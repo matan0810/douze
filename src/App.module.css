@@ -19,6 +19,7 @@
   justify-content: center;
   gap: 12px;
   padding: 24px var(--gutter) 32px;
-  color: rgb(216 180 254 / 35%);
+  color: var(--faint);
+  letter-spacing: 0.06em;
   font-size: 0.75rem;
 }

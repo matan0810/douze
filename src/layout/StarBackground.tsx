@@ -1,6 +1,6 @@
 import styles from './StarBackground.module.css';
 
-/** A small seeded random generator, so the sky is the same on every visit and screenshot. */
+/** A small seeded random generator, so the light is the same on every visit and screenshot. */
 function seeded(seed: number) {
   let s = seed;
   return () => {
@@ -11,50 +11,38 @@ function seeded(seed: number) {
   };
 }
 
+const TONES = [styles.white, styles.pink, styles.violet, styles.gold];
 const random = seeded(2026);
-const STARS = Array.from({ length: 80 }, () => ({
+const REFLECTIONS = Array.from({ length: 72 }, (_, i) => ({
   x: random() * 100,
   y: random() * 100,
-  size: random() * 3 + 1,
-  delay: random() * 4,
-  duration: random() * 3 + 2,
-}));
-const SPARKLES = Array.from({ length: 15 }, () => ({
-  x: random() * 100,
-  y: random() * 100,
-  delay: random() * 3,
+  size: 2 + random() * 3,
+  delay: random() * 7,
+  duration: 5 + random() * 5,
+  tone: TONES[i % TONES.length],
 }));
 
-/** The night sky behind every page: nebulae, twinkling stars and a few golden sparkles. */
+/**
+ * The room behind every page: a spotlight from above, and the square reflections the
+ * mirror ball throws on the walls, slowly catching the light.
+ */
 export function StarBackground() {
   return (
-    <div className={styles.sky} aria-hidden="true">
-      <div className={styles.base} />
-      <div className={`${styles.nebula} ${styles.purple}`} />
-      <div className={`${styles.nebula} ${styles.pink}`} />
-      <div className={`${styles.nebula} ${styles.blue}`} />
-      {STARS.map((star, i) => (
+    <div className={styles.room} aria-hidden="true">
+      <div className={styles.spot} />
+      {REFLECTIONS.map((r, i) => (
         <span
           key={i}
-          className={styles.star}
+          className={`${styles.reflection} ${r.tone}`}
           style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: star.size,
-            height: star.size,
-            animationDuration: `${star.duration}s`,
-            animationDelay: `${star.delay}s`,
+            left: `${r.x}%`,
+            top: `${r.y}%`,
+            width: r.size,
+            height: r.size,
+            animationDuration: `${r.duration}s`,
+            animationDelay: `${r.delay}s`,
           }}
         />
-      ))}
-      {SPARKLES.map((s, i) => (
-        <span
-          key={i}
-          className={styles.sparkle}
-          style={{ left: `${s.x}%`, top: `${s.y}%`, animationDelay: `${s.delay}s` }}
-        >
-          ✦
-        </span>
       ))}
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Duel } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
+import { Icon } from '../../ui/Icon';
 import page from './StatsScreen.module.css';
 import styles from './Duels.module.css';
 
@@ -12,9 +13,12 @@ interface Props {
 export function Duels({ duels, names }: Props) {
   const { t } = useI18n();
   return (
-    <section className={`${page.section} glass panel`} aria-labelledby="duels-title">
+    <section className={page.section} aria-labelledby="duels-title">
       <div className={page.sectionHead}>
-        <h2 id="duels-title">{t.stats.duels}</h2>
+        <h2 id="duels-title">
+          <Icon name="duel" size={16} />
+          {t.stats.duels}
+        </h2>
         <p>{t.stats.duelsHint}</p>
       </div>
       <ul className={styles.list}>

@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import type { Country } from '../domain/types';
 import { useI18n } from '../i18n/context';
 import { Flag } from '../ui/Flag';
+import { Icon } from '../ui/Icon';
 import { PlaceBadge } from '../ui/PlaceBadge';
 import { GripIcon } from './GripIcon';
 import styles from './CountryPicker.module.css';
@@ -25,7 +26,7 @@ export function SortableRow({ country, place, onRemove }: Props) {
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`${styles.row} ${isDragging ? `${styles.dragging} glass-purple` : 'glass'}`}
+      className={`${styles.row} ${isDragging ? styles.dragging : ''}`}
     >
       <button
         type="button"
@@ -48,7 +49,7 @@ export function SortableRow({ country, place, onRemove }: Props) {
         aria-label={`${t.remove} ${country.name[language]}`}
         onClick={onRemove}
       >
-        ✕
+        <Icon name="close" size={14} />
       </button>
     </li>
   );

@@ -12,7 +12,7 @@ export function RankingDisplay({ order }: { order: readonly string[] }) {
       {order.map((id, i) => {
         const country = countryById.get(id);
         return (
-          <li key={id} className={`${styles.row} glass`}>
+          <li key={id} className={styles.row}>
             <PlaceBadge place={i + 1} />
             <Flag country={country} size="lg" />
             <span className={styles.name}>{country?.name[language] ?? id}</span>

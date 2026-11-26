@@ -1,30 +1,41 @@
 .page {
-  max-width: 1024px;
+  max-width: 1040px;
   margin-inline: auto;
-  padding: 32px var(--gutter);
+  padding: 48px var(--gutter);
 }
 
 .sections {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 56px;
 }
 
 .section {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sectionHead {
-  margin-block-end: 16px;
+  margin-block-end: 20px;
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--line-strong);
 }
 
 .sectionHead h2 {
-  font-size: 1.125rem;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: var(--display-weight);
+}
+
+.sectionHead h2 svg {
+  color: var(--muted);
 }
 
 .sectionHead p {
-  margin-block-start: 4px;
-  color: rgb(216 180 254 / 60%);
-  font-size: 0.875rem;
+  margin-block-start: 6px;
+  color: var(--faint);
+  font-size: 0.82rem;
 }

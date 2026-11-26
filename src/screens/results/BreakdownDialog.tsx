@@ -2,7 +2,6 @@ import { countryById } from '../../domain/archive';
 import type { Game } from '../../domain/game';
 import { isComplete, scorePrediction } from '../../domain/scoring';
 import { useI18n } from '../../i18n/context';
-import { Avatar } from '../../ui/Avatar';
 import { Dialog } from '../../ui/Dialog';
 import { Flag } from '../../ui/Flag';
 import { closeness } from './closeness';
@@ -35,11 +34,10 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
         score && (
           <>
             <div className={styles.who}>
-              <Avatar name={name} size={56} />
               <div>
                 <h2 className={styles.name}>{name}</h2>
                 <div className={styles.summary}>
-                  <span className={`text-gold ${styles.total} num`}>{t.points(score.total)}</span>
+                  <span className={`text-brand ${styles.total} num`}>{t.points(score.total)}</span>
                   <span>{t.accuracy(percent)}</span>
                 </div>
               </div>
@@ -58,7 +56,7 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
                   tone: styles.lilac,
                 },
               ].map((stat) => (
-                <div key={stat.label} className={`${styles.stat} glass`}>
+                <div key={stat.label} className={styles.stat}>
                   <div className={`${styles.value} ${stat.tone} num`}>{stat.value}</div>
                   <div className={styles.label}>{stat.label}</div>
                 </div>
@@ -123,7 +121,7 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
                       </span>
                       {row.bonus > 0 && (
                         <span className={styles.bonus}>
-                          <bdi>+{row.bonus}★</bdi>
+                          <bdi>+{row.bonus}</bdi>
                         </span>
                       )}
                     </td>

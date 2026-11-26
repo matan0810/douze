@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { addPlayer, removePlayer, setOrder } from '../../domain/game';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
+import { Icon } from '../../ui/Icon';
 import { PageTitle } from '../../ui/PageTitle';
 import { YearSelect } from '../../ui/YearSelect';
 import { FinalistsPanel } from './FinalistsPanel';
@@ -28,9 +29,9 @@ export function PlayersScreen({ year }: { year: number }) {
   return (
     <div className={styles.page}>
       <PageTitle
+        eyebrow={t.eyebrow.players(year)}
         start={t.players.titleStart}
         end={t.players.titleEnd}
-        tone="purple"
         lead={t.players.lead}
         aside={<YearSelect year={year} view="players" />}
       />
@@ -38,7 +39,7 @@ export function PlayersScreen({ year }: { year: number }) {
       <div className={styles.grid}>
         <div className={styles.main}>
           <form
-            className={`${styles.add} glass`}
+            className={styles.add}
             onSubmit={(e) => {
               e.preventDefault();
               add();
@@ -57,6 +58,7 @@ export function PlayersScreen({ year }: { year: number }) {
                 placeholder={t.players.namePlaceholder}
               />
               <button type="submit" className="btn btn-primary" disabled={!name.trim()}>
+                <Icon name="plus" size={16} />
                 {t.players.add}
               </button>
             </div>
@@ -64,8 +66,8 @@ export function PlayersScreen({ year }: { year: number }) {
 
           {game.players.length === 0 ? (
             <div className="empty fade">
-              <div className={styles.emptyIcon} aria-hidden="true">
-                👥
+              <div className={styles.emptyIcon}>
+                <Icon name="players" size={32} />
               </div>
               <p>{t.players.empty}</p>
             </div>

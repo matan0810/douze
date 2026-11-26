@@ -14,7 +14,7 @@ export function YearSelect({ year, view }: { year: number; view: FinalView }) {
     <label className={styles.wrap}>
       <span className="visually-hidden">{t.yearPicker}</span>
       <select
-        className={`${styles.select} glass`}
+        className={styles.select}
         value={year}
         onChange={(e) => {
           if (e.target.value === NEW) window.location.hash = routeHash({ name: 'new' });

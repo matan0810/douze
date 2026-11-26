@@ -9,22 +9,24 @@ interface Input {
 }
 
 const WIDTH = 1080;
-const ROW = 112;
+const ROW = 120;
 const TOP = 300;
-const MEDALS = ['👑', '🥈', '🥉'];
-const BARS: [string, string][] = [
-  ['#f59e0b', '#fcd34d'],
-  ['#9ca3af', '#e5e7eb'],
-  ['#b45309', '#d97706'],
-];
+
+/** The site's own tokens (src/styles/global.css), so the picture keeps the look. */
+function token(name: string, fallback: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
 
 /**
  * The leaderboard as a picture for a chat, in the site's look and the page's language:
- * the night sky, the Douze wordmark, and every player with medal, points and a bar.
+ * the velvet night with the ball's reflections, the wordmark, and every player on a
+ * hairline row with their place in Syne (the first three in their metals) and their
+ * points thin and large; the leader's in the ball's light.
  */
 export async function drawShareImage({ title, table, names, t }: Input): Promise<Blob | null> {
   await document.fonts.ready;
-  const height = TOP + table.length * ROW + 120;
+  await document.fonts.load('800 60px Syne');
+  const height = TOP + table.length * ROW + 140;
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = height;
@@ -32,66 +34,88 @@ export async function drawShareImage({ title, table, names, t }: Input): Promise
   if (!c) return null;
   const rtl = t.dir === 'rtl';
   c.direction = rtl ? 'rtl' : 'ltr';
-  const font = (weight: number, size: number) => `${weight} ${size}px 'Heebo Variable', sans-serif`;
+  const text = (weight: number, size: number) => `${weight} ${size}px 'Heebo Variable', sans-serif`;
+  const brandFont = (size: number) => `800 ${size}px Syne, sans-serif`;
   // x measured from the reading start
   const x = (fromStart: number) => (rtl ? WIDTH - fromStart : fromStart);
+  const pink = token('--brand-pink', '#f9a8d4');
+  const violet = token('--brand-violet', '#c084fc');
+  const gold = token('--brand-gold', '#fde68a');
+  const ink = token('--text', '#f3eefb');
+  const brand = (from: number, to: number) => {
+    const g = c.createLinearGradient(from, 0, to, 0);
+    g.addColorStop(0, pink);
+    g.addColorStop(0.5, violet);
+    g.addColorStop(1, gold);
+    return g;
+  };
 
-  const sky = c.createRadialGradient(WIDTH * 0.2, height / 2, 0, WIDTH * 0.2, height / 2, WIDTH);
-  sky.addColorStop(0, '#2d0a4e');
-  sky.addColorStop(0.5, '#0d0221');
-  sky.addColorStop(1, '#1a0038');
-  c.fillStyle = sky;
+  // The night, a spotlight from above, and square reflections of the ball.
+  c.fillStyle = token('--night', '#07030d');
   c.fillRect(0, 0, WIDTH, height);
-  for (let i = 0; i < 70; i++) {
-    c.fillStyle = `rgb(255 255 255 / ${0.3 + ((i * 37) % 60) / 100})`;
-    c.beginPath();
-    c.arc((i * 151) % WIDTH, (i * 97) % height, 1 + (i % 3) * 0.6, 0, Math.PI * 2);
-    c.fill();
+  const spot = c.createRadialGradient(WIDTH / 2, -80, 0, WIDTH / 2, -80, 700);
+  spot.addColorStop(0, 'rgb(236 72 153 / 22%)');
+  spot.addColorStop(1, 'rgb(236 72 153 / 0%)');
+  c.fillStyle = spot;
+  c.fillRect(0, 0, WIDTH, height);
+  const tones = [ink, pink, violet, gold];
+  for (let i = 0; i < 60; i++) {
+    const size = 3 + (i % 4);
+    c.save();
+    c.globalAlpha = 0.15 + ((i * 37) % 50) / 100;
+    c.fillStyle = tones[i % tones.length] ?? ink;
+    c.translate((i * 151) % WIDTH, (i * 97) % height);
+    c.rotate(Math.PI / 4);
+    c.fillRect(-size / 2, -size / 2, size, size);
+    c.restore();
   }
 
-  await drawWordmark(c, WIDTH / 2, 160, 104);
+  await drawWordmark(c, WIDTH / 2, 150, 104);
   c.textAlign = 'center';
-  c.fillStyle = '#d8b4fe';
-  c.font = font(600, 40);
-  c.fillText(title, WIDTH / 2, 230);
+  c.fillStyle = token('--muted', '#b9adc9');
+  c.font = text(300, 38);
+  c.fillText(title, WIDTH / 2, 228);
 
+  const metals = [
+    ['#fff4c7', '#f5c45a', '#b7791f'],
+    ['#ffffff', '#c9ced6', '#8a93a0'],
+    ['#ffd9b0', '#e08a4b', '#8a4a1c'],
+  ];
   table.forEach((s, i) => {
     const y = TOP + i * ROW;
-    const podium = s.rank <= 3;
-    c.fillStyle = podium ? 'rgb(250 204 21 / 10%)' : 'rgb(255 255 255 / 5%)';
-    c.strokeStyle = podium ? 'rgb(250 204 21 / 40%)' : 'rgb(255 255 255 / 12%)';
-    c.lineWidth = 2;
-    c.beginPath();
-    c.roundRect(60, y, WIDTH - 120, ROW - 20, 24);
-    c.fill();
-    c.stroke();
+    const first = s.rank === 1;
+    // the row's hairline, in the ball's light for the leader
+    c.fillStyle = first ? brand(60, WIDTH - 60) : 'rgb(255 255 255 / 12%)';
+    c.fillRect(60, y + ROW - 1, WIDTH - 120, first ? 2 : 1);
+    // the place
     c.textAlign = rtl ? 'right' : 'left';
-    c.font = font(700, 44);
-    c.fillStyle = '#c084fc';
-    c.fillText(MEDALS[s.rank - 1] ?? `#${s.rank}`, x(90), y + 62);
-    c.fillStyle = '#ffffff';
-    c.fillText(names.get(s.player) ?? s.player, x(190), y + 62);
+    c.font = brandFont(54);
+    const metal = metals[s.rank - 1];
+    if (metal) {
+      const g = c.createLinearGradient(0, y + 30, 0, y + 80);
+      metal.forEach((colour, k) => g.addColorStop(k / 2, colour));
+      c.fillStyle = g;
+      c.fillText(String(s.rank).padStart(2, '0'), x(70), y + 82);
+    } else {
+      c.strokeStyle = 'rgb(243 238 251 / 45%)';
+      c.lineWidth = 1.5;
+      c.strokeText(String(s.rank).padStart(2, '0'), x(70), y + 82);
+    }
+    // the name
+    c.fillStyle = ink;
+    c.font = text(500, 44);
+    c.fillText(names.get(s.player) ?? s.player, x(210), y + 78);
+    // the points, thin and large
     c.textAlign = rtl ? 'left' : 'right';
-    c.font = font(900, 48);
-    c.fillStyle = s.rank === 1 ? '#facc15' : '#f8fafc';
-    c.fillText(String(s.total), x(WIDTH - 100), y + 64);
-    const [from, to] = BARS[s.rank - 1] ?? ['#7c3aed', '#ec4899'];
-    const barStart = 560;
-    const barLength = 300;
-    const bar = c.createLinearGradient(x(barStart), 0, x(barStart + barLength), 0);
-    bar.addColorStop(0, from);
-    bar.addColorStop(1, to);
-    c.fillStyle = 'rgb(255 255 255 / 10%)';
-    c.fillRect(Math.min(x(barStart), x(barStart + barLength)), y + 40, barLength, 12);
-    c.fillStyle = bar;
-    const filled = barLength * s.share;
-    c.fillRect(rtl ? x(barStart) - filled : x(barStart), y + 40, filled, 12);
+    c.font = text(200, 76);
+    c.fillStyle = first ? brand(rtl ? 60 : WIDTH - 260, rtl ? 260 : WIDTH - 60) : ink;
+    c.fillText(String(s.total), x(WIDTH - 70), y + 88);
   });
 
   c.textAlign = 'center';
-  c.font = font(500, 28);
-  c.fillStyle = 'rgb(216 180 254 / 60%)';
-  c.fillText(t.ofMax(table[0]?.max ?? 0), WIDTH / 2, height - 50);
+  c.font = text(400, 26);
+  c.fillStyle = token('--faint', '#8f849f');
+  c.fillText(t.ofMax(table[0]?.max ?? 0), WIDTH / 2, height - 60);
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 }

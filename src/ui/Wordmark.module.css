@@ -27,11 +27,11 @@
 
 /* One gradient across the word: pink into the ball, purple out of it, then gold. */
 .start {
-  background-image: linear-gradient(100deg, var(--brand-pink-light), var(--pink));
+  background-image: linear-gradient(100deg, var(--mark-pink-light), var(--mark-pink));
 }
 
 .end {
-  background-image: linear-gradient(100deg, var(--brand-violet), var(--brand-gold) 70%, #fff);
+  background-image: linear-gradient(100deg, var(--mark-violet), var(--mark-gold) 70%, #fff);
 }
 
 /* The ball stands for a lowercase o: its picture includes the string and the halo. */

@@ -1,55 +1,67 @@
-/* Design tokens and the shared forms of the look (DESIGN.md, section 2): a night sky in deep
-   purple, glass panels, gold for winners and purple-to-pink for action, emoji as icons.
-   Components use these tokens and classes, never raw values, and logical properties
-   throughout (inline-start, not left), so Hebrew and English share every rule. */
+/* Douze: light on velvet (DESIGN.md, section 2).
+   The site is a velvet night; its only colour is the light of the mirror ball: one brand
+   gradient, used sparingly, and the three metals for the first three places. Everything is
+   precise: hairlines instead of boxes, corners of 2px, no glow, no shadow. Components use
+   these tokens and classes, never raw values, and logical properties throughout, so Hebrew
+   and English share every rule. */
 @import './fonts.css';
 
 :root {
   color-scheme: dark;
 
-  --night: #0d0221;
-  --night-deep: #1a0038;
-  --nebula: #2d0a4e;
-  --text: #f8fafc;
-  --soft: #e9d5ff;
-  --lilac: #d8b4fe;
-  --violet: #c084fc;
-  --muted: rgb(216 180 254 / 70%);
-  --faint: rgb(255 255 255 / 40%);
-  --line: rgb(255 255 255 / 10%);
-  --line-strong: rgb(255 255 255 / 20%);
+  /* The night */
+  --night: #07030d;
+  --velvet: #0d0618;
+  --text: #f3eefb;
+  --soft: #e7defa;
+  --lilac: #d9c8f5;
+  --muted: rgb(231 222 250 / 58%);
+  --faint: rgb(231 222 250 / 40%);
+  --line: rgb(255 255 255 / 8%);
+  --line-strong: rgb(255 255 255 / 16%);
 
-  --purple: #7c3aed;
-  --purple-deep: #5b21b6;
-  --pink: #ec4899;
-  --blue: #3b82f6;
-  --gold: #f59e0b;
-  --gold-light: #fcd34d;
-  --yellow: #facc15;
-  --silver: #d1d5db;
-  --bronze: #d97706;
-  --good: #4ade80;
-  --near: #facc15;
-  --off: #fb923c;
-  --far: #f87171;
-
-  /* The Douze brand: the wordmark's gradient, from the mirror ball's own colours. */
-  --brand-pink-light: #f9a8d4;
-  --brand-violet: #a855f7;
+  /* The light of the ball */
+  --brand-pink: #f9a8d4;
+  --brand-violet: #c084fc;
   --brand-gold: #fde68a;
+  --brand: linear-gradient(100deg, var(--brand-pink), var(--brand-violet) 50%, var(--brand-gold));
+  --brand-line: linear-gradient(
+    90deg,
+    transparent,
+    rgb(249 168 212 / 50%),
+    rgb(192 132 252 / 50%),
+    rgb(253 230 138 / 50%),
+    transparent
+  );
+  --spot-pink: rgb(236 72 153 / 16%);
+  /* The wordmark's own gradient, as in the brand files (scripts/brand.ts) */
+  --mark-pink-light: #f9a8d4;
+  --mark-pink: #ec4899;
+  --mark-violet: #a855f7;
+  --mark-gold: #fde68a;
+  --spot-gold: rgb(253 230 138 / 10%);
 
-  --glass: rgb(255 255 255 / 5%);
-  --glass-purple: rgb(124 58 237 / 15%);
-  --glass-gold: rgb(245 158 11 / 15%);
-  --action: linear-gradient(135deg, var(--purple), var(--pink));
-  --gilded: linear-gradient(135deg, var(--gold), var(--gold-light));
-  --glow-purple: 0 4px 20px rgb(124 58 237 / 40%);
-  --glow-gold: 0 4px 20px rgb(245 158 11 / 40%);
+  /* The metals, for the first three places only */
+  --gold: #f5c45a;
+  --silver: #c9ced6;
+  --bronze: #e08a4b;
+  --gold-foil: linear-gradient(180deg, #fff4c7, #f5c45a 55%, #b7791f);
+  --silver-foil: linear-gradient(180deg, #ffffff, #c9ced6 55%, #8a93a0);
+  --bronze-foil: linear-gradient(180deg, #ffd9b0, #e08a4b 55%, #8a4a1c);
 
+  /* How close a predicted place was, in the brand's own light */
+  --exact: #fde68a;
+  --near: #f9a8d4;
+  --off: #b79cf0;
+  --far: #7d7291;
+
+  /* Type: text, display (titles and scores, thin), and the brand's Latin face */
   --font: 'Heebo Variable', Heebo, system-ui, sans-serif;
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
+  --font-display: var(--font);
+  --display-weight: 200;
+  --font-brand: Syne, var(--font);
+
+  --radius: 2px;
   --tap: 40px;
   --gutter: 16px;
   --page: 1152px;
@@ -81,7 +93,7 @@ body {
   background: var(--night);
   color: var(--text);
   font-family: var(--font);
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
@@ -92,6 +104,12 @@ h2,
 h3,
 p {
   margin: 0;
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 a {
@@ -116,12 +134,12 @@ button:disabled {
 }
 
 :focus-visible {
-  outline: 2px solid var(--violet);
-  outline-offset: 2px;
+  outline: 1px solid var(--brand-pink);
+  outline-offset: 3px;
 }
 
 ::selection {
-  background: rgb(124 58 237 / 45%);
+  background: rgb(192 132 252 / 40%);
 }
 
 ::-webkit-scrollbar {
@@ -130,54 +148,46 @@ button:disabled {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(255 255 255 / 5%);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(124 58 237 / 50%);
-  border-radius: 3px;
+  background: var(--line-strong);
 }
 
 /* ---------- Shared forms ---------- */
 
-.glass {
-  background: var(--glass);
-  backdrop-filter: blur(12px);
+/* A hairline frame: the only kind of panel. A lit one marks what matters most. */
+.frame {
   border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
-.glass-purple {
-  background: var(--glass-purple);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgb(124 58 237 / 30%);
-}
-
-.glass-gold {
-  background: var(--glass-gold);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgb(245 158 11 / 40%);
+.frame-lit {
+  border-color: rgb(253 230 138 / 28%);
 }
 
 .panel {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
-.text-gold,
-.text-purple {
-  background-size: 200% auto;
+/* The brand's light on a word: the first word of a title, a winning score. */
+.text-brand {
+  background-image: var(--brand);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 3s linear infinite;
 }
 
-.text-gold {
-  background-image: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
-}
-
-.text-purple {
-  background-image: linear-gradient(135deg, #a78bfa, var(--pink), #a78bfa);
+/* The line of spaced Latin capitals above a title. */
+.eyebrow {
+  display: block;
+  font-family: var(--font-brand);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.42em;
 }
 
 .btn {
@@ -185,144 +195,118 @@ button:disabled {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: var(--tap);
-  padding: 10px 20px;
-  border: 0;
+  min-height: 38px;
+  padding: 8px 18px;
+  border: 1px solid transparent;
   border-radius: var(--radius);
+  font-size: 0.85rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
   text-align: center;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
+    filter 0.2s ease,
+    border-color 0.2s ease,
     color 0.2s ease;
 }
 
 .btn:not(:disabled):hover {
-  transform: scale(1.04);
-}
-
-.btn:not(:disabled):active {
-  transform: scale(0.96);
+  filter: brightness(1.1);
 }
 
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
+.btn svg {
+  flex: none;
+}
+
+/* The one main action of a screen. */
 .btn-primary {
-  background: var(--action);
-  color: #fff;
-  box-shadow: var(--glow-purple);
+  background: var(--brand);
+  color: var(--velvet);
 }
 
-.btn-primary:not(:disabled):hover {
-  box-shadow: 0 6px 28px rgb(124 58 237 / 60%);
-}
-
-.btn-gold {
-  background: var(--gilded);
-  color: #111827;
-  box-shadow: var(--glow-gold);
-}
-
-.btn-gold:not(:disabled):hover {
-  box-shadow: 0 6px 28px rgb(245 158 11 / 60%);
-}
-
-.btn-ghost {
-  border: 1px solid var(--line-strong);
+/* Everything else: a hairline. */
+.btn-line {
+  border-color: var(--line-strong);
   background: transparent;
-  color: rgb(255 255 255 / 75%);
-  font-weight: 500;
+  color: var(--text);
 }
 
-.btn-ghost:not(:disabled):hover {
-  background: rgb(255 255 255 / 10%);
-  color: #fff;
-  transform: none;
+.btn-line:not(:disabled):hover {
+  border-color: rgb(249 168 212 / 50%);
+  filter: none;
 }
 
-.btn-soft {
-  border: 1px solid rgb(147 51 234 / 30%);
+/* A step back or a reset: words only. */
+.btn-quiet {
+  min-height: 32px;
+  padding-inline: 4px;
   background: transparent;
-  color: var(--lilac);
-  font-size: 0.875rem;
+  color: var(--muted);
   font-weight: 500;
-  padding-inline: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.btn-soft:not(:disabled):hover {
-  border-color: rgb(168 85 247 / 60%);
-  background: rgb(147 51 234 / 30%);
-  color: #fff;
-  transform: none;
-}
-
-.btn-danger {
-  border: 1px solid rgb(239 68 68 / 30%);
-  background: transparent;
-  color: rgb(248 113 113 / 80%);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.btn-danger:not(:disabled):hover {
-  background: rgb(239 68 68 / 10%);
-  color: var(--far);
-  transform: none;
+.btn-quiet:not(:disabled):hover {
+  color: var(--text);
+  filter: none;
 }
 
 .input {
   width: 100%;
   min-height: var(--tap);
-  padding: 8px 14px;
-  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: rgb(255 255 255 / 5%);
-  color: #fff;
+  background: transparent;
+  color: var(--text);
   transition: border-color 0.2s ease;
 }
 
 .input::placeholder {
-  color: rgb(255 255 255 / 30%);
+  color: var(--faint);
 }
 
 .input:focus {
   outline: none;
-  border-color: rgb(168 85 247 / 60%);
+  border-color: rgb(249 168 212 / 60%);
 }
 
 .section-label {
-  color: var(--lilac);
-  font-size: 0.8rem;
+  color: var(--muted);
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 8px 12px;
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   font-size: 0.75rem;
   text-align: center;
 }
 
 .note-warn {
-  border: 1px solid rgb(250 204 21 / 20%);
-  background: rgb(250 204 21 / 10%);
-  color: rgb(250 204 21 / 85%);
+  border-color: rgb(253 230 138 / 25%);
+  color: var(--brand-gold);
 }
 
 .note-info {
-  border: 1px solid rgb(126 34 206 / 25%);
-  background: rgb(88 28 135 / 20%);
   color: var(--muted);
 }
 
 .empty {
   padding: 32px 16px;
-  color: rgb(216 180 254 / 55%);
+  color: var(--faint);
   text-align: center;
 }
 
@@ -339,9 +323,15 @@ button:disabled {
   white-space: nowrap;
 }
 
+/* Chevrons point toward the reading end: "›" faces right, so it turns in Hebrew. */
+[dir='rtl'] .chevron {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
 /* Entrances: content rises softly into place, one part after another. */
 .rise {
-  animation: rise 0.6s ease-out both;
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .fade {
@@ -351,36 +341,13 @@ button:disabled {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(12px);
   }
 }
 
 @keyframes fade {
   from {
     opacity: 0;
-  }
-}
-
-@keyframes shimmer {
-  from {
-    background-position: 0% center;
-  }
-
-  to {
-    background-position: 200% center;
-  }
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.3;
-    transform: scale(0.7);
   }
 }
 
@@ -393,10 +360,4 @@ button:disabled {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Chevrons point toward the reading end: "›" faces right, so it turns in Hebrew. */
-[dir='rtl'] .chevron {
-  display: inline-block;
-  transform: scaleX(-1);
 }

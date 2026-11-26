@@ -16,7 +16,7 @@ export function FinalistsPanel({ game }: { game: Game }) {
 
   return (
     <div className={styles.stack}>
-      <section className={`${styles.panel} glass`}>
+      <section className={styles.panel}>
         <div className={styles.head}>
           <h2 className="section-label">{t.players.finalistsTitle(game.finalists.length)}</h2>
           <button
@@ -48,12 +48,12 @@ export function FinalistsPanel({ game }: { game: Game }) {
       </section>
 
       {edited(game.year) && (
-        <section className={`${styles.panel} ${styles.reset} glass`}>
+        <section className={`${styles.panel} ${styles.reset}`}>
           <h2 className="section-label">{t.players.resetTitle}</h2>
           <p>{t.players.resetText}</p>
           <button
             type="button"
-            className="btn btn-danger"
+            className="btn btn-quiet"
             onClick={() => {
               if (window.confirm(t.players.confirmReset)) reset(game.year);
             }}
@@ -72,7 +72,7 @@ export function FinalistsPanel({ game }: { game: Game }) {
           header={<h2 className={styles.dialogTitle}>{t.players.chooseFinalists}</h2>}
           footer={
             <>
-              <button type="button" className="btn btn-ghost" onClick={() => setChoosing(null)}>
+              <button type="button" className="btn btn-line" onClick={() => setChoosing(null)}>
                 {t.cancel}
               </button>
               <button

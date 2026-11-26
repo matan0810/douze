@@ -10,6 +10,19 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Changed
+
+- A new look, "light on velvet", made for Douze: a velvet night whose only colour is the
+  light of the mirror ball. Hairlines instead of boxes and sharp corners; thin, large titles
+  under a spaced English line; the table as a scoreboard, with large numerals for the places
+  (the first three in gold, silver and bronze) and thin, large points, the leader's in the
+  ball's light; line icons instead of emoji; square reflections of the ball and a spotlight
+  instead of stars.
+- How close each prediction was is shown in gold, pink, violet and ash instead of green,
+  yellow, orange and red, in the breakdown and in the country-by-country table, which is
+  now a mosaic of squares.
+- The image of the table is drawn in the new look.
+
 ## [1.2.0] - 2026-11-26
 
 A new name, a new address: the site is Douze, at https://matan0810.github.io/douze. Breaking

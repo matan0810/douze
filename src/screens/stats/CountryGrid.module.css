@@ -4,27 +4,29 @@
 
 .table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 3px;
+  border-collapse: collapse;
   font-size: 0.85rem;
   text-align: center;
 }
 
 .table th {
-  padding: 4px 6px;
-  color: rgb(216 180 254 / 60%);
-  font-size: 0.75rem;
+  padding: 6px;
+  border-block-end: 1px solid var(--line-strong);
+  color: var(--faint);
+  font-size: 0.72rem;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .table td {
-  padding: 2px 6px;
+  padding: 3px 6px;
+  border-block-end: 1px solid var(--line);
 }
 
 .place {
-  color: rgb(255 255 255 / 50%);
-  font-weight: 700;
+  color: var(--faint);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .country {
@@ -35,45 +37,46 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgb(255 255 255 / 90%);
   white-space: nowrap;
 }
 
+/* The mosaic: one square facet per prediction, lit by how close it was. */
 .cell {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  padding: 4px 6px;
-  border: 1px solid;
-  border-radius: 6px;
-  font-weight: 700;
+  width: 34px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  font-weight: 500;
 }
 
 .exact {
-  border-color: rgb(34 197 94 / 30%);
-  background: rgb(34 197 94 / 18%);
-  color: var(--good);
+  border-color: var(--exact);
+  background: var(--exact);
+  color: var(--velvet);
 }
 
 .near {
-  border-color: rgb(234 179 8 / 25%);
-  background: rgb(234 179 8 / 12%);
+  border-color: rgb(249 168 212 / 40%);
+  background: rgb(249 168 212 / 14%);
   color: var(--near);
 }
 
 .off {
-  border-color: rgb(249 115 22 / 25%);
-  background: rgb(249 115 22 / 12%);
+  border-color: rgb(183 156 240 / 28%);
+  background: rgb(183 156 240 / 8%);
   color: var(--off);
 }
 
 .far {
-  border-color: rgb(239 68 68 / 25%);
-  background: rgb(239 68 68 / 12%);
   color: var(--far);
 }
 
 .average {
-  color: var(--lilac);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-size: 1rem;
 }

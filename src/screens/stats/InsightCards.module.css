@@ -1,36 +1,42 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Six short stories, set like a magazine page: hairlines between them, no boxes. */
 .card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  border-radius: var(--radius);
+  gap: 10px;
+  padding: 20px;
+  border-block-end: 1px solid var(--line);
+}
+
+.card:not(:nth-child(3n + 1)) {
+  border-inline-start: 1px solid var(--line);
 }
 
 .title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  color: var(--muted);
 }
 
 .title h3 {
   flex: 1;
-  color: var(--gold-light);
-  font-size: 0.95rem;
-  font-weight: 700;
+  color: var(--brand-gold);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .card p {
-  color: rgb(233 213 255 / 80%);
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   line-height: 1.55;
 }
 
@@ -38,10 +44,26 @@
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .card:not(:nth-child(3n + 1)) {
+    border-inline-start: 0;
+  }
+
+  .card:nth-child(2n) {
+    border-inline-start: 1px solid var(--line);
+  }
 }
 
 @media (max-width: 520px) {
   .cards {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card:nth-child(2n) {
+    border-inline-start: 0;
+  }
+
+  .card {
+    padding-inline: 0;
   }
 }

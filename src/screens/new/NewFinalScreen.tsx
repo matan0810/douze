@@ -21,12 +21,12 @@ export function NewFinalScreen() {
   return (
     <div className={styles.page}>
       <PageTitle
+        eyebrow={t.eyebrow.newFinal}
         start={t.newFinal.titleStart}
         end={t.newFinal.titleEnd}
-        tone="gold"
         lead={t.newFinal.lead}
       />
-      <div className={`${styles.panel} glass panel`}>
+      <div className={styles.panel}>
         <label className={styles.year}>
           <span className="section-label">{t.newFinal.year}</span>
           <input
@@ -44,7 +44,7 @@ export function NewFinalScreen() {
         {chosen.length < 2 && <p className="note note-info">{t.newFinal.needTwo}</p>}
         <button
           type="button"
-          className="btn btn-gold"
+          className="btn btn-primary"
           disabled={!valid}
           onClick={() => {
             put(setFinalists(emptyGame(year), chosen));

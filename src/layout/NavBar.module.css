@@ -3,8 +3,18 @@
   inset-block-start: 0;
   inset-inline: 0;
   z-index: 50;
-  border-width: 0 0 1px;
-  border-color: rgb(88 28 135 / 30%);
+  background: rgb(7 3 13 / 86%);
+  backdrop-filter: blur(10px);
+}
+
+/* The bar ends in a hairline of the ball's light. */
+.bar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 1px;
+  background: var(--brand-line);
 }
 
 .inner {
@@ -21,73 +31,80 @@
   display: flex;
   flex: none;
   align-items: center;
-  gap: 8px;
-  font-size: 1.125rem;
-  font-weight: 700;
+  gap: 10px;
+  font-size: 1.05rem;
 }
 
 .year {
-  color: var(--lilac);
-  font-size: 0.75rem;
+  color: var(--faint);
+  font-size: 0.72rem;
   font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 .links {
   display: flex;
-  min-width: 0;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  min-width: 0;
   margin-inline-start: auto;
 }
 
 .link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   min-width: var(--tap);
   min-height: var(--tap);
-  padding: 8px 14px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  color: var(--soft);
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 8px 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
-  background: rgb(255 255 255 / 10%);
-  color: #fff;
+  color: var(--text);
 }
 
+/* The screen shown: its link in full light, a line of the brand under it. */
 .on,
 .on:hover {
-  border-color: rgb(168 85 247 / 50%);
-  background: rgb(147 51 234 / 40%);
-  color: #fff;
+  color: var(--text);
+}
+
+.on::after {
+  content: '';
+  position: absolute;
+  inset-inline: 10px;
+  inset-block-end: 4px;
+  height: 1px;
+  background: var(--brand);
 }
 
 .language {
   flex: none;
   min-width: var(--tap);
-  min-height: 32px;
+  min-height: 30px;
   padding: 4px 10px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: transparent;
-  color: var(--soft);
-  font-size: 0.8rem;
+  color: var(--muted);
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .language:hover {
-  border-color: rgb(168 85 247 / 60%);
-  color: #fff;
+  border-color: rgb(249 168 212 / 50%);
+  color: var(--text);
 }
 
-/* Narrow screens keep the emoji of each link; the words are in its label. */
+/* Narrow screens keep the icon of each link; the words are in its label. */
 @media (max-width: 900px) {
   .label {
     display: none;
@@ -95,7 +112,6 @@
 
   .link {
     padding: 8px;
-    font-size: 1.05rem;
   }
 }
 

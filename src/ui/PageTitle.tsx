@@ -2,21 +2,23 @@ import type { ReactNode } from 'react';
 import styles from './PageTitle.module.css';
 
 interface Props {
+  /** The spaced Latin line above the title, the same in both languages. */
+  eyebrow: string;
   start: string;
   end: string;
-  tone: 'gold' | 'purple';
   lead: ReactNode;
   /** Controls beside the title, such as the year. */
   aside?: ReactNode;
 }
 
-/** A page's heading: its first word in a shimmering gradient, the rest in white. */
-export function PageTitle({ start, end, tone, lead, aside }: Props) {
+/** A page's heading: an eyebrow, then a thin title whose first word catches the light. */
+export function PageTitle({ eyebrow, start, end, lead, aside }: Props) {
   return (
     <div className={`${styles.title} rise`}>
+      <span className={`eyebrow text-brand ${styles.eyebrow}`}>{eyebrow}</span>
       <div className={styles.row}>
         <h1>
-          <span className={tone === 'gold' ? 'text-gold' : 'text-purple'}>{start}</span>
+          <span className="text-brand">{start}</span>
           {end}
         </h1>
         {aside}

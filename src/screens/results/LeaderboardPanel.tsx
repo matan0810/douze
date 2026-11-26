@@ -3,6 +3,7 @@ import type { Standing } from '../../domain/scoring';
 import { downloadBlob, fileName, canShareFiles, shareFile } from '../../export/download';
 import { drawShareImage } from '../../export/shareImage';
 import { useI18n } from '../../i18n/context';
+import { Icon } from '../../ui/Icon';
 import { useToast } from '../../ui/toastContext';
 import { Leaderboard } from './Leaderboard';
 import styles from './LeaderboardPanel.module.css';
@@ -31,17 +32,23 @@ export function LeaderboardPanel({ game, table, live }: Props) {
   };
 
   return (
-    <section className={`${styles.panel} glass panel rise`} aria-labelledby="board-title">
+    <section className={`${styles.panel} rise`} aria-labelledby="board-title">
       <div className={styles.head}>
         <div>
           <h2 id="board-title" className={styles.title}>
             {t.results.leaderboard}
-            {live && <span className={styles.live}>● {t.results.liveBadge}</span>}
+            {live && (
+              <span className={styles.live}>
+                <span className={styles.dot} aria-hidden="true" />
+                {t.results.liveBadge}
+              </span>
+            )}
           </h2>
           <p className={styles.hint}>{t.results.clickPlayer}</p>
         </div>
         {!live && table.length > 0 && (
-          <button type="button" className="btn btn-soft" onClick={shareImage}>
+          <button type="button" className="btn btn-line" onClick={shareImage}>
+            <Icon name="image" size={15} />
             {t.results.shareImage}
           </button>
         )}
@@ -51,8 +58,8 @@ export function LeaderboardPanel({ game, table, live }: Props) {
           <Leaderboard year={game.year} table={table} names={names} />
         ) : (
           <div className="empty">
-            <div className={styles.trophy} aria-hidden="true">
-              🏆
+            <div className={styles.trophy}>
+              <Icon name="results" size={32} />
             </div>
             <p>{t.results.noScores}</p>
             <p className={styles.small}>{t.results.noScoresHint(game.finalists.length)}</p>

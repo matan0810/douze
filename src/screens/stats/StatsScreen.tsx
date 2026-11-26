@@ -20,14 +20,14 @@ export function StatsScreen({ year }: { year: number }) {
   return (
     <div className={styles.page}>
       <PageTitle
+        eyebrow={t.eyebrow.stats(year)}
         start={t.stats.titleStart}
         end={t.stats.titleEnd}
-        tone="purple"
         lead={t.stats.lead}
         aside={<YearSelect year={year} view="stats" />}
       />
       {!found ? (
-        <p className="empty glass panel">{t.stats.waiting}</p>
+        <p className="empty frame">{t.stats.waiting}</p>
       ) : (
         <div className={styles.sections}>
           <InsightCards found={found} names={names} />

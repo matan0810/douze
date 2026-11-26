@@ -1,28 +1,26 @@
 .page {
-  max-width: 896px;
+  max-width: 960px;
   margin-inline: auto;
-  padding: 32px var(--gutter);
+  padding: 48px var(--gutter);
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-  gap: 32px;
+  gap: 48px;
   align-items: start;
 }
 
 .main {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .add {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: var(--radius-lg);
+  gap: 10px;
 }
 
 .addRow {
@@ -37,20 +35,20 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   margin: 0;
   padding: 0;
+  border-block-start: 1px solid var(--line);
   list-style: none;
 }
 
 .emptyIcon {
   margin-block-end: 12px;
-  font-size: 2.25rem;
+  color: var(--faint);
 }
 
 .side {
   position: sticky;
-  inset-block-start: calc(var(--header) + 16px);
+  inset-block-start: calc(var(--header) + 24px);
 }
 
 @media (max-width: 767px) {

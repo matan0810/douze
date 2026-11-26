@@ -1,67 +1,47 @@
-/* The sky is a picture: it keeps physical left/top in both directions. */
-.sky {
+/* The room is a picture: it keeps physical left/top in both directions. */
+.room {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  background: var(--night);
 }
 
-.base {
+.spot {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at 20% 50%,
-    var(--nebula) 0%,
-    var(--night) 50%,
-    var(--night-deep) 100%
-  );
+  background:
+    radial-gradient(ellipse 45% 55% at 50% -8%, var(--spot-pink), transparent 70%),
+    radial-gradient(ellipse 26% 40% at 50% -6%, var(--spot-gold), transparent 70%);
 }
 
-.nebula {
+.reflection {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(64px);
+  border-radius: 1px;
+  opacity: 0.12;
+  transform: rotate(45deg);
+  animation: glint ease-in-out infinite;
 }
 
-.purple {
-  top: -160px;
-  left: -160px;
-  width: 384px;
-  height: 384px;
-  opacity: 0.2;
-  background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+.white {
+  background: var(--text);
 }
 
 .pink {
-  right: -160px;
-  bottom: -160px;
-  width: 384px;
-  height: 384px;
-  opacity: 0.2;
-  background: radial-gradient(circle, var(--pink) 0%, transparent 70%);
+  background: var(--brand-pink);
 }
 
-.blue {
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 600px;
-  opacity: 0.1;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+.violet {
+  background: var(--brand-violet);
 }
 
-.star {
-  position: absolute;
-  border-radius: 50%;
-  background: #fff;
-  animation: twinkle ease-in-out infinite;
+.gold {
+  background: var(--brand-gold);
 }
 
-.sparkle {
-  position: absolute;
-  color: #fde047;
-  font-size: 12px;
-  animation: twinkle 3s ease-in-out infinite;
+@keyframes glint {
+  50% {
+    opacity: 0.7;
+  }
 }

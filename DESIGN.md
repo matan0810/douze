@@ -18,11 +18,12 @@ waits for a server (issue #1): links without one were tried in 1.1.0 and removed
 
 ## 2. Look
 
-The owner's choice is the first site's look, kept as it was: a night sky in deep purple
-with twinkling stars and golden sparkles, glass panels, a shimmering gold for winners,
-purple to pink for actions, medals for the first three, emoji as icons. Three new
-directions were drawn and turned down (2026-11-26); the look is not to be redesigned
-without the owner asking.
+**Light on velvet** (chosen by the owner on 2026-11-26, after the first site's look and
+several directions): the site is a velvet night, and its only colour is the light of the
+mirror ball. Precise and calm: hairlines instead of boxes, corners of 2 px, no glow and no
+shadow, thin large type, and emoji replaced by line icons. The structure comes from the
+"scoreboard noir" direction, the colours from "velvet". It is not to be redesigned without
+the owner asking.
 
 **The brand: Douze.** The name comes from "douze points", the twelve points, the phrase
 everyone knows from the Eurovision scoreboard. It is written in Latin letters in both
@@ -45,21 +46,37 @@ of joining the winning two.
   `douze` since 2026-11-26 (first `euro-rank`; the old address no longer answers, and Pages
   cannot redirect it). The keys saved on devices keep the first name (`eurorank:…`).
 
-- **Tokens and shared forms** are in `src/styles/global.css`: colours, the glass panels
-  (`glass`, `glass-purple`, `glass-gold`), gradient text (`text-gold`, `text-purple`),
-  buttons (`btn-primary`, `btn-gold`, `btn-ghost`, `btn-soft`, `btn-danger`), inputs and
-  notes. Components use them and their own CSS Modules, with logical properties.
-- **Type**: Heebo (variable, bundled, Hebrew and Latin subsets only, so emoji keep their
-  colour). Titles 900, headings 700, text 400. Syne 800 for the wordmark only.
-- **Colours of closeness**, everywhere a predicted place meets the actual one: green for
-  exact, yellow within 2, orange within 5, red beyond (`closeness.ts`).
-- **Medals**: gold, silver and bronze for the first three of any ranking; the leader of a
-  table wears a crown.
-- **Motion**: panels rise softly into place, the table's bars grow, the title text
-  shimmers, stars twinkle. All of it stops with reduced motion.
-- **Phones**: the bar keeps only the emoji of each link below 900 px, and below 420 px the
-  home link steps aside (the name leads home) and the wordmark is smaller; the results page puts
-  the table above the official order below 1024 px.
+- **Tokens and shared forms** are in `src/styles/global.css`: the night, the brand
+  gradient and its hairline, the metals, the closeness colours, the fonts; and the forms
+  `frame` (a hairline; `frame-lit` for what matters most), `text-brand`, `eyebrow`, buttons
+  (`btn-primary` for the one main action, `btn-line` for the rest, `btn-quiet` for a step
+  back), `input`, `note`. Components use them and their own CSS Modules, with logical
+  properties.
+- **Colour.** Velvet black and ivory. The brand gradient (pink, violet, gold) only where the
+  eye should go: the main action, the leader, the tab shown, the first word of a title, the
+  eyebrow. Gold, silver and bronze only for the first three places.
+- **Closeness**, wherever a predicted place meets the actual one, in the brand's light:
+  exact in gold, within 2 in pink, within 5 in violet, beyond in ash (`closeness.ts`, the
+  `--exact`, `--near`, `--off`, `--far` tokens).
+- **Type.** Three roles, each a token: `--font` for text, `--font-display` (thin, weight
+  `--display-weight`) for titles, scores and big numbers, and `--font-brand`, Syne, for the
+  wordmark, the eyebrows and large numerals only (its digits are unreadable small). The
+  display face is still Heebo while the owner chooses one (issue #2).
+- **Eyebrows**: a spaced Latin line above every title, the same in both languages
+  (_LEADERBOARD · 2026_, _THE PLAYERS · 2026_, _STATISTICS · 2026_, _ALL THE YEARS_).
+- **Places**: two-digit numerals. In the table, large in Syne, outlined, the first three
+  filled with their metal; in lists, small in the text face, the first three in their
+  metal colour.
+- **Icons**: thin lines with square ends (`src/ui/Icon.tsx`). Flags are the only pictures
+  in colour; a hairline ring keeps white ones visible.
+- **The room**: a spotlight from above and the square reflections of the ball, slowly
+  catching the light, instead of stars.
+- **Motion**: content rises a few pixels into place, rows one after another; the table's
+  lines draw themselves; live mode blinks a pink "on air" light. All of it stops with
+  reduced motion.
+- **Phones**: the bar keeps only the icon of each link below 900 px, and below 420 px the
+  home link steps aside (the name leads home) and the wordmark is smaller; the results page
+  puts the table above the official order below 1024 px.
 
 ## 3. Scoring
 

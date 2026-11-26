@@ -3,12 +3,11 @@ import { gameStandings } from '../../domain/stats';
 import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
+import { Icon, type IconName } from '../../ui/Icon';
 import { Wordmark } from '../../ui/Wordmark';
 import styles from './HomeScreen.module.css';
 
-const SPARKS = ['✦', '⭐', '✦', '★', '✦', '⭐', '✦'];
-
-/** The front page: the name, the way in to players and results, and how scoring works. */
+/** The front page: the name, the last winner, the way in, and how scoring works. */
 export function HomeScreen() {
   const { t, language } = useI18n();
   const { games, years } = useGames();
@@ -18,79 +17,74 @@ export function HomeScreen() {
   const leaderName = leader && game?.players.find((p) => p.id === leader.player)?.name;
   const size = game?.finalists.length || 25;
   const hash = (view: 'players' | 'table') => routeHash({ name: 'final', year, view });
+  const ways: { icon: IconName; title: string; text: string; action: string; href: string }[] = [
+    {
+      icon: 'players',
+      title: t.home.playersTitle,
+      text: t.home.playersText,
+      action: t.home.playersAction,
+      href: hash('players'),
+    },
+    {
+      icon: 'results',
+      title: t.home.resultsTitle,
+      text: t.home.resultsText,
+      action: t.home.resultsAction,
+      href: hash('table'),
+    },
+  ];
 
   return (
     <div className={styles.page}>
       <section className={`${styles.hero} rise`}>
-        <div className={styles.sparks} aria-hidden="true">
-          {SPARKS.map((s, i) => (
-            <span
-              key={i}
-              className={i % 2 ? styles.big : styles.small}
-              style={{ animationDuration: `${2 + i * 0.3}s`, animationDelay: `${i * 0.2}s` }}
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+        <span className={`eyebrow text-brand ${styles.eyebrow}`}>{t.eyebrow.home(year)}</span>
         <h1 className={styles.title}>
           <Wordmark size="hero" />
         </h1>
-        <div className={styles.divider}>
-          <span className={styles.line} />
-          <span className={styles.edition}>{t.eurovision(year)}</span>
-          <span className={styles.line} />
-        </div>
         <p className={styles.slogan}>{t.slogan}</p>
         <p className={styles.lead}>{t.heroLine}</p>
         {leader && leaderName && (
-          <a href={hash('table')} className={`${styles.champion} glass-gold`}>
-            <span aria-hidden="true">👑</span>
+          <a href={hash('table')} className={styles.champion}>
+            <Icon name="crown" size={16} />
             <span>
-              {t.final(year)}: <strong>{leaderName[language]}</strong> ·{' '}
+              {t.final(year)} · <strong>{leaderName[language]}</strong> ·{' '}
               <span className="num">{t.points(leader.total)}</span>
             </span>
           </a>
         )}
       </section>
 
-      <section className={`${styles.cards} rise`} style={{ animationDelay: '0.2s' }}>
-        <a href={hash('players')} className={`${styles.card} glass`}>
-          <span className={`${styles.icon} ${styles.iconPurple}`} aria-hidden="true">
-            👥
-          </span>
-          <h2>{t.home.playersTitle}</h2>
-          <p>{t.home.playersText}</p>
-          <span className={`btn btn-primary ${styles.action}`}>{t.home.playersAction}</span>
-        </a>
-        <a href={hash('table')} className={`${styles.card} glass`}>
-          <span className={`${styles.icon} ${styles.iconGold}`} aria-hidden="true">
-            🏆
-          </span>
-          <h2>{t.home.resultsTitle}</h2>
-          <p>{t.home.resultsText}</p>
-          <span className={`btn btn-gold ${styles.action}`}>{t.home.resultsAction}</span>
-        </a>
+      <section className={`${styles.ways} rise`} style={{ animationDelay: '0.15s' }}>
+        {ways.map((way) => (
+          <a key={way.href} href={way.href} className={styles.way}>
+            <span className={styles.icon}>
+              <Icon name={way.icon} size={26} />
+            </span>
+            <h2>{way.title}</h2>
+            <p>{way.text}</p>
+            <span className={`btn btn-primary ${styles.action}`}>{way.action}</span>
+          </a>
+        ))}
       </section>
 
-      <section className={`${styles.scoring} glass fade`} style={{ animationDelay: '0.5s' }}>
-        <h3 className={styles.scoringTitle}>✦ {t.home.scoringTitle} ✦</h3>
-        <div className={styles.tiles}>
+      <section className={`${styles.scoring} fade`} style={{ animationDelay: '0.3s' }}>
+        <h3 className="section-label">{t.home.scoringTitle}</h3>
+        <dl className={styles.rules}>
           {[
-            { label: t.home.exact, pts: t.home.exactPts, tone: styles.good },
-            { label: t.home.offByOne, pts: t.home.offByOnePts, tone: styles.near },
-            { label: t.home.winnerBonus, pts: t.home.winnerBonusPts, tone: styles.gold },
-            { label: t.home.maxScore, pts: t.points(maxScore(size)), tone: styles.lilac },
-          ].map((tile) => (
-            <div key={tile.label} className={`${styles.tile} glass`}>
-              <div className={`${styles.pts} ${tile.tone}`}>
-                <bdi>{tile.pts}</bdi>
-              </div>
-              <div className={styles.tileLabel}>{tile.label}</div>
+            { label: t.home.exact, pts: t.home.exactPts },
+            { label: t.home.offByOne, pts: t.home.offByOnePts },
+            { label: t.home.winnerBonus, pts: t.home.winnerBonusPts },
+            { label: t.home.maxScore, pts: t.points(maxScore(size)) },
+          ].map((rule) => (
+            <div key={rule.label} className={styles.rule}>
+              <dt className={styles.pts}>
+                <bdi>{rule.pts}</bdi>
+              </dt>
+              <dd>{rule.label}</dd>
             </div>
           ))}
-        </div>
-        <p className={styles.scoringNote}>{t.home.scoringNote}</p>
+        </dl>
+        <p className={styles.note}>{t.home.scoringNote}</p>
       </section>
     </div>
   );

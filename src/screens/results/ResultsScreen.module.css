@@ -1,19 +1,19 @@
 .page {
-  max-width: 1024px;
+  max-width: 1040px;
   margin-inline: auto;
-  padding: 32px var(--gutter);
+  padding: 48px var(--gutter);
 }
 
 .split {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 32px;
+  gap: 48px;
   align-items: start;
 }
 
 .single {
   display: grid;
-  max-width: 512px;
+  max-width: 520px;
   margin-inline: auto;
 }
 
@@ -21,10 +21,8 @@
   .split {
     grid-template-columns: minmax(0, 1fr);
   }
-}
 
-/* On a narrow screen the table comes first: it is what people open the page for. */
-@media (max-width: 1023px) {
+  /* On a narrow screen the table comes first: it is what people open the page for. */
   .split > :last-child {
     order: -1;
   }

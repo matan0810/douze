@@ -1,32 +1,45 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-width: 896px;
+  gap: 56px;
+  max-width: 900px;
   margin-inline: auto;
-  padding: 32px var(--gutter);
+  padding: 48px var(--gutter);
+}
+
+.page > :first-child {
+  margin-block-end: -16px;
 }
 
 .section {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .heading {
-  margin-block-end: 12px;
-  font-size: 1.125rem;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block-end: 14px;
+  border-block-end: 1px solid var(--line-strong);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: var(--display-weight);
+}
+
+.heading svg {
+  color: var(--muted);
 }
 
 .hint {
-  margin-block: -8px 12px;
-  color: rgb(216 180 254 / 60%);
-  font-size: 0.875rem;
+  margin-block: 10px 4px;
+  color: var(--faint);
+  font-size: 0.82rem;
 }
 
 .years {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -35,29 +48,38 @@
 .year {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  border-radius: var(--radius-lg);
-  transition: transform 0.2s ease;
+  gap: 24px;
+  padding: 18px 4px;
+  border-block-end: 1px solid var(--line);
+  transition: background-color 0.2s ease;
 }
 
 .year:hover {
-  transform: scale(1.02);
+  background: rgb(255 255 255 / 2%);
 }
 
 .yearNumber {
-  font-size: 1.75rem;
-  font-weight: 900;
+  font-family: var(--font-brand);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .winner {
+  display: flex;
   flex: 1;
-  font-weight: 600;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.winner svg {
+  color: var(--gold);
 }
 
 .open {
-  color: var(--violet);
-  font-size: 0.85rem;
+  color: var(--muted);
+  font-size: 0.82rem;
   white-space: nowrap;
 }
 
@@ -73,16 +95,19 @@
 }
 
 .table th {
-  padding: 8px;
-  color: rgb(216 180 254 / 60%);
-  font-size: 0.75rem;
+  padding: 10px 8px;
+  border-block-end: 1px solid var(--line-strong);
+  color: var(--faint);
+  font-size: 0.68rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .table td {
-  padding: 10px 8px;
-  border-block-start: 1px solid var(--line);
+  padding: 14px 8px;
+  border-block-end: 1px solid var(--line);
   white-space: nowrap;
 }
 
@@ -91,13 +116,14 @@
 }
 
 .who {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .titles {
-  color: var(--yellow);
-  font-weight: 700;
+  color: var(--gold);
+}
+
+.titles svg {
+  margin-inline-end: 4px;
+  vertical-align: -2px;
 }

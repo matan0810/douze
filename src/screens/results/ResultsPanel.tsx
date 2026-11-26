@@ -2,6 +2,7 @@ import type { Game } from '../../domain/game';
 import { scoredPlayers } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
 import { CountryPicker } from '../../picker/CountryPicker';
+import { Icon } from '../../ui/Icon';
 import { RankingDisplay } from '../../ui/RankingDisplay';
 import styles from './ResultsPanel.module.css';
 
@@ -27,7 +28,7 @@ export function ResultsPanel(props: Props) {
   const anyComplete = scoredPlayers(game).length > 0;
 
   return (
-    <section className={`${styles.panel} glass panel`}>
+    <section className={styles.panel}>
       <div className={styles.head}>
         <div className={styles.heading}>
           <div className={styles.titleRow}>
@@ -48,7 +49,8 @@ export function ResultsPanel(props: Props) {
           </p>
         </div>
         {!editing && game.result && (
-          <button type="button" className="btn btn-soft" onClick={props.onEdit}>
+          <button type="button" className="btn btn-line" onClick={props.onEdit}>
+            <Icon name="edit" size={15} />
             {t.results.editButton}
           </button>
         )}
@@ -70,39 +72,46 @@ export function ResultsPanel(props: Props) {
       </div>
 
       <div className={styles.foot}>
-        {!anyComplete && <p className="note note-warn">{t.results.noCompletePlayers}</p>}
+        {!anyComplete && (
+          <p className="note note-warn">
+            <Icon name="warn" size={14} />
+            {t.results.noCompletePlayers}
+          </p>
+        )}
         {editing ? (
           <>
             {!live && (
               <button type="button" className={`btn ${styles.liveButton}`} onClick={props.onLive}>
+                <Icon name="live" size={16} />
                 {t.results.live}
               </button>
             )}
             {!canSave && <p className="note note-info">{t.results.needAll(total)}</p>}
             <div className={styles.buttons}>
               {(game.result || live) && (
-                <button type="button" className="btn btn-ghost" onClick={props.onCancel}>
+                <button type="button" className="btn btn-line" onClick={props.onCancel}>
                   {t.cancel}
                 </button>
               )}
               <button
                 type="button"
-                className="btn btn-gold"
+                className="btn btn-primary"
                 disabled={!canSave}
                 onClick={props.onSave}
               >
+                <Icon name="save" size={15} />
                 {t.results.saveResults}
               </button>
             </div>
             {game.result && (
-              <button type="button" className="btn btn-danger" onClick={props.onReset}>
+              <button type="button" className="btn btn-quiet" onClick={props.onReset}>
                 {t.results.reset}
               </button>
             )}
           </>
         ) : (
           !game.result && (
-            <button type="button" className="btn btn-gold" onClick={props.onEdit}>
+            <button type="button" className="btn btn-primary" onClick={props.onEdit}>
               {t.results.start}
             </button>
           )

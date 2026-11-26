@@ -1,38 +1,39 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .panel {
-  padding: 16px;
-  border-radius: var(--radius-lg);
+  padding-block-start: 4px;
 }
 
 .head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-block-end: 12px;
+  padding-block-end: 10px;
+  border-block-end: 1px solid var(--line);
 }
 
 .edit {
   min-height: 32px;
   border: 0;
   background: transparent;
-  color: var(--violet);
+  color: var(--muted);
   font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .edit:hover {
-  color: var(--soft);
+  color: var(--text);
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  max-height: 384px;
+  max-height: 440px;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -42,35 +43,34 @@
 .item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.item:hover {
-  background: rgb(255 255 255 / 5%);
+  gap: 10px;
+  min-height: 38px;
+  border-block-end: 1px solid var(--line);
 }
 
 .name {
   flex: 1;
-  color: rgb(255 255 255 / 80%);
-  font-size: 0.875rem;
+  font-size: 0.88rem;
 }
 
 .other {
-  color: rgb(216 180 254 / 40%);
-  font-size: 0.7rem;
+  color: var(--faint);
+  font-size: 0.72rem;
 }
 
 .reset {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   color: var(--muted);
   font-size: 0.85rem;
 }
 
 .dialogTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--display-weight);
 }

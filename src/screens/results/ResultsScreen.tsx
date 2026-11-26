@@ -35,12 +35,12 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
     return (
       <div className={styles.page}>
         <PageTitle
+          eyebrow={t.eyebrow.results(year)}
           start={t.results.titleStart}
           end={t.results.titleEnd}
-          tone="gold"
           lead={t.results.lead}
         />
-        <div className="empty glass panel">
+        <div className="empty frame">
           <p>{t.results.noFinalists}</p>
           <a className="btn btn-primary" href={routeHash({ name: 'final', year, view: 'players' })}>
             {t.results.toPlayers}
@@ -69,9 +69,9 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
   return (
     <div className={styles.page}>
       <PageTitle
+        eyebrow={t.eyebrow.results(year)}
         start={t.results.titleStart}
         end={t.results.titleEnd}
-        tone="gold"
         lead={t.results.lead}
         aside={<YearSelect year={year} view="table" />}
       />

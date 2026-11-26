@@ -71,7 +71,7 @@ async function main() {
     .locator('meta[http-equiv="Content-Security-Policy"]')
     .getAttribute('content');
   assert.match(policy ?? '', /default-src 'none'/, 'the page carries its CSP');
-  await page.getByRole('link', { name: /גמר 2026: מתן/ }).waitFor();
+  await page.getByRole('link', { name: /גמר 2026 · מתן/ }).waitFor();
   step('home: Hebrew, right to left, the version, the CSP and the last winner');
 
   await page.getByRole('heading', { level: 1, name: 'Douze' }).waitFor();

@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useI18n } from '../i18n/context';
+import { Icon } from './Icon';
 import styles from './Dialog.module.css';
 
 interface Props {
@@ -31,7 +32,7 @@ export function Dialog({ open, onClose, label, header, footer, wide, children }:
   return (
     <dialog
       ref={ref}
-      className={`${styles.dialog} ${wide ? styles.wide : ''} glass-purple`}
+      className={`${styles.dialog} ${wide ? styles.wide : ''}`}
       aria-label={label}
       onClose={onClose}
       onClick={(e) => {
@@ -43,7 +44,7 @@ export function Dialog({ open, onClose, label, header, footer, wide, children }:
           <div className={styles.head}>
             <div className={styles.headContent}>{header}</div>
             <button type="button" className={styles.close} aria-label={t.close} onClick={onClose}>
-              ✕
+              <Icon name="close" />
             </button>
           </div>
           <div className={styles.body}>{children}</div>

@@ -1,56 +1,39 @@
-.card {
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  transition: border-color 0.2s ease;
-}
-
-.card:hover {
-  border-color: rgb(168 85 247 / 40%);
-}
-
 .row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  padding: 16px 0 18px;
+  border-block-end: 1px solid var(--line);
 }
 
 .info {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 
 .name {
   overflow: hidden;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .status {
   display: inline-flex;
-  margin-block-start: 4px;
-  padding: 2px 8px;
-  border: 1px solid;
-  border-radius: 999px;
+  align-items: center;
+  gap: 4px;
+  color: var(--faint);
   font-size: 0.75rem;
+  letter-spacing: 0.04em;
 }
 
 .complete {
-  border-color: rgb(74 222 128 / 30%);
-  background: rgb(74 222 128 / 10%);
-  color: var(--good);
-}
-
-.partial {
-  border-color: rgb(250 204 21 / 30%);
-  background: rgb(250 204 21 / 10%);
-  color: var(--yellow);
-}
-
-.none {
-  border-color: rgb(156 163 175 / 30%);
-  background: rgb(156 163 175 / 10%);
-  color: #9ca3af;
+  color: var(--brand-gold);
 }
 
 .actions {
@@ -60,55 +43,32 @@
   gap: 4px;
 }
 
-.icon {
-  min-width: 36px;
-  min-height: 36px;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
-}
-
-.icon:hover {
-  background: rgb(147 51 234 / 25%);
-}
-
 .delete {
-  opacity: 0.6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--faint);
 }
 
 .delete:hover {
-  background: rgb(239 68 68 / 10%);
-  opacity: 1;
+  color: var(--brand-pink);
 }
 
+/* How much of the prediction is done: a line of light along the row's foot. */
 .track {
-  height: 6px;
-  margin-block-start: 12px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 10%);
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -1px;
+  height: 1px;
 }
 
 .fill {
+  display: block;
   height: 100%;
-  border-radius: 999px;
-  background: var(--action);
+  background: var(--brand);
   transition: width 0.5s ease-out;
-}
-
-.fillDone {
-  background: linear-gradient(90deg, #10b981, #34d399);
-}
-
-@media (max-width: 340px) {
-  .row {
-    flex-wrap: wrap;
-  }
-
-  .actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
 }

@@ -1,6 +1,7 @@
 import { archive } from '../domain/archive';
 import { useI18n } from '../i18n/context';
 import { Flag } from './Flag';
+import { Icon } from './Icon';
 import styles from './FinalistsChooser.module.css';
 
 interface Props {
@@ -40,7 +41,7 @@ export function FinalistsChooser({ chosen, onChange }: Props) {
             >
               <Flag country={country} size="sm" />
               <span>{country.name[language]}</span>
-              {on && <span aria-hidden="true">✓</span>}
+              {on && <Icon name="check" size={14} />}
             </button>
           );
         })}

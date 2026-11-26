@@ -31,7 +31,7 @@ export function PredictionEditor({ name, field, initial, onSave, onClose }: Prop
       }
       footer={
         <>
-          <button type="button" className="btn btn-ghost" onClick={onClose}>
+          <button type="button" className="btn btn-line" onClick={onClose}>
             {t.cancel}
           </button>
           <button type="button" className="btn btn-primary" onClick={() => onSave(order)}>

@@ -4,6 +4,7 @@ import type { GridRow } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
 import { Flag } from '../../ui/Flag';
 import { closeness } from '../results/closeness';
+import { Icon } from '../../ui/Icon';
 import page from './StatsScreen.module.css';
 import styles from './CountryGrid.module.css';
 
@@ -16,9 +17,12 @@ interface Props {
 export function CountryGrid({ rows, players }: Props) {
   const { t, language } = useI18n();
   return (
-    <section className={`${page.section} glass panel`} aria-labelledby="grid-title">
+    <section className={page.section} aria-labelledby="grid-title">
       <div className={page.sectionHead}>
-        <h2 id="grid-title">{t.stats.grid}</h2>
+        <h2 id="grid-title">
+          <Icon name="grid" size={16} />
+          {t.stats.grid}
+        </h2>
         <p>{t.stats.gridHint}</p>
       </div>
       <div className={styles.scroll}>

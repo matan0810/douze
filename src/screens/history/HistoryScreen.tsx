@@ -2,8 +2,9 @@ import { routeHash } from '../../domain/routes';
 import { careers, gameStandings } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
-import { Avatar } from '../../ui/Avatar';
+import { Icon } from '../../ui/Icon';
 import { PageTitle } from '../../ui/PageTitle';
+import { PlaceBadge } from '../../ui/PlaceBadge';
 import styles from './HistoryScreen.module.css';
 
 /** Every final with its winner, and the all-time table across them. */
@@ -19,14 +20,15 @@ export function HistoryScreen() {
   return (
     <div className={styles.page}>
       <PageTitle
+        eyebrow={t.eyebrow.history}
         start={t.history.titleStart}
         end={t.history.titleEnd}
-        tone="gold"
         lead={t.history.lead}
       />
 
-      <section className={`${styles.section} glass panel`} aria-labelledby="champions">
+      <section className={styles.section} aria-labelledby="champions">
         <h2 id="champions" className={styles.heading}>
+          <Icon name="crown" size={16} />
           {t.history.champions}
         </h2>
         <ul className={styles.years}>
@@ -38,14 +40,14 @@ export function HistoryScreen() {
             return (
               <li key={game.year}>
                 <a
-                  className={`${styles.year} glass-gold`}
+                  className={styles.year}
                   href={routeHash({ name: 'final', year: game.year, view: 'table' })}
                 >
-                  <span className={`${styles.yearNumber} text-gold num`}>{game.year}</span>
+                  <span className={`${styles.yearNumber} text-brand num`}>{game.year}</span>
                   <span className={styles.winner}>
                     {top[0] ? (
                       <>
-                        <span aria-hidden="true">👑 </span>
+                        <Icon name="crown" size={15} />
                         {t.history.winnerOf(names.join(' · '), top[0].total)}
                       </>
                     ) : (
@@ -60,8 +62,9 @@ export function HistoryScreen() {
         </ul>
       </section>
 
-      <section className={`${styles.section} glass panel`} aria-labelledby="all-time">
+      <section className={styles.section} aria-labelledby="all-time">
         <h2 id="all-time" className={styles.heading}>
+          <Icon name="results" size={16} />
           {t.history.allTime}
         </h2>
         <p className={styles.hint}>{t.history.allTimeHint}</p>
@@ -84,19 +87,15 @@ export function HistoryScreen() {
               <tbody>
                 {all.map((c, i) => (
                   <tr key={c.key}>
-                    <td className="num">{i + 1}</td>
+                    <td>
+                      <PlaceBadge place={i + 1} />
+                    </td>
                     <td className={styles.start}>
-                      <span className={styles.who}>
-                        <Avatar
-                          name={c.name[language]}
-                          size={32}
-                          tone={i === 0 ? 'gold' : 'action'}
-                        />
-                        {c.name[language]}
-                      </span>
+                      <span className={styles.who}>{c.name[language]}</span>
                     </td>
                     <td className={`${styles.titles} num`}>
-                      {c.titles ? `${'👑'.repeat(Math.min(c.titles, 3))} ${c.titles}` : 0}
+                      {c.titles > 0 && <Icon name="crown" size={14} />}
+                      {c.titles}
                     </td>
                     <td className="num">{c.podiums}</td>
                     <td className="num">{c.finals}</td>

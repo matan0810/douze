@@ -2,238 +2,178 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100dvh - var(--header) - 80px);
-  padding: 64px var(--gutter);
+  gap: 72px;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 80px var(--gutter) 64px;
 }
 
 .hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-block-end: 64px;
+  gap: 16px;
   text-align: center;
 }
 
-.sparks {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-block-end: 24px;
-  color: #fde047;
-}
-
-.sparks span {
-  animation: twinkle ease-in-out infinite;
-}
-
-.small {
-  font-size: 14px;
-}
-
-.big {
-  font-size: 20px;
+.eyebrow {
+  margin-block-end: 8px;
 }
 
 .title {
-  margin-block-end: 20px;
+  margin-block-end: 8px;
   line-height: 1;
 }
 
 .slogan {
-  margin-block-end: 8px;
-  color: #fff;
-  font-size: clamp(1.35rem, 4.5vw, 1.75rem);
-  font-weight: 800;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-block-end: 24px;
-}
-
-.line {
-  width: 64px;
-  height: 1px;
-  background: linear-gradient(to left, transparent, #a855f7);
-}
-
-.divider .line:last-child {
-  background: linear-gradient(to right, transparent, #a855f7);
-}
-
-.edition {
-  color: var(--lilac);
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: var(--display-weight);
+  letter-spacing: -0.01em;
 }
 
 .lead {
-  max-width: 576px;
-  color: rgb(233 213 255 / 80%);
-  font-size: clamp(1.125rem, 3vw, 1.25rem);
-  line-height: 1.65;
+  max-width: 46ch;
+  color: var(--muted);
 }
 
 .champion {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-block-start: 24px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 0.95rem;
-  transition: transform 0.2s ease;
+  margin-block-start: 8px;
+  padding: 8px 16px;
+  border: 1px solid rgb(253 230 138 / 28%);
+  border-radius: var(--radius);
+  color: var(--soft);
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
 }
 
-.champion:hover {
-  transform: scale(1.04);
+.champion svg {
+  color: var(--gold);
 }
 
 .champion strong {
-  color: var(--yellow);
+  color: var(--brand-gold);
+  font-weight: 600;
 }
 
-.cards {
+.champion:hover {
+  border-color: rgb(253 230 138 / 60%);
+}
+
+.ways {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 16px;
   width: 100%;
-  max-width: 672px;
 }
 
-.card {
+.way {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 32px;
-  border-radius: var(--radius-lg);
+  gap: 12px;
+  padding: 32px 24px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   text-align: center;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 32px rgb(124 58 237 / 20%);
+.way:hover {
+  border-color: rgb(249 168 212 / 35%);
 }
 
-.card h2 {
+.way h2 {
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: var(--display-weight);
 }
 
-.card p {
-  color: rgb(233 213 255 / 70%);
-  font-size: 0.875rem;
-  line-height: 1.65;
+.way p {
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   margin-block-end: 8px;
-  border-radius: var(--radius-lg);
-  font-size: 2.25rem;
-}
-
-.iconPurple {
-  background: linear-gradient(135deg, rgb(124 58 237 / 20%), rgb(236 72 153 / 20%));
-}
-
-.iconGold {
-  background: linear-gradient(135deg, rgb(245 158 11 / 20%), rgb(252 211 77 / 20%));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--soft);
 }
 
 .action {
   width: 100%;
   margin-block-start: auto;
-  padding-block: 12px;
 }
 
 .scoring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   width: 100%;
-  max-width: 672px;
-  margin-block-start: 48px;
-  padding: 24px;
-  border-radius: var(--radius-lg);
+  padding-block-start: 40px;
+  border-block-start: 1px solid var(--line);
 }
 
-.scoringTitle {
-  margin-block-end: 16px;
-  color: var(--soft);
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.tiles {
+.rules {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  width: 100%;
+  margin: 0;
+}
+
+.rule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
   text-align: center;
 }
 
-.tile {
-  padding: 12px;
-  border-radius: var(--radius);
+.rule + .rule {
+  border-inline-start: 1px solid var(--line);
 }
 
-.pts {
-  font-size: 1.125rem;
-  font-weight: 700;
-}
-
-.tileLabel {
-  margin-block-start: 4px;
-  color: rgb(255 255 255 / 50%);
+.rule dd {
+  margin: 0;
+  color: var(--faint);
   font-size: 0.75rem;
 }
 
-.scoringNote {
-  margin-block-start: 16px;
-  color: rgb(255 255 255 / 45%);
+.pts {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: var(--display-weight);
+}
+
+.note {
+  max-width: 52ch;
+  color: var(--faint);
   font-size: 0.8rem;
   text-align: center;
 }
 
-.good {
-  color: var(--good);
-}
-
-.near {
-  color: var(--near);
-}
-
-.gold {
-  color: var(--gold-light);
-}
-
-.lilac {
-  color: var(--lilac);
-}
-
 @media (max-width: 767px) {
-  .cards {
+  .ways {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .tiles {
+  .rules {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 16px;
+  }
+
+  .rule:nth-child(3) {
+    border-inline-start: 0;
   }
 }
