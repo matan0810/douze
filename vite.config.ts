@@ -3,7 +3,7 @@ import { copyFileSync, readFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 
-const { name, version } = JSON.parse(
+const { name, version, homepage } = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
 );
 
@@ -31,6 +31,39 @@ export const CONTENT_SECURITY_POLICY = [
   "require-trusted-types-for 'script'",
   "trusted-types 'none'",
 ].join('; ');
+
+/**
+ * What a chat or a social site shows for the site's address: the name, the slogan and the
+ * card (`scripts/brand.ts`). The card's address must be absolute; it comes from
+ * package.json's homepage. The same card for every address: there is no server to make one
+ * per page (issue #1).
+ */
+function socialMeta(): Plugin {
+  const meta = (attrs: Record<string, string>) => ({
+    tag: 'meta',
+    attrs,
+    injectTo: 'head' as const,
+  });
+  return {
+    name: 'social-meta',
+    apply: 'build',
+    transformIndexHtml: () => [
+      meta({ property: 'og:type', content: 'website' }),
+      meta({ property: 'og:site_name', content: 'Douze' }),
+      meta({ property: 'og:title', content: 'Douze · מי באמת מבין באירוויזיון?' }),
+      meta({
+        property: 'og:description',
+        content: 'חזו את הדירוג הסופי של גמר האירוויזיון, והתחרו עם החברים על התואר.',
+      }),
+      meta({ property: 'og:url', content: `${homepage}/` }),
+      meta({ property: 'og:image', content: `${homepage}/brand/card.jpg` }),
+      meta({ property: 'og:image:width', content: '1200' }),
+      meta({ property: 'og:image:height', content: '630' }),
+      meta({ property: 'og:locale', content: 'he_IL' }),
+      meta({ name: 'twitter:card', content: 'summary_large_image' }),
+    ],
+  };
+}
 
 function securityMeta(): Plugin {
   return {
@@ -67,7 +100,7 @@ function notFoundPage(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), securityMeta(), notFoundPage()],
+  plugins: [react(), securityMeta(), socialMeta(), notFoundPage()],
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },

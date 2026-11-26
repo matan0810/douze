@@ -1,6 +1,7 @@
-# EuroRank
+# Douze
 
-יורורנק: the Eurovision prediction game of our group of friends. Each of us predicts the
+_Who really knows Eurovision?_ Douze (דוּז) is the Eurovision prediction game of our group
+of friends. Each of us predicts the
 order of the grand final; once the result is in, the site scores every prediction and keeps
 the table, year after year. Hebrew and English.
 
@@ -27,6 +28,7 @@ Live at https://matan0810.github.io/euro-rank.
 | `src/i18n/`              | Hebrew and English strings                                             |
 | `src/styles/`            | Tokens and the shared forms of the look; the bundled font              |
 | `public/flags/`          | A flag for every country (`node scripts/flags.ts` draws them)          |
+| `public/brand/`          | The mirror ball, icons and the card (`node scripts/brand.ts`)          |
 | `scripts/`               | Version bump, CHANGELOG helpers, release plan, flags                   |
 | `tests/e2e/smoke.mjs`    | Browser test: every screen and flow, desktop and phone, both languages |
 | `.github/workflows/`     | `checks.yml`, `ci.yml` (branches), `deploy.yml` (Pages)                |

@@ -37,10 +37,15 @@
 }
 
 .title {
-  margin-block-end: 16px;
-  font-size: clamp(3.75rem, 14vw, 4.5rem);
-  font-weight: 900;
+  margin-block-end: 20px;
   line-height: 1;
+}
+
+.slogan {
+  margin-block-end: 8px;
+  color: #fff;
+  font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+  font-weight: 800;
 }
 
 .divider {

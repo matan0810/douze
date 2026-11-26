@@ -33,6 +33,11 @@
   --off: #fb923c;
   --far: #f87171;
 
+  /* The Douze brand: the wordmark's gradient, from the mirror ball's own colours. */
+  --brand-pink-light: #f9a8d4;
+  --brand-violet: #a855f7;
+  --brand-gold: #fde68a;
+
   --glass: rgb(255 255 255 / 5%);
   --glass-purple: rgb(124 58 237 / 15%);
   --glass-gold: rgb(245 158 11 / 15%);

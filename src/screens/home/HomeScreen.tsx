@@ -3,6 +3,7 @@ import { gameStandings } from '../../domain/stats';
 import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
+import { Wordmark } from '../../ui/Wordmark';
 import styles from './HomeScreen.module.css';
 
 const SPARKS = ['✦', '⭐', '✦', '★', '✦', '⭐', '✦'];
@@ -33,14 +34,14 @@ export function HomeScreen() {
           ))}
         </div>
         <h1 className={styles.title}>
-          <span className="text-gold">{t.brandStart}</span>
-          <span>{t.brandEnd}</span>
+          <Wordmark size="hero" />
         </h1>
         <div className={styles.divider}>
           <span className={styles.line} />
           <span className={styles.edition}>{t.eurovision(year)}</span>
           <span className={styles.line} />
         </div>
+        <p className={styles.slogan}>{t.slogan}</p>
         <p className={styles.lead}>{t.heroLine}</p>
         {leader && leaderName && (
           <a href={hash('table')} className={`${styles.champion} glass-gold`}>

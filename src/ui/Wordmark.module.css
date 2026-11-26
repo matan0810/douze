@@ -1,0 +1,42 @@
+.mark {
+  display: inline-flex;
+  align-items: flex-end;
+  font-family: Syne, var(--font);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Relative to its place, so the bar can make it smaller on a narrow phone. */
+.bar {
+  font-size: 1.3em;
+}
+
+.hero {
+  font-size: clamp(3rem, 14vw, 6rem);
+  filter: drop-shadow(0 6px 24px rgb(236 72 153 / 40%));
+}
+
+.start,
+.end {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* One gradient across the word: pink into the ball, purple out of it, then gold. */
+.start {
+  background-image: linear-gradient(100deg, var(--brand-pink-light), var(--pink));
+}
+
+.end {
+  background-image: linear-gradient(100deg, var(--brand-violet), var(--brand-gold) 70%, #fff);
+}
+
+/* The ball stands for a lowercase o: its picture includes the string and the halo. */
+.ball {
+  width: 0.96em;
+  height: 0.96em;
+  margin: 0 -0.03em -0.1em;
+}

@@ -1,6 +1,7 @@
-# EuroRank: working procedure
+# Douze: working procedure
 
-EuroRank (יורורנק in Hebrew; repository `euro-rank`) is the Eurovision prediction game of our
+Douze (written so in both languages, said דוּז; repository `euro-rank`, its first name) is
+the Eurovision prediction game of our
 group of friends: each of us predicts the order of the grand final, the official result is
 entered, and the site scores every prediction and keeps the table, year after year, in Hebrew
 and English. A static React site on GitHub Pages.
@@ -236,7 +237,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
 
 - **Stack:** React, TypeScript (strict), Vite, CSS Modules, Vitest, Playwright for the
   browser test. Node 22 (`.nvmrc`). Runtime dependencies: React, `@dnd-kit` (dragging rows
-  by pointer, touch and keyboard) and the Heebo font.
+  by pointer, touch and keyboard) and the Heebo and Syne fonts.
 - **Hosting:** GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to
   `master` (Settings → Pages → Source: GitHub Actions); the repository's name in
   `package.json` is the site's path. The old `gh-pages` branch is no longer used.
@@ -247,7 +248,8 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   year in `editions/`; `src/state/` this device's finals; `src/screens/` one folder per
   screen; `src/picker/`, `src/ui/`, `src/layout/` shared pieces; `src/export/` sharing;
   `src/i18n/` strings; `src/styles/` tokens and the font; `public/flags/` the flags;
-  `scripts/` version bump, CHANGELOG, release plan and `flags.ts`; `tests/e2e/` browser
+  `scripts/` version bump, CHANGELOG, release plan, `flags.ts`, and `ball.ts` with
+  `brand.ts` for the brand files; `tests/e2e/` browser
   test; `.github/` workflows and Dependabot.
 - **Data and how to update it:** a new year is a new file, `src/data/editions/<year>.json`:
   the host city, the date of the final, the finalists (catalogue ids), the result (or
@@ -261,5 +263,6 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   - What a visitor enters on their own device stays on it; the repository's data is the
     archive. No server, no account. Sharing between phones comes with a server (issue #1);
     no more link features until then (the owner's decision, 2026-11-26).
-  - The look is the first site's, kept by the owner's choice (`DESIGN.md`, section 2): do
-    not redesign it unasked.
+  - The look is the first site's, kept by the owner's choice, and the brand is Douze
+    (`DESIGN.md`, section 2): do not redesign either unasked. A change to the mark goes into
+    `scripts/ball.ts`, then `node scripts/brand.ts` redraws every brand file.

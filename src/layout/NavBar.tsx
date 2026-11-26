@@ -1,6 +1,7 @@
 import type { Route } from '../domain/routes';
 import { routeHash } from '../domain/routes';
 import { useI18n } from '../i18n/context';
+import { Wordmark } from '../ui/Wordmark';
 import styles from './NavBar.module.css';
 
 interface Props {
@@ -44,8 +45,7 @@ export function NavBar({ route, year }: Props) {
           className={styles.brand}
           aria-current={route.name === 'home' ? 'page' : undefined}
         >
-          <span aria-hidden="true">⭐</span>
-          <span className="text-gold">{t.brand}</span>
+          <Wordmark size="bar" />
           <span className={styles.year}>{year}</span>
         </a>
         <nav className={styles.links} aria-label={t.nav.label}>

@@ -18,7 +18,7 @@ read once, moved and removed.
 ## Hosts
 
 The site talks to no host but its own: the flags (`public/flags/`, drawn by
-`scripts/flags.ts` from the MIT-licensed `flag-icons`) and the Heebo font are part of the
+`scripts/flags.ts` from the MIT-licensed `flag-icons`) and the Heebo and Syne fonts are part of the
 site. The first site loaded both from outside hosts (Google Fonts, flagcdn.com); it no
 longer does. The Content Security Policy (`vite.config.ts`)
 enforces it, and the browser test fails if any request leaves the site. A new host needs a

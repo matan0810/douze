@@ -10,6 +10,15 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Changed
+
+- A new name and brand: **Douze**, after the twelve points, with the slogan "מי באמת מבין
+  באירוויזיון?". The name is written with a mirror ball for its O, in the bar and as the
+  title of the home page, in both languages and on every screen size.
+- The mirror ball is the icon of the tab and of the home screen, and heads the image of the
+  table.
+- A link to the site shows a card with the name and the slogan in chats.
+
 ### Removed
 
 - Predictions and groups sent by link, and the "my prediction" page: without a server

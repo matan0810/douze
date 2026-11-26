@@ -74,6 +74,28 @@ async function main() {
   await page.getByRole('link', { name: /גמר 2026: מתן/ }).waitFor();
   step('home: Hebrew, right to left, the version, the CSP and the last winner');
 
+  await page.getByRole('heading', { level: 1, name: 'Douze' }).waitFor();
+  await page.getByRole('banner').getByRole('link', { name: /Douze/ }).waitFor();
+  assert.equal(await page.title(), 'Douze · מי באמת מבין באירוויזיון?');
+  const card = await page.locator('meta[property="og:image"]').getAttribute('content');
+  assert.match(card ?? '', /^https:\/\/.+\/brand\/card\.jpg$/, 'the page names its card');
+  for (const file of [
+    'favicon.svg',
+    'apple-touch-icon.png',
+    'manifest.webmanifest',
+    'brand/card.jpg',
+    'brand/ball.svg',
+  ]) {
+    const response = await page.request.get(`${url}${file}`);
+    assert.equal(response.status(), 200, `${file} is served`);
+  }
+  const ballDrawn = await page
+    .getByRole('heading', { level: 1 })
+    .locator('img')
+    .evaluate((img) => img.complete && img.naturalWidth > 0);
+  assert.ok(ballDrawn, 'the mirror ball of the wordmark loads');
+  step('brand: the Douze wordmark in the bar and the title, the tab title, icons and card');
+
   await page.goto(`${base}/2026`);
   const board = page.getByRole('region', { name: /טבלת מובילים/ });
   await board.getByText('158', { exact: true }).waitFor();
@@ -195,6 +217,20 @@ async function main() {
         return bar ? bar.scrollWidth - bar.clientWidth : -1;
       });
       assert.ok(cut === 0, `${locale} ${width}px: the bar is ${cut}px wider than the screen`);
+      // Nothing in the bar may cover anything else: the name, each link, the language.
+      const overlap = await small.evaluate(() => {
+        const parts = [...document.querySelectorAll('header a, header button')].filter(
+          (el) => el.getBoundingClientRect().width > 0,
+        );
+        const boxes = parts.map((el) => el.getBoundingClientRect());
+        for (let i = 0; i < boxes.length; i++)
+          for (let j = i + 1; j < boxes.length; j++) {
+            const [a, b] = [boxes[i], boxes[j]];
+            if (a && b && a.left < b.right - 1 && b.left < a.right - 1) return true;
+          }
+        return false;
+      });
+      assert.ok(!overlap, `${locale} ${width}px: parts of the bar cover each other`);
       await small.getByRole('button', { name: /English|עברית/ }).click({ trial: true });
       await context.close();
     }

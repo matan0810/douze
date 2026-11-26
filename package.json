@@ -2,7 +2,7 @@
   "name": "euro-rank",
   "private": true,
   "version": "1.1.0",
-  "description": "EuroRank: predict the Eurovision final with friends, and see who knew best",
+  "description": "Douze: predict the Eurovision final with friends. Who really knows Eurovision?",
   "type": "module",
   "homepage": "https://matan0810.github.io/euro-rank",
   "scripts": {
@@ -23,6 +23,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@fontsource-variable/heebo": "^5.3.0",
+    "@fontsource/syne": "^5.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

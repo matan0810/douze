@@ -44,7 +44,7 @@ export function App() {
     };
     const page =
       route.name === 'final' ? `${views[route.view]} · ${t.final(route.year)}` : names[route.name];
-    document.title = page ? `${page} · ${t.brand}` : `${t.brand} · ${t.eurovision(latest)}`;
+    document.title = page ? `${page} · ${t.brand}` : `${t.brand} · ${t.slogan}`;
   }, [route, t, latest]);
 
   return (

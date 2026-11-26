@@ -19,17 +19,37 @@ waits for a server (issue #1): links without one were tried in 1.1.0 and removed
 ## 2. Look
 
 The owner's choice is the first site's look, kept as it was: a night sky in deep purple
-with twinkling stars and golden sparkles, glass panels, a shimmering gold for the name and
-for winners, purple to pink for actions, medals for the first three, emoji as icons. Three
-new directions were drawn and turned down (2026-11-26); the look is not to be redesigned
+with twinkling stars and golden sparkles, glass panels, a shimmering gold for winners,
+purple to pink for actions, medals for the first three, emoji as icons. Three new
+directions were drawn and turned down (2026-11-26); the look is not to be redesigned
 without the owner asking.
+
+**The brand: Douze.** The name comes from "douze points", the twelve points, the phrase
+everyone knows from the Eurovision scoreboard. It is written in Latin letters in both
+languages (said דוּז), with the slogan **מי באמת מבין באירוויזיון?** (_Who really knows
+Eurovision?_). Chosen by the owner on 2026-11-26, from four named directions and three ways
+of joining the winning two.
+
+- **The mark** is a mirror ball: the stage's disco ball and a crystal ball for predicting,
+  in the sky's purples, pinks and gold, lit from the top left (`scripts/ball.ts`).
+- **The wordmark** is _Douze_ in Syne 800 with the mirror ball for its O, always left to
+  right: pink into the ball, purple out of it, then gold (`src/ui/Wordmark.tsx`, the
+  `--brand-*` tokens). It is the name in the bar, in every state, and the title of the home
+  page, followed there by the slogan.
+- **Its files** are drawn by `node scripts/brand.ts` and committed: the ball and the
+  favicon (SVG), the home-screen icons (180, 192, 512 px) and the card a chat shows for the
+  site's address (1200 × 630, JPEG to stay small). The same card for every address: there
+  is no server to make one per page (issue #1).
+- The tab is titled _Douze · the slogan_ on the home page and _screen · final · Douze_
+  elsewhere; the share image is headed by the wordmark. The repository and the address
+  keep the first name, `euro-rank`, and so do the keys saved on devices.
 
 - **Tokens and shared forms** are in `src/styles/global.css`: colours, the glass panels
   (`glass`, `glass-purple`, `glass-gold`), gradient text (`text-gold`, `text-purple`),
   buttons (`btn-primary`, `btn-gold`, `btn-ghost`, `btn-soft`, `btn-danger`), inputs and
   notes. Components use them and their own CSS Modules, with logical properties.
 - **Type**: Heebo (variable, bundled, Hebrew and Latin subsets only, so emoji keep their
-  colour). Titles 900, headings 700, text 400.
+  colour). Titles 900, headings 700, text 400. Syne 800 for the wordmark only.
 - **Colours of closeness**, everywhere a predicted place meets the actual one: green for
   exact, yellow within 2, orange within 5, red beyond (`closeness.ts`).
 - **Medals**: gold, silver and bronze for the first three of any ranking; the leader of a
@@ -37,7 +57,7 @@ without the owner asking.
 - **Motion**: panels rise softly into place, the table's bars grow, the title text
   shimmers, stars twinkle. All of it stops with reduced motion.
 - **Phones**: the bar keeps only the emoji of each link below 900 px, and below 420 px the
-  home link steps aside (the name leads home) and the name is a little smaller; the results page puts
+  home link steps aside (the name leads home) and the wordmark is smaller; the results page puts
   the table above the official order below 1024 px.
 
 ## 3. Scoring

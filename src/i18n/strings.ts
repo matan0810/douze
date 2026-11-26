@@ -6,14 +6,13 @@ const ordinalHe = ['ראשון', 'שני', 'שלישי'];
 /** Every piece of interface text, in Hebrew. English must provide the same keys. */
 const he = {
   dir: 'rtl',
-  brand: 'יורורנק',
-  brandStart: 'יורו',
-  brandEnd: 'רנק',
+  brand: 'Douze',
+  slogan: 'מי באמת מבין באירוויזיון?',
   switchLanguage: 'EN',
   switchLanguageLabel: 'Switch to English',
   version: (v: string) => `גרסה ${v}`,
   eurovision: (year: number) => `אירוויזיון ${year}`,
-  heroLine: 'חזו את הדירוג הסופי של האירוויזיון, התחרו עם חברים, וגלו מי באמת מבין באירוויזיון!',
+  heroLine: 'חזו את הדירוג הסופי של הגמר, והתחרו עם החברים על התואר.',
   final: (year: number) => `גמר ${year}`,
   finalIn: (year: number, host: string) => `גמר ${year} · ${host}`,
   nav: {
@@ -205,15 +204,14 @@ export type Strings = typeof he;
 
 const en: Strings = {
   dir: 'ltr',
-  brand: 'EuroRank',
-  brandStart: 'Euro',
-  brandEnd: 'Rank',
+  brand: 'Douze',
+  slogan: 'Who really knows Eurovision?',
   switchLanguage: 'עב',
   switchLanguageLabel: 'החלפה לעברית',
   version: (v) => `Version ${v}`,
   eurovision: (year) => `Eurovision ${year}`,
   heroLine:
-    'Predict the final ranking of the Eurovision, compete with friends, and find out who really knows Eurovision!',
+    'Predict the final ranking of the grand final, and compete with your friends for the title.',
   final: (year) => `Final ${year}`,
   finalIn: (year, host) => `Final ${year} · ${host}`,
   nav: {
