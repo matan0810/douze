@@ -65,6 +65,10 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
+      # A past release whose commit holds other workflow files than today's cannot be tagged
+      # by this token (GitHub requires a `workflows` permission it never has): it is reported
+      # and skipped, and tagged by hand once (CLAUDE.md, section 9). Only the current version
+      # must succeed.
       - name: Tag and publish missing releases
         run: |
           node scripts/release-plan.ts "$GITHUB_SHA" "$RUNNER_TEMP/notes" > plan.tsv
@@ -73,7 +77,12 @@ jobs:
               echo "$tag already released"
               continue
             fi
-            gh release create "$tag" --target "$commit" --title "$title" \
-              --notes-file "$notes" --latest="$latest"
-            echo "Released $tag at ${commit:0:7}" | tee -a "$GITHUB_STEP_SUMMARY"
+            if gh release create "$tag" --target "$commit" --title "$title" \
+              --notes-file "$notes" --latest="$latest"; then
+              echo "Released $tag at ${commit:0:7}" | tee -a "$GITHUB_STEP_SUMMARY"
+            elif [ "$latest" = "true" ]; then
+              exit 1
+            else
+              echo "::warning::$tag could not be created at ${commit:0:7}; tag it by hand once."
+            fi
           done < plan.tsv

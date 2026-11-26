@@ -170,7 +170,10 @@ and checked by a test, and is shown in the interface.
 
 A release is a push to `master` whose version has no tag yet. After the deploy, the deploy
 workflow tags the commit `vX.Y.Z` and publishes a GitHub release with the version's
-CHANGELOG section. Tags are created only by that workflow; never push one by hand.
+CHANGELOG section. Tags are created only by that workflow; never push one by hand. The one
+exception: a past release the workflow cannot tag, because its commit holds other workflow
+files than today's (the run warns about it). With the owner's approval, that tag is pushed
+once, at the commit in `scripts/release-history.json`; the next deploy publishes its release.
 
 **Before:** CI on `dev` is green; `## [Unreleased]` describes everything in
 `git log origin/master..origin/dev`, plus any lines marked live without a version (if it
