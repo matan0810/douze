@@ -153,16 +153,6 @@ export function setOrder(game: Game, id: string, order: string[]): Game {
   };
 }
 
-/**
- * Adds a prediction received from someone: a player of the same name (in either
- * language) gets the new order, anyone else is added.
- */
-export function receivePrediction(game: Game, name: string, order: string[]): Game {
-  const clean = cleanName(name);
-  const same = game.players.find((p) => sameName(p.name, clean));
-  return same ? setOrder(game, same.id, order) : addPlayer(game, clean, order);
-}
-
 export function sameName(name: Bilingual, other: string): boolean {
   const key = (s: string) => s.toLocaleLowerCase().replace(/\s+/g, ' ').trim();
   return key(name.he) === key(other) || key(name.en) === key(other);

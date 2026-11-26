@@ -5,16 +5,16 @@ them is made here first (CLAUDE.md, section 4).
 
 ## 1. Scope
 
-| In                                                        | Out                                  |
-| --------------------------------------------------------- | ------------------------------------ |
-| The grand final of each year, from 2026                   | Semi-finals, jury and televote split |
-| Predictions of the full order, the result, the table      | Accounts, a server, live data feeds  |
-| Predictions and groups passed from phone to phone by link | Syncing devices automatically        |
-| Statistics of each final and of all the years             | Betting odds, outside data           |
-| Hebrew (RTL) and English                                  | Other languages                      |
+| In                                                   | Out                                  |
+| ---------------------------------------------------- | ------------------------------------ |
+| The grand final of each year, from 2026              | Semi-finals, jury and televote split |
+| Predictions of the full order, the result, the table | Accounts, a server, live data feeds  |
+| Statistics of each final and of all the years        | Betting odds, outside data           |
+| Hebrew (RTL) and English                             | Other languages                      |
 
 The site has no server. The archive (`src/data/`) is what the repository says; everything
-else lives on the device that entered it and travels only in links people send.
+else lives on the device that entered it. Sharing between phones, by link or by a server,
+waits for a server (issue #1): links without one were tried in 1.1.0 and removed.
 
 ## 2. Look
 
@@ -54,11 +54,11 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 
 ## 4. Screens
 
-- **Home**: the name, the last final's winner, the way to the players and the results, a
-  way for a friend to fill in their own prediction, and how scoring works.
+- **Home**: the name, the last final's winner, the way to the players and the results, and
+  how scoring works.
 - **Players** (per final): add a player, enter or edit their prediction (type a name in
   Hebrew or English and press Enter; drag, or use the handle with the arrow keys, to
-  reorder), share it, delete it. Two links invite the group (section 5). The countries in
+  reorder), delete it. The countries in
   the final can be changed from the catalogue; a device whose data differs from the archive
   can go back to it.
 - **Results** (per final): the official order, entered like a prediction, and the table.
@@ -78,38 +78,17 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 - **All the years**: each final with its winner, and the all-time table by titles, then
   average share of the maximum, then points. The same person is joined across years by
   their archive id; players added on a device, by name.
-- **My prediction**: a friend orders the countries and sends the result as a link. The
-  draft and the name stay on their device until sent.
 - **New final**: a year and its countries from the catalogue.
 
-## 5. Links
-
-A link carries predictions with no server; everything is after `#`, so it never reaches
-GitHub's servers. A country is one character, its place in `countries.json` in base 62
-(the catalogue only grows at its end, and a test holds it to that).
-
-| Link                                  | Carries                                 | Opens               |
-| ------------------------------------- | --------------------------------------- | ------------------- |
-| `#/<year>/predict?f=<field>`          | The countries of the final              | My prediction       |
-| `#/predict?y=<year>&p=<order>-<name>` | One complete prediction                 | Add it to my group  |
-| `#/join?y=&f=&r=&p=…`                 | The field, the result, every prediction | Keep the group here |
-
-- A received prediction replaces the prediction of the player of the same name (in either
-  language), or adds a player.
-- A received group replaces this device's final of that year, after asking if it holds
-  changes of its own. Archive players are recognised by name and keep their identity.
-- Limits: 40 countries, 40 players, names of 30 characters, 4000 characters of query.
-  Anything else, or anything malformed, shows "this link is broken".
-
-## 6. Addresses
+## 5. Addresses
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/player/<id>` a breakdown over the table,
-`#/<year>/predict` my prediction, `#/history`, `#/new`, and the links of section 5. Unknown
+`#/history`, `#/new`. Unknown
 addresses show home and are rewritten. The first site's paths (`/euro-rank/players`,
 `/euro-rank/results`) reach the site through Pages' 404 page and open their screens.
 
-## 7. On the device
+## 6. On the device
 
 Each final changed on this device is saved under its own key, and forgotten as soon as it
 matches the archive again, so later corrections to the archive reach it. What the first

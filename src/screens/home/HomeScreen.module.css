@@ -159,47 +159,6 @@
   padding-block: 12px;
 }
 
-.mine {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  max-width: 672px;
-  margin-block-start: 24px;
-  padding: 16px 20px;
-  border-radius: var(--radius-lg);
-  transition: border-color 0.2s ease;
-}
-
-.mine:hover {
-  border-color: rgb(168 85 247 / 50%);
-}
-
-.mineIcon {
-  font-size: 1.75rem;
-}
-
-.mineText {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-  color: rgb(233 213 255 / 70%);
-  font-size: 0.875rem;
-}
-
-.mineText strong {
-  color: #fff;
-  font-size: 1rem;
-}
-
-.mineAction {
-  color: var(--violet);
-  font-size: 0.875rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
 .scoring {
   width: 100%;
   max-width: 672px;
@@ -271,14 +230,5 @@
 
   .tiles {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mine {
-    flex-wrap: wrap;
-  }
-
-  .mineAction {
-    width: 100%;
-    text-align: end;
   }
 }

@@ -5,26 +5,15 @@ Update it whenever any of these change (CLAUDE.md, section 4).
 
 ## What the site stores on a device
 
-| Key                             | What                                                |
-| ------------------------------- | --------------------------------------------------- |
-| `eurorank:language`             | The language chosen in the header                   |
-| `eurorank:game:<year>`          | A final changed, created or received on this device |
-| `eurorank:my-name`              | The name typed on "my prediction"                   |
-| `eurorank:my-prediction:<year>` | The draft of "my prediction" for that year          |
+| Key                    | What                                      |
+| ---------------------- | ----------------------------------------- |
+| `eurorank:language`    | The language chosen in the header         |
+| `eurorank:game:<year>` | A final changed or created on this device |
 
 Every value read back is parsed and checked (`src/hooks/storage.ts`,
 `src/domain/game.ts`, `parseStoredGame`), never cast: unknown countries and repeats are
 dropped, a bad entry is ignored. The first site's keys (`eurorank_state_he_<year>`) are
 read once, moved and removed.
-
-## Links
-
-Predictions travel in links (DESIGN.md, section 5), after `#`: they never reach a server,
-and they carry nothing but names and orders. Anyone can make a link, so a received link is
-untrusted input: it is parsed against closed lists (catalogue characters, year range),
-capped (40 countries, 40 players, 30-character names, 4000 characters), its names are
-cleaned of control and direction marks, and it changes nothing until the visitor presses
-the button. Names are shown as React text, never as HTML.
 
 ## Hosts
 
@@ -41,7 +30,6 @@ reason, a change to the policy and a line here.
 | --------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Script injection (XSS)      | Text is rendered as React text; CSP allows only the site's own files; Trusted Types on | e2e: CSP present, no violations                           |
 | Tampered saved choices      | Parsed and checked; a bad value means the default                                      | unit (`storage.test.ts`, `game.test.ts`, `games.test.ts`) |
-| A crafted link              | Parsed against closed lists, capped, cleaned; nothing changes without a press          | unit (`links.test.ts`), e2e (broken link)                 |
 | A disguised download name   | ASCII names only, no path or direction characters                                      | unit (`download.test.ts`), e2e                            |
 | A compromised dependency    | Few runtime dependencies; `npm audit` blocks high advisories; no install scripts       | CI                                                        |
 | A compromised workflow step | Read-only permissions by default; checkouts keep no token                              | review                                                    |
@@ -49,12 +37,8 @@ reason, a change to the policy and a line here.
 
 ## Known limits, accepted
 
-- A link is as private as the chat it is sent in: anyone holding a group link sees every
-  prediction in it, and anyone can make a link in someone else's name. Among friends that
-  is accepted; nothing in a link is secret.
-- Devices do not sync: two people editing the same final see their own copies until one
-  sends the other a group link.
-
+- Devices do not sync: a final entered on one phone stays there until a server exists
+  (issue #1).
 - GitHub Pages sends no headers, so the policy is a `<meta>` tag and cannot forbid framing.
 - Every Pages project of an account shares one origin (`<account>.github.io`), and with it
   `localStorage`. A custom domain gives the site an origin of its own.

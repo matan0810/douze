@@ -8,7 +8,7 @@ export interface Games {
   years: number[];
   /** Changes one final; it is saved on this device. */
   update: (year: number, change: (game: Game) => Game) => void;
-  /** Puts a whole final in place (created here or received in a link). */
+  /** Puts a whole final in place (one created here). */
   put: (game: Game) => void;
   /** Whether this device's final differs from the site's archive. */
   edited: (year: number) => boolean;

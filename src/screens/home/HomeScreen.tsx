@@ -72,21 +72,6 @@ export function HomeScreen() {
         </a>
       </section>
 
-      <a
-        href={routeHash({ name: 'mine', year })}
-        className={`${styles.mine} glass fade`}
-        style={{ animationDelay: '0.35s' }}
-      >
-        <span className={styles.mineIcon} aria-hidden="true">
-          📨
-        </span>
-        <span className={styles.mineText}>
-          <strong>{t.home.mineTitle}</strong>
-          <span>{t.home.mineText}</span>
-        </span>
-        <span className={styles.mineAction}>{t.home.mineAction}</span>
-      </a>
-
       <section className={`${styles.scoring} glass fade`} style={{ animationDelay: '0.5s' }}>
         <h3 className={styles.scoringTitle}>✦ {t.home.scoringTitle} ✦</h3>
         <div className={styles.tiles}>

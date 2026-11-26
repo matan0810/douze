@@ -17,13 +17,13 @@ Live at https://matan0810.github.io/euro-rank.
 
 | Path                     | What                                                                   |
 | ------------------------ | ---------------------------------------------------------------------- |
-| `src/domain/`            | Scoring, data checks, games, links, statistics, addresses: no UI       |
+| `src/domain/`            | Scoring, data checks, games, statistics, addresses: no UI              |
 | `src/data/`              | Countries, players, and one file per year in `editions/`               |
 | `src/state/`             | The finals of this device, saved and read back                         |
 | `src/screens/`           | One folder per screen: home, players, results, stats, history, …       |
 | `src/picker/`            | Building a ranking: search, keyboard, drag                             |
 | `src/ui/`, `src/layout/` | Shared pieces: flags, dialog, titles, the sky, the bar                 |
-| `src/export/`            | Sharing a link, the table as an image, downloads                       |
+| `src/export/`            | The table as an image, downloads                                       |
 | `src/i18n/`              | Hebrew and English strings                                             |
 | `src/styles/`            | Tokens and the shared forms of the look; the bundled font              |
 | `public/flags/`          | A flag for every country (`node scripts/flags.ts` draws them)          |

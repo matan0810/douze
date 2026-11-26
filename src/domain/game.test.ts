@@ -7,7 +7,6 @@ import {
   emptyGame,
   MAX_NAME,
   parseStoredGame,
-  receivePrediction,
   setFinalists,
   setOrder,
   setResult,
@@ -52,15 +51,6 @@ describe('editing a game', () => {
   it('takes only a complete result', () => {
     const game = game2026();
     expect(setResult(game, ['israel']).result).toBeNull();
-  });
-
-  it('gives a received prediction to the player of that name, or adds them', () => {
-    const game = game2026();
-    const order = [...game.finalists];
-    expect(
-      receivePrediction(game, 'Adi', order).players.find((p) => p.id === 'adi')?.order,
-    ).toEqual(order);
-    expect(receivePrediction(game, 'דנה', order).players).toHaveLength(4);
   });
 
   it('knows when the device differs from the archive', () => {

@@ -14,10 +14,6 @@ import { preview } from 'vite';
 
 const read = async (path) => JSON.parse(await readFile(new URL(path, import.meta.url)));
 const { version } = await read('../../package.json');
-const edition = await read('../../src/data/editions/2026.json');
-const countryIds = (await read('../../src/data/countries.json')).map((c) => c.id);
-// One character per country, as src/domain/links.ts writes it.
-const DIGITS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 async function main() {
   const server = await preview({ preview: { port: 0 }, logLevel: 'silent' });
@@ -96,16 +92,6 @@ async function main() {
   assert.equal((await download).suggestedFilename(), 'eurorank-2026.png');
   step('results: the table as an image');
 
-  // A perfect prediction, as a friend's phone would send it.
-  const order = edition.result.map((id) => DIGITS[countryIds.indexOf(id)]).join('');
-  await page.goto(`${base}/predict?y=2026&p=${order}-${encodeURIComponent('דנה')}`);
-  await page.getByRole('button', { name: /הוספה לקבוצה שלי/ }).click();
-  await atHash(page, '#/2026/players');
-  await page.getByRole('listitem').filter({ hasText: 'דנה' }).getByText('✓ הושלם').waitFor();
-  await page.goto(`${base}/2026`);
-  await board.getByRole('link', { name: /דנה/ }).getByText('280', { exact: true }).waitFor();
-  step('players: a prediction received by link joins the group and tops the table');
-
   await page.goto(`${base}/2026/players`);
   await page.getByLabel('הוספת שחקן חדש').fill('טל');
   await page.getByRole('button', { name: 'הוספה', exact: true }).click();
@@ -167,26 +153,6 @@ async function main() {
   step('desktop: English, left to right, remembered after a reload');
   await desk.close();
 
-  // ---------- A whole group, opened on another device ----------
-  const { context: friend, page: other } = await open(
-    { viewport: { width: 1280, height: 800 }, locale: 'en-US' },
-    'friend',
-  );
-  const field = edition.finalists.map((id) => DIGITS[countryIds.indexOf(id)]).join('');
-  await other.goto(
-    `${base}/join?y=2026&f=${field}&r=${order}&p=${order}-${encodeURIComponent('Noa')}`,
-  );
-  await other.getByRole('button', { name: /Keep on this device/ }).click();
-  await atHash(other, '#/2026');
-  await other
-    .getByRole('region', { name: /Leaderboard/ })
-    .getByText('Noa')
-    .waitFor();
-  await other.goto(`${base}/predict?y=2026&p=zz`);
-  await other.getByText(/This link is broken/).waitFor();
-  step('group link: kept on another device; a broken link says so');
-  await friend.close();
-
   // ---------- Phone, every screen, both languages ----------
   const screens = [
     '/',
@@ -194,7 +160,7 @@ async function main() {
     '/2026/players',
     '/2026/stats',
     '/history',
-    '/2026/predict',
+
     '/new',
     '/2026/player/matan',
   ];

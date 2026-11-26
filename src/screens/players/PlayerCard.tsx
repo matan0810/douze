@@ -1,8 +1,5 @@
 import type { Game, GamePlayer } from '../../domain/game';
-import { archive } from '../../domain/archive';
-import { predictionHash } from '../../domain/links';
 import { isComplete } from '../../domain/scoring';
-import { useShare } from '../../hooks/useShare';
 import { useI18n } from '../../i18n/context';
 import { Avatar } from '../../ui/Avatar';
 import styles from './PlayerCard.module.css';
@@ -17,7 +14,6 @@ interface Props {
 /** A player: their initial, how far their prediction is, and what can be done with it. */
 export function PlayerCard({ game, player, onEdit, onDelete }: Props) {
   const { t, language } = useI18n();
-  const share = useShare();
   const total = game.finalists.length;
   const count = player.order.length;
   const complete = total > 0 && isComplete(player.order, game.finalists);
@@ -42,22 +38,6 @@ export function PlayerCard({ game, player, onEdit, onDelete }: Props) {
           <button type="button" className="btn btn-soft" onClick={onEdit} disabled={!total}>
             {complete ? t.players.editPrediction : t.players.predict}
           </button>
-          {complete && (
-            <button
-              type="button"
-              className={styles.icon}
-              aria-label={`${t.players.sharePrediction} ${name}`}
-              title={`${t.players.sharePrediction} ${name}`}
-              onClick={() =>
-                share(
-                  predictionHash(game.year, name, player.order, archive.countries),
-                  t.mine.shareText(name, game.year),
-                )
-              }
-            >
-              🔗
-            </button>
-          )}
           <button
             type="button"
             className={`${styles.icon} ${styles.delete}`}

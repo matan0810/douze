@@ -242,7 +242,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   `package.json` is the site's path. The old `gh-pages` branch is no longer used.
 - **Commands:** `npm run dev` (local site), `npm run check` (types, lint, format, unit tests),
   `npm run build && npm run e2e` (browser test), `npm run bump -- patch|minor|major` (release).
-- **Layout:** `src/domain/` the rules with no UI (scoring, data checks, games, links,
+- **Layout:** `src/domain/` the rules with no UI (scoring, data checks, games,
   statistics, addresses); `src/data/` the country catalogue, the players and one file per
   year in `editions/`; `src/state/` this device's finals; `src/screens/` one folder per
   screen; `src/picker/`, `src/ui/`, `src/layout/` shared pieces; `src/export/` sharing;
@@ -252,16 +252,14 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
 - **Data and how to update it:** a new year is a new file, `src/data/editions/<year>.json`:
   the host city, the date of the final, the finalists (catalogue ids), the result (or
   `null` until it is known) and each player's predicted order. A new player goes into
-  `src/data/players.json`, a new country at the **end** of `src/data/countries.json` (links
-  number countries by their place), then `node scripts/flags.ts` draws its flag. `npm run check` validates every file against the rules in `parse.ts`.
+  `src/data/players.json`, a new country into `src/data/countries.json`, then `node scripts/flags.ts` draws its flag. `npm run check` validates every file against the rules in `parse.ts`.
   Adding a result or a year is a `patch` release.
 - **Rules only this project has:**
   - The scoring rule is in `src/domain/scoring.ts` and `DESIGN.md`, section 3, and is
     tested against the real 2026 final. Changing it changes past tables: only on the
     owner's order, with a `Changed` line in the CHANGELOG.
-  - What a visitor enters on their own device stays on it, and travels only in links they
-    send; the repository's data is the archive. No server, no account.
+  - What a visitor enters on their own device stays on it; the repository's data is the
+    archive. No server, no account. Sharing between phones comes with a server (issue #1);
+    no more link features until then (the owner's decision, 2026-11-26).
   - The look is the first site's, kept by the owner's choice (`DESIGN.md`, section 2): do
     not redesign it unasked.
-  - Links already sent must keep working: the catalogue only grows at its end, and the link
-    format changes only in ways old links still read (`links.test.ts`).

@@ -9,12 +9,8 @@ describe('addresses', () => {
     ['#/2026/results', { name: 'final', year: 2026, view: 'results' }],
     ['#/2026/stats', { name: 'final', year: 2026, view: 'stats' }],
     ['#/2026/player/matan', { name: 'player', year: 2026, id: 'matan' }],
-    ['#/2027/predict', { name: 'mine', year: 2027 }],
-    ['#/2027/predict?f=j0E', { name: 'mine', year: 2027, field: 'j0E' }],
     ['#/history', { name: 'history' }],
     ['#/new', { name: 'new' }],
-    ['#/predict?y=2026&p=j-x', { name: 'received', kind: 'prediction', query: 'y=2026&p=j-x' }],
-    ['#/join?y=2026&f=j0', { name: 'received', kind: 'group', query: 'y=2026&f=j0' }],
   ])('%s round-trips', (hash, route) => {
     expect(parseRoute(hash)).toEqual(route);
     expect(routeHash(route)).toBe(hash);

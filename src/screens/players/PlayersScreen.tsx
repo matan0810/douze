@@ -5,7 +5,6 @@ import { useGame, useGames } from '../../state/context';
 import { PageTitle } from '../../ui/PageTitle';
 import { YearSelect } from '../../ui/YearSelect';
 import { FinalistsPanel } from './FinalistsPanel';
-import { InvitePanel } from './InvitePanel';
 import { PlayerCard } from './PlayerCard';
 import { PredictionEditor } from './PredictionEditor';
 import styles from './PlayersScreen.module.css';
@@ -62,8 +61,6 @@ export function PlayersScreen({ year }: { year: number }) {
               </button>
             </div>
           </form>
-
-          <InvitePanel game={game} />
 
           {game.players.length === 0 ? (
             <div className="empty fade">

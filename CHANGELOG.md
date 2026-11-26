@@ -10,6 +10,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Removed
+
+- Predictions and groups sent by link, and the "my prediction" page: without a server
+  nothing synced, so sharing between phones will come back with one (issue #1).
+
 ### Fixed
 
 - On small phones (360 pixels wide and less) the bar no longer cuts off the language switch:

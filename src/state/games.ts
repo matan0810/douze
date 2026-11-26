@@ -71,8 +71,7 @@ export function fromLegacy(
 }
 
 /**
- * Every final this device knows: the archive's, and those saved here (edited, created or
- * received). Saved games that match their archive edition are dropped, so the device
+ * Every final this device knows: the archive's, and those saved here (edited or created). Saved games that match their archive edition are dropped, so the device
  * follows later corrections of the archive.
  */
 export function loadGames(store: Store, data: Archive = archive): Map<number, Game> {

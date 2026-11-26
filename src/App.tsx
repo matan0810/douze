@@ -6,10 +6,8 @@ import { NavBar } from './layout/NavBar';
 import { StarBackground } from './layout/StarBackground';
 import { HistoryScreen } from './screens/history/HistoryScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
-import { MineScreen } from './screens/mine/MineScreen';
 import { NewFinalScreen } from './screens/new/NewFinalScreen';
 import { PlayersScreen } from './screens/players/PlayersScreen';
-import { ReceivedScreen } from './screens/received/ReceivedScreen';
 import { ResultsScreen } from './screens/results/ResultsScreen';
 import { StatsScreen } from './screens/stats/StatsScreen';
 import { useGames } from './state/context';
@@ -29,7 +27,7 @@ export function App() {
   const known = games.has(year);
 
   useEffect(() => {
-    if (!known && route.name !== 'mine' && yearOf(route) !== undefined)
+    if (!known && yearOf(route) !== undefined)
       window.history.replaceState(null, '', routeHash({ name: 'home' }));
   }, [known, route]);
 
@@ -37,7 +35,6 @@ export function App() {
     const names: Partial<Record<Route['name'], string>> = {
       history: t.nav.history,
       new: t.newFinal.titleStart + t.newFinal.titleEnd,
-      mine: t.mine.titleStart + t.mine.titleEnd,
     };
     const views = {
       table: t.nav.results,
@@ -73,10 +70,6 @@ function screen(route: Route, known: boolean) {
       return <HistoryScreen />;
     case 'new':
       return <NewFinalScreen />;
-    case 'received':
-      return <ReceivedScreen key={route.query} kind={route.kind} query={route.query} />;
-    case 'mine':
-      return <MineScreen key={route.year} year={route.year} encodedField={route.field} />;
     case 'final':
     case 'player':
       if (!known) return <HomeScreen />;
