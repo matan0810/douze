@@ -10,6 +10,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-26
+
 The second generation of the site, rebuilt on the method and tools of the project template,
 in the look of the first.
 
