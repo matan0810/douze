@@ -1,10 +1,10 @@
 {
-  "name": "euro-rank",
+  "name": "douze",
   "private": true,
   "version": "1.1.0",
   "description": "Douze: predict the Eurovision final with friends. Who really knows Eurovision?",
   "type": "module",
-  "homepage": "https://matan0810.github.io/euro-rank",
+  "homepage": "https://matan0810.github.io/douze",
   "scripts": {
     "dev": "vite",
     "build": "npm run typecheck && vite build",

@@ -85,9 +85,8 @@ function securityMeta(): Plugin {
 }
 
 /**
- * Pages serves 404.html for any unknown path. The first site lived at real paths
- * (/euro-rank/players); as a copy of the page, the 404 page sends them to their screens
- * (src/domain/routes.ts, legacyHash).
+ * Pages serves 404.html for any unknown path under the site; as a copy of the page, it opens
+ * the site (on its home screen) instead of an error.
  */
 function notFoundPage(): Plugin {
   return {

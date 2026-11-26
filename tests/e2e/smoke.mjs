@@ -164,10 +164,6 @@ async function main() {
   await page.getByText('מדינות בגמר (3)').waitFor();
   step('new final: 2027 with three countries');
 
-  await page.goto(`${url}players`);
-  await atHash(page, '#/2026/players');
-  step('the first site’s address /players opens the players of 2026');
-
   await page.getByRole('button', { name: 'Switch to English' }).click();
   assert.equal(await page.evaluate(() => document.documentElement.dir), 'ltr');
   await page.reload();

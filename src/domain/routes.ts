@@ -41,16 +41,3 @@ export function routeHash(route: Route): string {
       return `#/${route.year}/player/${route.id}`;
   }
 }
-
-/**
- * The first site lived at real paths (`/euro-rank/players`, `/euro-rank/results`). Pages
- * serves its 404 page, which is this site, for those; this is where each one went.
- */
-export function legacyHash(pathname: string, base: string, latestYear: number): string | undefined {
-  if (!pathname.startsWith(base)) return undefined;
-  const rest = pathname.slice(base.length).replace(/\/+$/, '');
-  if (rest === '' || rest === 'index.html') return undefined;
-  if (rest === 'players') return `#/${latestYear}/players`;
-  if (rest === 'results') return `#/${latestYear}/results`;
-  return '#/';
-}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { legacyHash, parseRoute, routeHash, type Route } from './routes';
+import { parseRoute, routeHash, type Route } from './routes';
 
 describe('addresses', () => {
   it.each<[string, Route]>([
@@ -23,11 +23,4 @@ describe('addresses', () => {
       expect(['home', 'final']).toContain(route.name);
     },
   );
-
-  it('sends the first site’s paths to their screens', () => {
-    expect(legacyHash('/euro-rank/players', '/euro-rank/', 2026)).toBe('#/2026/players');
-    expect(legacyHash('/euro-rank/results/', '/euro-rank/', 2026)).toBe('#/2026/results');
-    expect(legacyHash('/euro-rank/other', '/euro-rank/', 2026)).toBe('#/');
-    expect(legacyHash('/euro-rank/', '/euro-rank/', 2026)).toBeUndefined();
-  });
 });

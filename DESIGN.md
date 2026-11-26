@@ -41,8 +41,9 @@ of joining the winning two.
   site's address (1200 × 630, JPEG to stay small). The same card for every address: there
   is no server to make one per page (issue #1).
 - The tab is titled _Douze · the slogan_ on the home page and _screen · final · Douze_
-  elsewhere; the share image is headed by the wordmark. The repository and the address
-  keep the first name, `euro-rank`, and so do the keys saved on devices.
+  elsewhere; the share image is headed by the wordmark. The repository and the address are
+  `douze` since 2026-11-26 (first `euro-rank`; the old address no longer answers, and Pages
+  cannot redirect it). The keys saved on devices keep the first name (`eurorank:…`).
 
 - **Tokens and shared forms** are in `src/styles/global.css`: colours, the glass panels
   (`glass`, `glass-purple`, `glass-gold`), gradient text (`text-gold`, `text-purple`),
@@ -105,8 +106,8 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/player/<id>` a breakdown over the table,
 `#/history`, `#/new`. Unknown
-addresses show home and are rewritten. The first site's paths (`/euro-rank/players`,
-`/euro-rank/results`) reach the site through Pages' 404 page and open their screens.
+addresses show home and are rewritten, and so does an unknown path under the site: Pages'
+404 page is a copy of the site.
 
 ## 6. On the device
 

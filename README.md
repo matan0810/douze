@@ -5,7 +5,7 @@ of friends. Each of us predicts the
 order of the grand final; once the result is in, the site scores every prediction and keeps
 the table, year after year. Hebrew and English.
 
-Live at https://matan0810.github.io/euro-rank.
+Live at https://matan0810.github.io/douze.
 
 ## Commands
 

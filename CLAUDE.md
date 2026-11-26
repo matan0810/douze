@@ -1,11 +1,11 @@
 # Douze: working procedure
 
-Douze (written so in both languages, said דוּז; repository `euro-rank`, its first name) is
+Douze (written so in both languages, said דוּז; repository `douze`, first named `euro-rank`) is
 the Eurovision prediction game of our
 group of friends: each of us predicts the order of the grand final, the official result is
 entered, and the site scores every prediction and keeps the table, year after year, in Hebrew
 and English. A static React site on GitHub Pages.
-Live at https://matan0810.github.io/euro-rank.
+Live at https://matan0810.github.io/douze.
 
 This file is binding. Follow it on every task, in every session.
 

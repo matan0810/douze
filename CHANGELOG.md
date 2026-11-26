@@ -18,6 +18,9 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - The mirror ball is the icon of the tab and of the home screen, and heads the image of the
   table.
 - A link to the site shows a card with the name and the slogan in chats.
+- The site's address is now https://matan0810.github.io/douze. The old address
+  (`/euro-rank`) no longer works, and with it the first site's paths `/players` and
+  `/results`; what each device saved is kept.
 
 ### Removed
 
