@@ -67,7 +67,7 @@ jobs:
           node-version-file: .nvmrc
       # A past release whose commit holds other workflow files than today's cannot be tagged
       # by this token (GitHub requires a `workflows` permission it never has): it is reported
-      # and skipped, and tagged by hand once (CLAUDE.md, section 9). Only the current version
+      # and skipped, and created once by the owner (CLAUDE.md, section 9). Only the current version
       # must succeed.
       - name: Tag and publish missing releases
         run: |
@@ -83,6 +83,6 @@ jobs:
             elif [ "$latest" = "true" ]; then
               exit 1
             else
-              echo "::warning::$tag could not be created at ${commit:0:7}; tag it by hand once."
+              echo "::warning::$tag could not be created at ${commit:0:7}; the owner creates it once (CLAUDE.md, section 9)."
             fi
           done < plan.tsv

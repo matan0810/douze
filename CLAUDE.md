@@ -172,8 +172,11 @@ A release is a push to `master` whose version has no tag yet. After the deploy, 
 workflow tags the commit `vX.Y.Z` and publishes a GitHub release with the version's
 CHANGELOG section. Tags are created only by that workflow; never push one by hand. The one
 exception: a past release the workflow cannot tag, because its commit holds other workflow
-files than today's (the run warns about it). With the owner's approval, that tag is pushed
-once, at the commit in `scripts/release-history.json`; the next deploy publishes its release.
+files than today's (the run warns about it), and cloud sessions cannot push tags. The owner
+creates that release once in the browser, from a link to
+`https://github.com/<owner>/<repo>/releases/new` with `tag`, `target` (the commit in
+`scripts/release-history.json`), `title` and `body` (its CHANGELOG section) filled in, and
+"Set as the latest release" unchecked.
 
 **Before:** CI on `dev` is green; `## [Unreleased]` describes everything in
 `git log origin/master..origin/dev`, plus any lines marked live without a version (if it
