@@ -1,0 +1,330 @@
+[
+  {
+    "id": "albania",
+    "code": "al",
+    "name": {
+      "he": "אלבניה",
+      "en": "Albania"
+    }
+  },
+  {
+    "id": "armenia",
+    "code": "am",
+    "name": {
+      "he": "ארמניה",
+      "en": "Armenia"
+    }
+  },
+  {
+    "id": "australia",
+    "code": "au",
+    "name": {
+      "he": "אוסטרליה",
+      "en": "Australia"
+    }
+  },
+  {
+    "id": "austria",
+    "code": "at",
+    "name": {
+      "he": "אוסטריה",
+      "en": "Austria"
+    }
+  },
+  {
+    "id": "azerbaijan",
+    "code": "az",
+    "name": {
+      "he": "אזרבייג׳ן",
+      "en": "Azerbaijan"
+    }
+  },
+  {
+    "id": "belgium",
+    "code": "be",
+    "name": {
+      "he": "בלגיה",
+      "en": "Belgium"
+    }
+  },
+  {
+    "id": "bulgaria",
+    "code": "bg",
+    "name": {
+      "he": "בולגריה",
+      "en": "Bulgaria"
+    }
+  },
+  {
+    "id": "croatia",
+    "code": "hr",
+    "name": {
+      "he": "קרואטיה",
+      "en": "Croatia"
+    }
+  },
+  {
+    "id": "cyprus",
+    "code": "cy",
+    "name": {
+      "he": "קפריסין",
+      "en": "Cyprus"
+    }
+  },
+  {
+    "id": "czechia",
+    "code": "cz",
+    "name": {
+      "he": "צ׳כיה",
+      "en": "Czechia"
+    }
+  },
+  {
+    "id": "denmark",
+    "code": "dk",
+    "name": {
+      "he": "דנמרק",
+      "en": "Denmark"
+    }
+  },
+  {
+    "id": "estonia",
+    "code": "ee",
+    "name": {
+      "he": "אסטוניה",
+      "en": "Estonia"
+    }
+  },
+  {
+    "id": "finland",
+    "code": "fi",
+    "name": {
+      "he": "פינלנד",
+      "en": "Finland"
+    }
+  },
+  {
+    "id": "france",
+    "code": "fr",
+    "name": {
+      "he": "צרפת",
+      "en": "France"
+    }
+  },
+  {
+    "id": "georgia",
+    "code": "ge",
+    "name": {
+      "he": "גאורגיה",
+      "en": "Georgia"
+    }
+  },
+  {
+    "id": "germany",
+    "code": "de",
+    "name": {
+      "he": "גרמניה",
+      "en": "Germany"
+    }
+  },
+  {
+    "id": "greece",
+    "code": "gr",
+    "name": {
+      "he": "יוון",
+      "en": "Greece"
+    }
+  },
+  {
+    "id": "iceland",
+    "code": "is",
+    "name": {
+      "he": "איסלנד",
+      "en": "Iceland"
+    }
+  },
+  {
+    "id": "ireland",
+    "code": "ie",
+    "name": {
+      "he": "אירלנד",
+      "en": "Ireland"
+    }
+  },
+  {
+    "id": "israel",
+    "code": "il",
+    "name": {
+      "he": "ישראל",
+      "en": "Israel"
+    }
+  },
+  {
+    "id": "italy",
+    "code": "it",
+    "name": {
+      "he": "איטליה",
+      "en": "Italy"
+    }
+  },
+  {
+    "id": "latvia",
+    "code": "lv",
+    "name": {
+      "he": "לטביה",
+      "en": "Latvia"
+    }
+  },
+  {
+    "id": "lithuania",
+    "code": "lt",
+    "name": {
+      "he": "ליטא",
+      "en": "Lithuania"
+    }
+  },
+  {
+    "id": "luxembourg",
+    "code": "lu",
+    "name": {
+      "he": "לוקסמבורג",
+      "en": "Luxembourg"
+    }
+  },
+  {
+    "id": "malta",
+    "code": "mt",
+    "name": {
+      "he": "מלטה",
+      "en": "Malta"
+    }
+  },
+  {
+    "id": "moldova",
+    "code": "md",
+    "name": {
+      "he": "מולדובה",
+      "en": "Moldova"
+    }
+  },
+  {
+    "id": "montenegro",
+    "code": "me",
+    "name": {
+      "he": "מונטנגרו",
+      "en": "Montenegro"
+    }
+  },
+  {
+    "id": "netherlands",
+    "code": "nl",
+    "name": {
+      "he": "הולנד",
+      "en": "Netherlands"
+    }
+  },
+  {
+    "id": "north-macedonia",
+    "code": "mk",
+    "name": {
+      "he": "מקדוניה הצפונית",
+      "en": "North Macedonia"
+    }
+  },
+  {
+    "id": "norway",
+    "code": "no",
+    "name": {
+      "he": "נורווגיה",
+      "en": "Norway"
+    }
+  },
+  {
+    "id": "poland",
+    "code": "pl",
+    "name": {
+      "he": "פולין",
+      "en": "Poland"
+    }
+  },
+  {
+    "id": "portugal",
+    "code": "pt",
+    "name": {
+      "he": "פורטוגל",
+      "en": "Portugal"
+    }
+  },
+  {
+    "id": "romania",
+    "code": "ro",
+    "name": {
+      "he": "רומניה",
+      "en": "Romania"
+    }
+  },
+  {
+    "id": "san-marino",
+    "code": "sm",
+    "name": {
+      "he": "סן מרינו",
+      "en": "San Marino"
+    }
+  },
+  {
+    "id": "serbia",
+    "code": "rs",
+    "name": {
+      "he": "סרביה",
+      "en": "Serbia"
+    }
+  },
+  {
+    "id": "slovenia",
+    "code": "si",
+    "name": {
+      "he": "סלובניה",
+      "en": "Slovenia"
+    }
+  },
+  {
+    "id": "spain",
+    "code": "es",
+    "name": {
+      "he": "ספרד",
+      "en": "Spain"
+    }
+  },
+  {
+    "id": "sweden",
+    "code": "se",
+    "name": {
+      "he": "שוודיה",
+      "en": "Sweden"
+    }
+  },
+  {
+    "id": "switzerland",
+    "code": "ch",
+    "name": {
+      "he": "שווייץ",
+      "en": "Switzerland"
+    }
+  },
+  {
+    "id": "ukraine",
+    "code": "ua",
+    "name": {
+      "he": "אוקראינה",
+      "en": "Ukraine"
+    }
+  },
+  {
+    "id": "united-kingdom",
+    "code": "gb",
+    "name": {
+      "he": "בריטניה",
+      "en": "United Kingdom"
+    }
+  }
+]

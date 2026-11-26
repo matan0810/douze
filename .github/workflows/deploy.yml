@@ -1,38 +1,79 @@
-name: Deploy to GitHub Pages
+# Every push to master is a deploy: all checks run first, and only if they pass is the
+# site built and published to GitHub Pages. Once it is live, any release that has no
+# tag yet is tagged and published on GitHub with its CHANGELOG.md section: the current
+# version from package.json, and the past ones in scripts/release-history.json.
+name: Deploy
 
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  build:
+    needs: checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
         with:
-          node-version: 20
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: SPA fallback (copy index.html to 404.html)
-        run: cp dist/index.html dist/404.html
-
-      - name: Publish to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+  release:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Tag and publish missing releases
+        run: |
+          node scripts/release-plan.ts "$GITHUB_SHA" "$RUNNER_TEMP/notes" > plan.tsv
+          while IFS=$'\t' read -r tag commit title notes latest; do
+            if gh release view "$tag" > /dev/null 2>&1; then
+              echo "$tag already released"
+              continue
+            fi
+            gh release create "$tag" --target "$commit" --title "$title" \
+              --notes-file "$notes" --latest="$latest"
+            echo "Released $tag at ${commit:0:7}" | tee -a "$GITHUB_STEP_SUMMARY"
+          done < plan.tsv

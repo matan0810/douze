@@ -1,0 +1,45 @@
+/** A text in both interface languages. */
+export interface Bilingual {
+  he: string;
+  en: string;
+}
+
+/** A country that can take part, from the catalogue in `src/data/countries.json`. */
+export interface Country {
+  id: string;
+  /** ISO 3166-1 alpha-2, lower case: names the flag in `public/flags/`. */
+  code: string;
+  name: Bilingual;
+}
+
+/** One of us, from `src/data/players.json`: the same person across the years. */
+export interface Player {
+  id: string;
+  name: Bilingual;
+}
+
+/** One player's predicted order of the final: country ids, first place first. */
+export interface Prediction {
+  player: string;
+  order: string[];
+}
+
+/** One year's grand final. */
+export interface Edition {
+  year: number;
+  host: Bilingual;
+  /** The date of the grand final, YYYY-MM-DD. */
+  final: string;
+  /** The countries in the grand final, in the catalogue's order. */
+  finalists: string[];
+  /** The official order of the final, first place first; null until it is known. */
+  result: string[] | null;
+  predictions: Prediction[];
+}
+
+/** Everything the site knows: the catalogue, the players and every edition, newest first. */
+export interface Archive {
+  countries: Country[];
+  players: Player[];
+  editions: Edition[];
+}
