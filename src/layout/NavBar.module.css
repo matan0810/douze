@@ -34,6 +34,7 @@
 
 .links {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 4px;
   margin-inline-start: auto;
@@ -98,6 +99,8 @@
   }
 }
 
+/* A small phone keeps the star of the name: the name itself is large on the home page,
+   and the six controls need the width. */
 @media (max-width: 420px) {
   .inner {
     gap: 6px;
@@ -105,6 +108,15 @@
 
   .year {
     display: none;
+  }
+
+  .name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .links {

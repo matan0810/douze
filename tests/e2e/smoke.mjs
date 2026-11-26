@@ -215,6 +215,25 @@ async function main() {
     await context.close();
   }
 
+  // The bar is fixed, so it never makes the page scroll: what does not fit in it is cut.
+  for (const locale of ['he-IL', 'en-US'])
+    for (const width of [320, 360]) {
+      const { context, page: small } = await open(
+        { viewport: { width, height: 700 }, isMobile: true, hasTouch: true, locale },
+        `small ${locale} ${width}`,
+      );
+      await small.goto(`${base}/2026`);
+      await small.getByRole('navigation').waitFor();
+      const cut = await small.evaluate(() => {
+        const bar = document.querySelector('header > div');
+        return bar ? bar.scrollWidth - bar.clientWidth : -1;
+      });
+      assert.ok(cut === 0, `${locale} ${width}px: the bar is ${cut}px wider than the screen`);
+      await small.getByRole('button', { name: /English|עברית/ }).click({ trial: true });
+      await context.close();
+    }
+  step('small phones (320 and 360 px): the bar fits, the language switch can be reached');
+
   await browser.close();
   await new Promise((resolve) => server.httpServer.close(resolve));
   if (problems.length) {

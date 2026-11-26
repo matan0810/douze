@@ -41,7 +41,7 @@ export function NavBar({ route, year }: Props) {
       <div className={styles.inner}>
         <a href="#/" className={styles.brand}>
           <span aria-hidden="true">⭐</span>
-          <span className="text-gold">{t.brand}</span>
+          <span className={`${styles.name} text-gold`}>{t.brand}</span>
           <span className={styles.year}>{year}</span>
         </a>
         <nav className={styles.links} aria-label={t.nav.label}>

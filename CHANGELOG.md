@@ -10,6 +10,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Fixed
+
+- On small phones (360 pixels wide and less) the bar no longer cuts off the language switch:
+  the name in the bar becomes its star.
+
 ## [1.1.0] - 2026-11-26
 
 The second generation of the site, rebuilt on the method and tools of the project template,
