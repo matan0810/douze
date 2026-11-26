@@ -237,7 +237,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
 
 - **Stack:** React, TypeScript (strict), Vite, CSS Modules, Vitest, Playwright for the
   browser test. Node 22 (`.nvmrc`). Runtime dependencies: React, `@dnd-kit` (dragging rows
-  by pointer, touch and keyboard) and the Heebo and Syne fonts.
+  by pointer, touch and keyboard) and the Noto Sans Hebrew and Syne fonts.
 - **Hosting:** GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to
   `master` (Settings → Pages → Source: GitHub Actions); the repository's name in
   `package.json` is the site's path. The old `gh-pages` branch is no longer used.

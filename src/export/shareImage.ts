@@ -34,7 +34,8 @@ export async function drawShareImage({ title, table, names, t }: Input): Promise
   if (!c) return null;
   const rtl = t.dir === 'rtl';
   c.direction = rtl ? 'rtl' : 'ltr';
-  const text = (weight: number, size: number) => `${weight} ${size}px 'Heebo Variable', sans-serif`;
+  const text = (weight: number, size: number) =>
+    `${weight} ${size}px 'Noto Sans Hebrew', sans-serif`;
   const brandFont = (size: number) => `800 ${size}px Syne, sans-serif`;
   // x measured from the reading start
   const x = (fromStart: number) => (rtl ? WIDTH - fromStart : fromStart);
@@ -108,8 +109,10 @@ export async function drawShareImage({ title, table, names, t }: Input): Promise
     // the points, thin and large
     c.textAlign = rtl ? 'left' : 'right';
     c.font = text(200, 76);
+    c.fontStretch = 'condensed';
     c.fillStyle = first ? brand(rtl ? 60 : WIDTH - 260, rtl ? 260 : WIDTH - 60) : ink;
     c.fillText(String(s.total), x(WIDTH - 70), y + 88);
+    c.fontStretch = 'normal';
   });
 
   c.textAlign = 'center';

@@ -2,6 +2,7 @@
   font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: var(--display-weight);
+  font-stretch: var(--display-stretch);
 }
 
 .hint {

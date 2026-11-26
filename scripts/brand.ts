@@ -19,12 +19,14 @@ await writeFile(file('public/favicon.svg'), favicon);
 const font = async (path: string) =>
   `data:font/woff2;base64,${(await readFile(file(`node_modules/${path}`))).toString('base64')}`;
 const syne = await font('@fontsource/syne/files/syne-latin-800-normal.woff2');
-const heebo = await font('@fontsource-variable/heebo/files/heebo-hebrew-wght-normal.woff2');
+const noto = await font(
+  '@fontsource-variable/noto-sans-hebrew/files/noto-sans-hebrew-hebrew-standard-normal.woff2',
+);
 const svg = (text: string) => `data:image/svg+xml;base64,${Buffer.from(text).toString('base64')}`;
 const SKY = 'background:radial-gradient(ellipse at 25% 45%,#2d0a4e 0%,#0d0221 55%,#1a0038 100%)';
 const page = (body: string) => `<!doctype html><meta charset="utf-8"><style>
   @font-face{font-family:Syne;src:url(${syne});font-weight:800}
-  @font-face{font-family:Heebo;src:url(${heebo});font-weight:100 900}
+  @font-face{font-family:Noto;src:url(${noto});font-weight:100 900;font-stretch:62.5% 100%}
   *{box-sizing:border-box}body{margin:0;overflow:hidden}
   .word{font-family:Syne;font-weight:800;line-height:1;letter-spacing:-.01em;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -48,14 +50,14 @@ const icon = (size: number) =>
     <img src="${svg(favicon)}" style="position:absolute;inset:${size * 0.12}px;width:${size * 0.76}px;height:${size * 0.76}px"></div>`);
 
 const card =
-  page(`<div style="position:relative;width:1200px;height:630px;${SKY};overflow:hidden;font-family:Heebo">
+  page(`<div style="position:relative;width:1200px;height:630px;${SKY};overflow:hidden;font-family:Noto">
   ${stars(80, 1200, 630)}
   <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px">
     <div dir="ltr" style="display:flex;align-items:flex-end;filter:drop-shadow(0 6px 30px rgba(236,72,153,.45))">
       <span class="word start" style="font-size:190px">D</span>
       <img src="${svg(ball)}" style="width:182px;height:182px;margin:0 -6px -18px">
       <span class="word end" style="font-size:190px">uze</span></div>
-    <div dir="rtl" style="color:#f5f3ff;font-size:58px;font-weight:700">מי באמת מבין באירוויזיון?</div>
+    <div dir="rtl" style="color:#f5f3ff;font-size:64px;font-weight:300;font-stretch:75%">מי באמת מבין באירוויזיון?</div>
   </div></div>`);
 
 const browser = await chromium.launch();

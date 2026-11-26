@@ -58,10 +58,12 @@ of joining the winning two.
 - **Closeness**, wherever a predicted place meets the actual one, in the brand's light:
   exact in gold, within 2 in pink, within 5 in violet, beyond in ash (`closeness.ts`, the
   `--exact`, `--near`, `--off`, `--far` tokens).
-- **Type.** Three roles, each a token: `--font` for text, `--font-display` (thin, weight
-  `--display-weight`) for titles, scores and big numbers, and `--font-brand`, Syne, for the
-  wordmark, the eyebrows and large numerals only (its digits are unreadable small). The
-  display face is still Heebo while the owner chooses one (issue #2).
+- **Type.** One family, Noto Sans Hebrew (variable, bundled), in two voices: text at regular
+  width and weight (`--font`), and the display voice, thin and narrow (`--font-display`,
+  `--display-weight` 200, `--display-stretch` 75%), for titles, scores and big numbers: a
+  couture headline beside the wide wordmark. Syne (`--font-brand`) for the wordmark, the
+  eyebrows and large numerals only (its digits are unreadable small). Chosen 2026-11-26 after
+  two rounds of specimens, at the owner's request that it be chosen for him (issue #2).
 - **Eyebrows**: a spaced Latin line above every title, the same in both languages
   (_LEADERBOARD · 2026_, _THE PLAYERS · 2026_, _STATISTICS · 2026_, _ALL THE YEARS_).
 - **Places**: two-digit numerals. In the table, large in Syne, outlined, the first three

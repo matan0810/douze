@@ -56,9 +56,10 @@
   --far: #7d7291;
 
   /* Type: text, display (titles and scores, thin), and the brand's Latin face */
-  --font: 'Heebo Variable', Heebo, system-ui, sans-serif;
+  --font: 'Noto Sans Hebrew', system-ui, sans-serif;
   --font-display: var(--font);
   --display-weight: 200;
+  --display-stretch: 75%;
   --font-brand: Syne, var(--font);
 
   --radius: 2px;
@@ -225,6 +226,14 @@ button:disabled {
 .btn-primary {
   background: var(--brand);
   color: var(--velvet);
+}
+
+/* Not yet possible: no light, only its outline. */
+.btn-primary:disabled {
+  border-color: var(--line-strong);
+  background: transparent;
+  color: var(--faint);
+  opacity: 1;
 }
 
 /* Everything else: a hairline. */
