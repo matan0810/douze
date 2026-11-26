@@ -13,7 +13,7 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 ### Fixed
 
 - On small phones (360 pixels wide and less) the bar no longer cuts off the language switch:
-  the name in the bar becomes its star.
+  the name stays and leads home, and the separate home link steps aside.
 
 ## [1.1.0] - 2026-11-26
 

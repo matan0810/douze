@@ -99,24 +99,21 @@
   }
 }
 
-/* A small phone keeps the star of the name: the name itself is large on the home page,
-   and the six controls need the width. */
+/* A small phone needs the width for six controls. The name stays (it is the brand, and it
+   leads home), so the home link, which repeats it, goes, and the name gets a little smaller. */
 @media (max-width: 420px) {
   .inner {
     gap: 6px;
   }
 
-  .year {
-    display: none;
+  .brand {
+    gap: 6px;
+    font-size: 1rem;
   }
 
-  .name {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .year,
+  .home {
+    display: none;
   }
 
   .links {
@@ -125,5 +122,10 @@
 
   .link {
     min-width: 36px;
+  }
+
+  .language {
+    min-width: 36px;
+    padding-inline: 8px;
   }
 }

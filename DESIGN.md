@@ -36,8 +36,8 @@ without the owner asking.
   table wears a crown.
 - **Motion**: panels rise softly into place, the table's bars grow, the title text
   shimmers, stars twinkle. All of it stops with reduced motion.
-- **Phones**: the bar keeps only the emoji of each link below 900 px, and only the star of
-  the name below 420 px; the results page puts
+- **Phones**: the bar keeps only the emoji of each link below 900 px, and below 420 px the
+  home link steps aside (the name leads home) and the name is a little smaller; the results page puts
   the table above the official order below 1024 px.
 
 ## 3. Scoring

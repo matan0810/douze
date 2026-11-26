@@ -14,7 +14,7 @@ export function NavBar({ route, year }: Props) {
   const { t, language, setLanguage } = useI18n();
   const view = route.name === 'final' ? route.view : route.name === 'player' ? 'table' : null;
   const links = [
-    { emoji: '✦', label: t.nav.home, hash: '#/', on: route.name === 'home' },
+    { emoji: '✦', label: t.nav.home, hash: '#/', on: route.name === 'home', home: true },
     {
       emoji: '👥',
       label: t.nav.players,
@@ -39,9 +39,13 @@ export function NavBar({ route, year }: Props) {
   return (
     <header className={`${styles.bar} glass`}>
       <div className={styles.inner}>
-        <a href="#/" className={styles.brand}>
+        <a
+          href="#/"
+          className={styles.brand}
+          aria-current={route.name === 'home' ? 'page' : undefined}
+        >
           <span aria-hidden="true">⭐</span>
-          <span className={`${styles.name} text-gold`}>{t.brand}</span>
+          <span className="text-gold">{t.brand}</span>
           <span className={styles.year}>{year}</span>
         </a>
         <nav className={styles.links} aria-label={t.nav.label}>
@@ -49,7 +53,9 @@ export function NavBar({ route, year }: Props) {
             <a
               key={link.hash}
               href={link.hash}
-              className={link.on ? `${styles.link} ${styles.on}` : styles.link}
+              className={[styles.link, link.on && styles.on, 'home' in link && styles.home]
+                .filter(Boolean)
+                .join(' ')}
               aria-current={link.on ? 'page' : undefined}
               aria-label={link.label}
               title={link.label}
