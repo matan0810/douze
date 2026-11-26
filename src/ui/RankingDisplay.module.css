@@ -1,0 +1,34 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+}
+
+.name {
+  flex: 1;
+  color: rgb(255 255 255 / 90%);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.other {
+  color: rgb(216 180 254 / 40%);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .other {
+    display: none;
+  }
+}

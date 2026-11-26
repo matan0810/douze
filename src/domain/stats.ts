@@ -37,6 +37,8 @@ export interface Insights {
   letdown: { country: string; average: number; actual: number };
   /** Our average prediction, scored, and the place it would have taken in the table. */
   crowd: { total: number; rank: number };
+  /** The country that won. */
+  winner: string;
   /** Who placed the winner closest to first (all of them, if level). */
   prophets: { players: string[]; predicted: number };
   /** The country we agreed on most (smallest spread of predicted places). */
@@ -73,6 +75,7 @@ export function insights(game: Game): Insights | undefined {
     surprise: pick((a, b) => a > b),
     letdown: pick((a, b) => a < b),
     crowd: { total: crowd, rank },
+    winner,
     prophets: {
       players: winnerPlaces.filter((w) => w.place === closest).map((w) => w.id),
       predicted: closest,

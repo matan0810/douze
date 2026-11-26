@@ -1,54 +1,24 @@
-.header {
+.app {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: var(--header);
-  padding-inline: var(--gutter);
-  border-block-end: 1px solid var(--line);
-}
-
-.brand {
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-
-.version {
-  margin-inline-start: auto;
-  color: var(--faint);
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.language {
-  min-height: var(--tap);
-  padding-inline: 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--text);
-}
-
-.language:hover {
-  border-color: var(--accent);
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 .main {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  padding-block-start: var(--header);
+}
+
+.footer {
+  position: relative;
+  z-index: 10;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  max-width: var(--page);
-  margin-inline: auto;
-  padding: 96px var(--gutter);
-  text-align: center;
-}
-
-.title {
-  font-size: clamp(2.4rem, 8vw, 4.5rem);
-  font-weight: 400;
-  line-height: 1;
-}
-
-.lead {
-  color: var(--muted);
+  justify-content: center;
+  gap: 12px;
+  padding: 24px var(--gutter) 32px;
+  color: rgb(216 180 254 / 35%);
+  font-size: 0.75rem;
 }

@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { readFileSync } from 'node:fs';
+import { copyFileSync, readFileSync } from 'node:fs';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 
@@ -51,8 +51,23 @@ function securityMeta(): Plugin {
   };
 }
 
+/**
+ * Pages serves 404.html for any unknown path. The first site lived at real paths
+ * (/euro-rank/players); as a copy of the page, the 404 page sends them to their screens
+ * (src/domain/routes.ts, legacyHash).
+ */
+function notFoundPage(): Plugin {
+  return {
+    name: 'not-found-page',
+    apply: 'build',
+    writeBundle({ dir }) {
+      if (dir) copyFileSync(`${dir}/index.html`, `${dir}/404.html`);
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), securityMeta()],
+  plugins: [react(), securityMeta(), notFoundPage()],
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },

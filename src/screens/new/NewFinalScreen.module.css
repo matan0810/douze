@@ -1,0 +1,19 @@
+.page {
+  max-width: 768px;
+  margin-inline: auto;
+  padding: 32px var(--gutter);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.year {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 160px;
+}

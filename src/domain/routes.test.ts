@@ -10,6 +10,7 @@ describe('addresses', () => {
     ['#/2026/stats', { name: 'final', year: 2026, view: 'stats' }],
     ['#/2026/player/matan', { name: 'player', year: 2026, id: 'matan' }],
     ['#/2027/predict', { name: 'mine', year: 2027 }],
+    ['#/2027/predict?f=j0E', { name: 'mine', year: 2027, field: 'j0E' }],
     ['#/history', { name: 'history' }],
     ['#/new', { name: 'new' }],
     ['#/predict?y=2026&p=j-x', { name: 'received', kind: 'prediction', query: 'y=2026&p=j-x' }],

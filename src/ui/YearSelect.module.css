@@ -1,0 +1,19 @@
+.wrap {
+  display: inline-flex;
+}
+
+.select {
+  min-height: var(--tap);
+  padding-block: 6px;
+  padding-inline: 14px 10px;
+  border-radius: 999px;
+  background-color: rgb(124 58 237 / 15%);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.select option {
+  background: var(--night);
+  color: #fff;
+}

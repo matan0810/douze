@@ -1,0 +1,19 @@
+.region {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: max(24px, env(safe-area-inset-bottom));
+  z-index: 80;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast {
+  max-width: calc(100vw - 32px);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 50%);
+  color: #fff;
+  font-weight: 500;
+  animation: rise 0.25s ease-out both;
+}

@@ -1,0 +1,143 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid;
+  border-radius: var(--radius-lg);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.row:hover {
+  transform: scale(1.02);
+}
+
+.first {
+  border-color: rgb(250 204 21 / 50%);
+  background: rgb(250 204 21 / 10%);
+  box-shadow: 0 0 30px rgb(245 158 11 / 40%);
+  --score: var(--yellow);
+  --bar: linear-gradient(90deg, #f59e0b, #fcd34d);
+}
+
+.second {
+  border-color: rgb(209 213 219 / 50%);
+  background: rgb(209 213 219 / 10%);
+  box-shadow: 0 0 20px rgb(156 163 175 / 30%);
+  --score: var(--silver);
+  --bar: linear-gradient(90deg, #9ca3af, #e5e7eb);
+}
+
+.third {
+  border-color: rgb(217 119 6 / 50%);
+  background: rgb(217 119 6 / 10%);
+  box-shadow: 0 0 20px rgb(180 83 9 / 30%);
+  --score: #f59e0b;
+  --bar: linear-gradient(90deg, #b45309, #d97706);
+}
+
+.rest:hover {
+  border-color: rgb(168 85 247 / 40%);
+}
+
+.rest {
+  --score: var(--lilac);
+  --bar: var(--action);
+}
+
+.rank {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 40px;
+  color: rgb(192 132 252 / 60%);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.medal {
+  font-size: 1.5rem;
+}
+
+.winner {
+  color: var(--yellow);
+  font-size: 0.7rem;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score {
+  flex: none;
+  color: var(--score);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.track {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--bar);
+  animation: grow 0.8s ease-out both;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  color: rgb(255 255 255 / 40%);
+  font-size: 0.75rem;
+}
+
+.chevron {
+  flex: none;
+  color: rgb(192 132 252 / 50%);
+  font-size: 1.5rem;
+}
+
+@keyframes grow {
+  from {
+    width: 0;
+  }
+}

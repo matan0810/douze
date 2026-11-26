@@ -1,0 +1,16 @@
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.hint {
+  margin-block-start: 4px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.count {
+  margin-block-start: 12px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.75rem;
+}

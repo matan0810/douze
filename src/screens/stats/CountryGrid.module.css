@@ -1,0 +1,79 @@
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 3px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.table th {
+  padding: 4px 6px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 2px 6px;
+}
+
+.place {
+  color: rgb(255 255 255 / 50%);
+  font-weight: 700;
+}
+
+.country {
+  text-align: start;
+}
+
+.name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(255 255 255 / 90%);
+  white-space: nowrap;
+}
+
+.cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 4px 6px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.exact {
+  border-color: rgb(34 197 94 / 30%);
+  background: rgb(34 197 94 / 18%);
+  color: var(--good);
+}
+
+.near {
+  border-color: rgb(234 179 8 / 25%);
+  background: rgb(234 179 8 / 12%);
+  color: var(--near);
+}
+
+.off {
+  border-color: rgb(249 115 22 / 25%);
+  background: rgb(249 115 22 / 12%);
+  color: var(--off);
+}
+
+.far {
+  border-color: rgb(239 68 68 / 25%);
+  background: rgb(239 68 68 / 12%);
+  color: var(--far);
+}
+
+.average {
+  color: var(--lilac);
+}

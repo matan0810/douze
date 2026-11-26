@@ -1,0 +1,67 @@
+/* The sky is a picture: it keeps physical left/top in both directions. */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.base {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 20% 50%,
+    var(--nebula) 0%,
+    var(--night) 50%,
+    var(--night-deep) 100%
+  );
+}
+
+.nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+}
+
+.purple {
+  top: -160px;
+  left: -160px;
+  width: 384px;
+  height: 384px;
+  opacity: 0.2;
+  background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+}
+
+.pink {
+  right: -160px;
+  bottom: -160px;
+  width: 384px;
+  height: 384px;
+  opacity: 0.2;
+  background: radial-gradient(circle, var(--pink) 0%, transparent 70%);
+}
+
+.blue {
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  opacity: 0.1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle ease-in-out infinite;
+}
+
+.sparkle {
+  position: absolute;
+  color: #fde047;
+  font-size: 12px;
+  animation: twinkle 3s ease-in-out infinite;
+}

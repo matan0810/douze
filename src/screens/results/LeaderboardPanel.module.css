@@ -1,0 +1,46 @@
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  border-block-end: 1px solid var(--line);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.live {
+  padding: 2px 8px;
+  border: 1px solid rgb(248 113 113 / 40%);
+  border-radius: 999px;
+  background: rgb(239 68 68 / 15%);
+  color: var(--far);
+  font-size: 0.7rem;
+}
+
+.hint {
+  margin-block-start: 4px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.875rem;
+}
+
+.body {
+  padding: 16px;
+}
+
+.trophy {
+  margin-block-end: 16px;
+  font-size: 3rem;
+}
+
+.small {
+  margin-block-start: 8px;
+  font-size: 0.875rem;
+}

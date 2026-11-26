@@ -1,0 +1,103 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 896px;
+  margin-inline: auto;
+  padding: 32px var(--gutter);
+}
+
+.section {
+  padding: 20px;
+}
+
+.heading {
+  margin-block-end: 12px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.hint {
+  margin-block: -8px 12px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.875rem;
+}
+
+.years {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.year {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  transition: transform 0.2s ease;
+}
+
+.year:hover {
+  transform: scale(1.02);
+}
+
+.yearNumber {
+  font-size: 1.75rem;
+  font-weight: 900;
+}
+
+.winner {
+  flex: 1;
+  font-weight: 600;
+}
+
+.open {
+  color: var(--violet);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.table th {
+  padding: 8px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 10px 8px;
+  border-block-start: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.start {
+  text-align: start;
+}
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.titles {
+  color: var(--yellow);
+  font-weight: 700;
+}

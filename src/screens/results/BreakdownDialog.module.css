@@ -1,0 +1,216 @@
+.who {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-block-start: 4px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.875rem;
+}
+
+.total {
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-block-start: 16px;
+}
+
+.stat {
+  padding: 12px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.label {
+  margin-block-start: 2px;
+  color: rgb(255 255 255 / 40%);
+  font-size: 0.75rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 12px;
+  padding: 0 8px;
+  color: rgb(255 255 255 / 40%);
+  font-size: 0.75rem;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend .exact {
+  background: rgb(34 197 94 / 40%);
+}
+
+.legend .near {
+  background: rgb(234 179 8 / 40%);
+}
+
+.legend .off {
+  background: rgb(249 115 22 / 40%);
+}
+
+.legend .far {
+  background: rgb(239 68 68 / 40%);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.table th {
+  padding: 4px 8px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.table td {
+  padding: 8px;
+  border-block: 1px solid transparent;
+}
+
+.table td:first-child {
+  border-inline-start: 1px solid transparent;
+  border-start-start-radius: var(--radius-sm);
+  border-end-start-radius: var(--radius-sm);
+}
+
+.table td:last-child {
+  border-inline-end: 1px solid transparent;
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+}
+
+.row td {
+  background: var(--row-bg);
+  border-color: var(--row-line);
+}
+
+.exactRow {
+  --row-bg: rgb(34 197 94 / 10%);
+  --row-line: rgb(34 197 94 / 20%);
+}
+
+.nearRow {
+  --row-bg: rgb(234 179 8 / 10%);
+  --row-line: rgb(234 179 8 / 20%);
+}
+
+.offRow {
+  --row-bg: rgb(249 115 22 / 10%);
+  --row-line: rgb(249 115 22 / 20%);
+}
+
+.farRow {
+  --row-bg: rgb(239 68 68 / 10%);
+  --row-line: rgb(239 68 68 / 20%);
+}
+
+.countryCell {
+  text-align: start;
+}
+
+.end {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.index {
+  color: rgb(255 255 255 / 40%);
+  font-size: 0.75rem;
+}
+
+.country {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(255 255 255 / 90%);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+td.exact,
+.exactPoints,
+.good {
+  color: var(--good);
+}
+
+td.near,
+.nearPoints {
+  color: var(--near);
+}
+
+td.off,
+.offPoints {
+  color: var(--off);
+}
+
+td.far,
+.farPoints {
+  color: var(--far);
+}
+
+td.exact,
+td.near,
+td.off,
+td.far {
+  font-weight: 700;
+}
+
+.points {
+  font-weight: 900;
+}
+
+.bonus {
+  margin-inline-start: 4px;
+  color: var(--yellow);
+  font-size: 0.75rem;
+}
+
+.lilac {
+  color: var(--lilac);
+}
+
+.stat .near {
+  color: var(--near);
+}

@@ -1,0 +1,76 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 12px;
+}
+
+.edit {
+  min-height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--violet);
+  font-size: 0.8rem;
+}
+
+.edit:hover {
+  color: var(--soft);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 384px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.item:hover {
+  background: rgb(255 255 255 / 5%);
+}
+
+.name {
+  flex: 1;
+  color: rgb(255 255 255 / 80%);
+  font-size: 0.875rem;
+}
+
+.other {
+  color: rgb(216 180 254 / 40%);
+  font-size: 0.7rem;
+}
+
+.reset {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.dialogTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}

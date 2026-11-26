@@ -1,0 +1,24 @@
+.page {
+  max-width: 576px;
+  margin-inline: auto;
+  padding: 32px var(--gutter);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.send {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

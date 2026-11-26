@@ -1,0 +1,31 @@
+.page {
+  max-width: 1024px;
+  margin-inline: auto;
+  padding: 32px var(--gutter);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.single {
+  display: grid;
+  max-width: 512px;
+  margin-inline: auto;
+}
+
+@media (max-width: 1023px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a narrow screen the table comes first: it is what people open the page for. */
+@media (max-width: 1023px) {
+  .split > :last-child {
+    order: -1;
+  }
+}

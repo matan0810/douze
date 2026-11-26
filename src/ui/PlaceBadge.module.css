@@ -1,0 +1,36 @@
+.badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.first {
+  border-color: rgb(250 204 21 / 30%);
+  background: rgb(250 204 21 / 10%);
+  color: var(--yellow);
+}
+
+.second {
+  border-color: rgb(209 213 219 / 30%);
+  background: rgb(209 213 219 / 10%);
+  color: var(--silver);
+}
+
+.third {
+  border-color: rgb(217 119 6 / 30%);
+  background: rgb(217 119 6 / 10%);
+  color: var(--bronze);
+}
+
+.rest {
+  border-color: rgb(107 33 168 / 30%);
+  background: rgb(88 28 135 / 20%);
+  color: var(--lilac);
+}

@@ -7,7 +7,8 @@ export type Route =
   | { name: 'home' }
   | { name: 'final'; year: number; view: FinalView }
   | { name: 'player'; year: number; id: string }
-  | { name: 'mine'; year: number }
+  /** `field`: the finalists, encoded as in `links.ts`, for a device that lacks the final. */
+  | { name: 'mine'; year: number; field?: string }
   | { name: 'history' }
   | { name: 'new' }
   | { name: 'received'; kind: 'prediction' | 'group'; query: string };
@@ -32,7 +33,12 @@ export function parseRoute(hash: string): Route {
   if (!isYear(year)) return { name: 'home' };
   if (second === 'player' && third && /^[\w-]{1,60}$/.test(third))
     return { name: 'player', year, id: third };
-  if (second === 'predict') return { name: 'mine', year };
+  if (second === 'predict') {
+    const field = new URLSearchParams(query).get('f');
+    return field && /^[0-9a-zA-Z]{2,40}$/.test(field)
+      ? { name: 'mine', year, field }
+      : { name: 'mine', year };
+  }
   return { name: 'final', year, view: isView(second) ? second : 'table' };
 }
 
@@ -49,7 +55,7 @@ export function routeHash(route: Route): string {
     case 'player':
       return `#/${route.year}/player/${route.id}`;
     case 'mine':
-      return `#/${route.year}/predict`;
+      return route.field ? `#/${route.year}/predict?f=${route.field}` : `#/${route.year}/predict`;
     case 'received':
       return `#/${route.kind === 'prediction' ? 'predict' : 'join'}?${route.query}`;
   }

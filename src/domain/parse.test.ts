@@ -30,7 +30,7 @@ describe('the data files', () => {
   it('have a flag for every country in the catalogue', () => {
     for (const country of archive.countries)
       expect(
-        existsSync(new URL(`../../public/flags/${country.code}.svg`, import.meta.url)),
+        existsSync(new URL(`../../public/flags/${country.code}.png`, import.meta.url)),
         country.id,
       ).toBe(true);
   });

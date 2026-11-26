@@ -1,0 +1,30 @@
+.page {
+  max-width: 1024px;
+  margin-inline: auto;
+  padding: 32px var(--gutter);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.section {
+  padding: 20px;
+}
+
+.sectionHead {
+  margin-block-end: 16px;
+}
+
+.sectionHead h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.sectionHead p {
+  margin-block-start: 4px;
+  color: rgb(216 180 254 / 60%);
+  font-size: 0.875rem;
+}

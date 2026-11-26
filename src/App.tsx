@@ -1,43 +1,91 @@
-import { archive } from './domain/archive';
-import { standings } from './domain/scoring';
+import { useEffect } from 'react';
+import { routeHash, type Route } from './domain/routes';
+import { useRoute } from './hooks/useRoute';
 import { useI18n } from './i18n/context';
+import { NavBar } from './layout/NavBar';
+import { StarBackground } from './layout/StarBackground';
+import { HistoryScreen } from './screens/history/HistoryScreen';
+import { HomeScreen } from './screens/home/HomeScreen';
+import { MineScreen } from './screens/mine/MineScreen';
+import { NewFinalScreen } from './screens/new/NewFinalScreen';
+import { PlayersScreen } from './screens/players/PlayersScreen';
+import { ReceivedScreen } from './screens/received/ReceivedScreen';
+import { ResultsScreen } from './screens/results/ResultsScreen';
+import { StatsScreen } from './screens/stats/StatsScreen';
+import { useGames } from './state/context';
 import styles from './App.module.css';
 
-/** The first screen while the site is rebuilt: the latest final's table. */
+function yearOf(route: Route): number | undefined {
+  return 'year' in route ? route.year : undefined;
+}
+
 export function App() {
-  const { t, language, setLanguage } = useI18n();
-  const edition = archive.editions[0];
-  const table = edition?.result
-    ? standings(edition.predictions, edition.result, edition.finalists)
-    : [];
-  const name = (id: string) => archive.players.find((p) => p.id === id)?.name[language] ?? id;
+  const route = useRoute();
+  const { t } = useI18n();
+  const { games, years } = useGames();
+  const latest = years[0] ?? new Date().getFullYear();
+  const year = yearOf(route) ?? latest;
+  // A year this device does not know (an old link, a typo) shows the newest final.
+  const known = games.has(year);
+
+  useEffect(() => {
+    if (!known && route.name !== 'mine' && yearOf(route) !== undefined)
+      window.history.replaceState(null, '', routeHash({ name: 'home' }));
+  }, [known, route]);
+
+  useEffect(() => {
+    const names: Partial<Record<Route['name'], string>> = {
+      history: t.nav.history,
+      new: t.newFinal.titleStart + t.newFinal.titleEnd,
+      mine: t.mine.titleStart + t.mine.titleEnd,
+    };
+    const views = {
+      table: t.nav.results,
+      results: t.nav.results,
+      players: t.nav.players,
+      stats: t.nav.stats,
+    };
+    const page =
+      route.name === 'final' ? `${views[route.view]} · ${t.final(route.year)}` : names[route.name];
+    document.title = page ? `${page} · ${t.brand}` : `${t.brand} · ${t.eurovision(latest)}`;
+  }, [route, t, latest]);
+
   return (
-    <>
-      <header className={styles.header}>
-        <span className={styles.brand}>{t.brand}</span>
-        <span className={styles.version} title={t.version(__APP_VERSION__)}>
+    <div className={styles.app}>
+      <StarBackground />
+      <NavBar route={route} year={known ? year : latest} />
+      <main className={styles.main}>{screen(route, known)}</main>
+      <footer className={styles.footer}>
+        <span>{t.brand}</span>
+        <span className="num" title={t.version(__APP_VERSION__)}>
           v{__APP_VERSION__}
         </span>
-        <button
-          type="button"
-          className={styles.language}
-          aria-label={t.switchLanguageLabel}
-          onClick={() => setLanguage(language === 'he' ? 'en' : 'he')}
-        >
-          {t.switchLanguage}
-        </button>
-      </header>
-      <main className={styles.main}>
-        <h1 className={styles.title}>{t.heroTitle}</h1>
-        <p className={styles.lead}>{t.heroLine}</p>
-        <ol>
-          {table.map((s) => (
-            <li key={s.player}>
-              {name(s.player)}: {t.points(s.total)}
-            </li>
-          ))}
-        </ol>
-      </main>
-    </>
+      </footer>
+    </div>
   );
+}
+
+function screen(route: Route, known: boolean) {
+  switch (route.name) {
+    case 'home':
+      return <HomeScreen />;
+    case 'history':
+      return <HistoryScreen />;
+    case 'new':
+      return <NewFinalScreen />;
+    case 'received':
+      return <ReceivedScreen key={route.query} kind={route.kind} query={route.query} />;
+    case 'mine':
+      return <MineScreen key={route.year} year={route.year} encodedField={route.field} />;
+    case 'final':
+    case 'player':
+      if (!known) return <HomeScreen />;
+      if (route.name === 'player')
+        return <ResultsScreen key={route.year} year={route.year} open={route.id} />;
+      if (route.view === 'players') return <PlayersScreen key={route.year} year={route.year} />;
+      if (route.view === 'stats') return <StatsScreen key={route.year} year={route.year} />;
+      return (
+        <ResultsScreen key={route.year} year={route.year} editing={route.view === 'results'} />
+      );
+  }
 }

@@ -1,0 +1,62 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.duel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgb(255 255 255 / 3%);
+}
+
+.names {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.winner {
+  color: var(--yellow);
+}
+
+.score {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.bar {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.a {
+  background: var(--purple);
+}
+
+.even {
+  background: rgb(255 255 255 / 15%);
+}
+
+.b {
+  background: var(--pink);
+}
+
+.note {
+  color: rgb(255 255 255 / 40%);
+  font-size: 0.75rem;
+  text-align: center;
+}
