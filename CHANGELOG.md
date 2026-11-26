@@ -4,9 +4,9 @@ All changes a visitor or the owner would notice are recorded here. The format fo
 [Keep a Changelog](https://keepachangelog.com/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
-Version 0.1.0 was never numbered at the time. It was reconstructed from the git history: the
-state of `master` published to the live site on 2026-05-18 (a deploy on the old `gh-pages`
-branch).
+Version 1.0.0 was never numbered at the time. It was reconstructed from the git history and
+the deploy runs: the one state of `master` that reached the live site as a working site, on
+2026-05-18, by a manual deploy to the old `gh-pages` branch.
 
 ## [Unreleased]
 
@@ -60,11 +60,20 @@ in the look of the first.
 - Saved data and received links are checked strictly; a tampered value is ignored.
 - No dependency runs code when it is installed, and CI leaves no token on disk.
 
-## [0.1.0] - 2026-05-18
+## [1.0.0] - 2026-05-18
+
+The first site: published after the 2026 final, with its result in it.
 
 ### Added
 
-- Players and their predicted order of the Eurovision final, typed in by country name in
-  Hebrew or English and reordered by dragging.
-- The official result, and a leaderboard with every player's points country by country.
-- The 2026 final: its 25 countries, three players' predictions and the result.
+- Players and their predicted order of the final: a country typed by its name in Hebrew or
+  English goes into the next place, and rows are reordered by dragging.
+- The countries of the final, with their flags, added or removed by hand.
+- The official result, and a leaderboard: 10 points per country less one per place off,
+  and 15, 10 and 5 for the exact first three; each player's points country by country.
+- The 2026 final: its 25 countries, the predictions of Adi, Ori and Matan, and the result.
+- A Hebrew interface, right to left, on a night sky with stars.
+
+Before this release the site was a prototype, built on 16 and 17 May 2026, first in
+English and then in Hebrew. On 17 May GitHub Pages published the repository's source as it
+was, unbuilt, which showed an empty page; the deploy that worked came on 18 May.

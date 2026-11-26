@@ -1,7 +1,7 @@
 {
   "name": "euro-rank",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "EuroRank: predict the Eurovision final with friends, and see who knew best",
   "type": "module",
   "homepage": "https://matan0810.github.io/euro-rank",
