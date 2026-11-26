@@ -10,7 +10,9 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
-## [1.2.0] - 2026-11-26
+## [2.0.0] - 2026-11-26
+
+A new name, a new address: the site is Douze, at https://matan0810.github.io/douze.
 
 ### Changed
 
