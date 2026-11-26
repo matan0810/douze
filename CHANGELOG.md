@@ -10,6 +10,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-26
+
 ### Changed
 
 - A new name and brand: **Douze**, after the twelve points, with the slogan "מי באמת מבין
