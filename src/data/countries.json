@@ -40,11 +40,27 @@
     }
   },
   {
+    "id": "belarus",
+    "code": "by",
+    "name": {
+      "he": "בלארוס",
+      "en": "Belarus"
+    }
+  },
+  {
     "id": "belgium",
     "code": "be",
     "name": {
       "he": "בלגיה",
       "en": "Belgium"
+    }
+  },
+  {
+    "id": "bosnia-and-herzegovina",
+    "code": "ba",
+    "name": {
+      "he": "בוסניה והרצגובינה",
+      "en": "Bosnia and Herzegovina"
     }
   },
   {
@@ -133,6 +149,14 @@
     "name": {
       "he": "יוון",
       "en": "Greece"
+    }
+  },
+  {
+    "id": "hungary",
+    "code": "hu",
+    "name": {
+      "he": "הונגריה",
+      "en": "Hungary"
     }
   },
   {
@@ -261,6 +285,14 @@
     "name": {
       "he": "רומניה",
       "en": "Romania"
+    }
+  },
+  {
+    "id": "russia",
+    "code": "ru",
+    "name": {
+      "he": "רוסיה",
+      "en": "Russia"
     }
   },
   {

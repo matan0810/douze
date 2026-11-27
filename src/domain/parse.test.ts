@@ -64,3 +64,56 @@ describe('an edition', () => {
     );
   });
 });
+
+describe('the catalogue', () => {
+  it('holds every country of the last decade of contests, 2016 to 2026', () => {
+    const decade = [
+      'albania',
+      'armenia',
+      'australia',
+      'austria',
+      'azerbaijan',
+      'belarus',
+      'belgium',
+      'bosnia-and-herzegovina',
+      'bulgaria',
+      'croatia',
+      'cyprus',
+      'czechia',
+      'denmark',
+      'estonia',
+      'finland',
+      'france',
+      'georgia',
+      'germany',
+      'greece',
+      'hungary',
+      'iceland',
+      'ireland',
+      'israel',
+      'italy',
+      'latvia',
+      'lithuania',
+      'luxembourg',
+      'malta',
+      'moldova',
+      'montenegro',
+      'netherlands',
+      'north-macedonia',
+      'norway',
+      'poland',
+      'portugal',
+      'romania',
+      'russia',
+      'san-marino',
+      'serbia',
+      'slovenia',
+      'spain',
+      'sweden',
+      'switzerland',
+      'ukraine',
+      'united-kingdom',
+    ];
+    expect(archive.countries.map((c) => c.id).sort()).toEqual(decade.sort());
+  });
+});
