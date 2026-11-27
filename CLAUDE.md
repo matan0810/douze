@@ -263,7 +263,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   - What a visitor enters on their own device stays on it; the repository's data is the
     archive. No server, no account. Sharing between phones comes with a server (issue #1);
     no more link features until then (the owner's decision, 2026-11-26).
-  - The look is "a game show on velvet" and the brand is Douze, both the owner's choice
+  - The look is "the party" and the brand is Douze, both the owner's choice
     (`DESIGN.md`, section 2): do not redesign either unasked. No emoji in the interface:
     an icon from `src/ui/Icon.tsx`. A change to the mark goes into
     `scripts/ball.ts`, then `node scripts/brand.ts` redraws every brand file.

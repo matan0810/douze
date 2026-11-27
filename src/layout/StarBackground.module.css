@@ -5,7 +5,11 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: var(--night);
+  /* The arena's light pours in: violet from the top, pink from the side, blue from below. */
+  background:
+    radial-gradient(circle at 20% 10%, var(--light-violet) 0%, transparent 45%),
+    radial-gradient(circle at 85% 30%, var(--light-pink) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, var(--light-blue) 0%, transparent 50%), var(--night);
 }
 
 .spot {

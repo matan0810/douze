@@ -60,7 +60,7 @@ function Row({
     >
       <a
         href={routeHash({ name: 'player', year, id: s.player })}
-        className={first ? `${styles.row} ${styles.first}` : styles.row}
+        className={`${styles.row} piece-card ${first ? 'piece-card-first' : ''}`}
       >
         <span className={`${styles.place} ${METALS[s.rank - 1] ?? ''} num`} aria-hidden="true">
           {String(s.rank).padStart(2, '0')}

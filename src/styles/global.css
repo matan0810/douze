@@ -1,7 +1,8 @@
-/* Douze: a game show on velvet (DESIGN.md, section 2).
-   The night stays a velvet night with the mirror ball's light; on it, the game: every
-   player a colour and a token, rounded shapes, heavy rounded type, stickers of reward and
-   buttons that press. Surfaces stay clear: colour is in the pieces, never in the fills.
+/* Douze: the party (DESIGN.md, section 2).
+   A night lit like the arena on the evening of the final: violet, with pink and blue
+   light pouring in. On it, the game: every player a colour and a token, their cards filled
+   with their colour and standing on it like game pieces, rounded shapes, heavy rounded
+   type, stickers of reward and buttons that press.
    Components use these tokens and classes, never raw values, and logical properties
    throughout, so Hebrew and English share every rule. */
 @import './fonts.css';
@@ -9,21 +10,26 @@
 :root {
   color-scheme: dark;
 
-  /* The night */
-  --night: #07030d;
-  --velvet: #0d0618;
-  --text: #f3eefb;
-  --soft: #e7defa;
-  --lilac: #d9c8f5;
-  --muted: rgb(231 222 250 / 58%);
-  --faint: rgb(231 222 250 / 40%);
-  --line: rgb(255 255 255 / 8%);
-  --line-strong: rgb(255 255 255 / 16%);
+  /* The night of the party, and the light pouring into it */
+  --night: #1e0848;
+  --velvet: #2a0c5e;
+  --bar: rgb(30 8 72 / 90%);
+  --light-violet: #7b2cf5;
+  --light-pink: #ff3fa4;
+  --light-blue: #2f6bff;
+  --card: rgb(30 8 72 / 70%);
+  --text: #fbf7ff;
+  --soft: #efe6ff;
+  --lilac: #e2d2ff;
+  --muted: rgb(245 238 255 / 78%);
+  --faint: rgb(245 238 255 / 58%);
+  --line: rgb(255 255 255 / 12%);
+  --line-strong: rgb(255 255 255 / 22%);
 
   /* The light of the ball */
-  --brand-pink: #f9a8d4;
-  --brand-violet: #c084fc;
-  --brand-gold: #fde68a;
+  --brand-pink: #ff6ad5;
+  --brand-violet: #c774ff;
+  --brand-gold: #ffe66d;
   --brand: linear-gradient(100deg, var(--brand-pink), var(--brand-violet) 50%, var(--brand-gold));
   --brand-line: linear-gradient(
     90deg,
@@ -171,6 +177,23 @@ button:disabled {
 }
 
 /* ---------- Shared forms ---------- */
+
+/* A player's card, filled with their colour (--pc) and standing on it like a game piece. */
+.piece-card {
+  border: 2px solid var(--pc);
+  background: color-mix(in srgb, var(--pc) 22%, var(--card));
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--pc) 55%, #000);
+}
+
+/* The leader's card: lit gold around it. */
+.piece-card-first {
+  border-color: var(--brand-gold);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--pc) 34%, var(--velvet)),
+    color-mix(in srgb, var(--light-violet) 40%, var(--velvet))
+  );
+}
 
 /* A hairline frame: the only kind of panel. A lit one marks what matters most. */
 .frame {

@@ -73,7 +73,7 @@ function Row({
   );
   return (
     <li
-      className={`land ${s.rank === 1 ? `${styles.row} ${styles.first}` : styles.row}`}
+      className={`land ${styles.row} piece-card ${s.rank === 1 ? `${styles.first} piece-card-first` : ''}`}
       style={{ ...pieceColour(piece), animationDelay: `${landsAt}s` }}
     >
       <span className={`${styles.place} num`} aria-hidden="true">

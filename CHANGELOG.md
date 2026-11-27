@@ -19,12 +19,22 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   perfect semi-final.
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
+- Jokers, switched on in a year's settings: each player stars one country in their
+  prediction of the final, and the points for its place count twice.
+- Hungary, Bosnia and Herzegovina, Russia and Belarus join the countries to choose from:
+  every country of the last ten contests is there for a new season.
 - A settings page for each year: the countries of the final and of each semi-final, set
   separately, since the host and the big five go straight to the final; the number of
-  semi-finals; and the way back to the archive.
+  semi-finals; whether they add up to a season table (off for 2026, where not everyone
+  predicted every stage); the date of the final and its running order; and the way back to
+  the archive.
 
 ### Changed
 
+- A new look, "the party": the night is lit like the arena on the evening of the final,
+  violet with pink and blue light pouring in, and every player's card is filled with their
+  colour and stands on it like a game piece, on every screen and in the picture of the
+  table.
 - The button that downloads the table as a picture is now called _Share the table_.
 
 - Douze feels like a game: every player has a colour and a token of their own, on every

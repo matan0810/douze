@@ -18,15 +18,16 @@ waits for a server (issue #1): links without one were tried in 1.1.0 and removed
 
 ## 2. Look
 
-**A game show on velvet** (chosen by the owner on 2026-11-27). The night of "light on
-velvet" stays: the velvet room, the mirror ball's reflections, the brand, the eyebrows and
-the Syne numerals. On it, the site plays: every player is a game piece with a colour and a
-token, shapes are rounded, titles and scores heavy and rounded, buttons press like keys,
-stickers reward, and the table lands and counts up like a scoreboard on the night. Surfaces
-stay clear on the night (the owner's "background like A"): colour lives in the pieces, the
-outlines, the numbers and the stickers, never in a filled card. Before it: the first site's
-look, then "light on velvet" (precise, 2026-11-26), which the owner found too serious for a
-game. It is not to be redesigned without the owner asking.
+**The party** (chosen by the owner on 2026-11-27, option 4 of four rendered colour
+directions). The night is the arena on the evening of the final: violet, with pink light
+from the side and blue from below pouring in (`--light-*`), over which the mirror ball's
+reflections still catch the light. On it, the site plays: every player is a game piece
+with a colour and a token, and their card is filled with that colour and stands on it like
+a piece on a board; shapes are rounded, titles and scores heavy, buttons press like keys,
+stickers reward, and the table lands and counts up like a scoreboard on the night. Before
+it: the first site's look, "light on velvet" (precise, 2026-11-26), and "a game show on
+velvet" (clear surfaces on a black night, earlier on 2026-11-27), which the owner wanted
+more playful still. It is not to be redesigned without the owner asking.
 
 **The brand: Douze.** The name comes from "douze points", the twelve points, the phrase
 everyone knows from the Eurovision scoreboard. It is written in Latin letters in both
@@ -59,8 +60,10 @@ of joining the winning two.
 - **Game pieces.** Each player has a colour (`src/domain/pieces.ts`): the archive's
   players name theirs in `players.json` (Matan pink, Adi cyan, Ori violet); a player added
   on a device takes the first one free in that final. Their token is a disc in that colour
-  with their initial; their row is outlined in it, their bar and points are in it, on every
-  screen and in the share image.
+  with their initial; their card (`piece-card`) is edged in it, filled with a fifth of it
+  and stands on a darker step of it; their bar is in it and their points stand white on
+  it, on every screen and in the share image. The leader's card is edged in gold
+  (`piece-card-first`).
 - **Shapes.** Corners of 14 px (`--radius`), rows and cards 18 to 22 px, stickers and
   chips round (`--pill`). Buttons stand on a 4 px shadow and go down when pressed.
 - **Colour.** Velvet black and ivory, the players' pieces, and the brand gradient (pink,

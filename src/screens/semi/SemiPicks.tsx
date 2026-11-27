@@ -33,7 +33,7 @@ export function SemiPicks({ game, semi, pieces, onPick }: Props) {
             const name = p.name[language];
             const piece = pieces.get(p.id) ?? 'violet';
             return (
-              <li key={p.id} className={styles.row} style={pieceColour(piece)}>
+              <li key={p.id} className={`${styles.row} piece-card`} style={pieceColour(piece)}>
                 <Token name={name} piece={piece} size="sm" />
                 <span className={styles.name}>{name}</span>
                 <span className={`${styles.status} ${complete ? styles.complete : ''} num`}>

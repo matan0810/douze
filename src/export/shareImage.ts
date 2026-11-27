@@ -50,22 +50,22 @@ export async function drawShareImage({
   const violet = token('--brand-violet', '#c084fc');
   const gold = token('--brand-gold', '#fde68a');
   const ink = token('--text', '#f3eefb');
-  const brand = (from: number, to: number) => {
-    const g = c.createLinearGradient(from, 0, to, 0);
-    g.addColorStop(0, pink);
-    g.addColorStop(0.5, violet);
-    g.addColorStop(1, gold);
-    return g;
-  };
 
-  // The night, a spotlight from above, and square reflections of the ball.
-  c.fillStyle = token('--night', '#07030d');
+  // The party's night, the arena's light pouring in, and square reflections of the ball.
+  c.fillStyle = token('--night', '#1e0848');
   c.fillRect(0, 0, WIDTH, height);
-  const spot = c.createRadialGradient(WIDTH / 2, -80, 0, WIDTH / 2, -80, 700);
-  spot.addColorStop(0, 'rgb(236 72 153 / 22%)');
-  spot.addColorStop(1, 'rgb(236 72 153 / 0%)');
-  c.fillStyle = spot;
-  c.fillRect(0, 0, WIDTH, height);
+  const glow = (cx: number, cy: number, radius: number, colour: string) => {
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    g.addColorStop(0, colour);
+    g.addColorStop(1, 'transparent');
+    c.globalAlpha = 0.85;
+    c.fillStyle = g;
+    c.fillRect(0, 0, WIDTH, height);
+    c.globalAlpha = 1;
+  };
+  glow(WIDTH * 0.2, height * 0.1, WIDTH * 0.6, token('--light-violet', '#7b2cf5'));
+  glow(WIDTH * 0.85, height * 0.3, WIDTH * 0.5, token('--light-pink', '#ff3fa4'));
+  glow(WIDTH * 0.5, height, WIDTH * 0.7, token('--light-blue', '#2f6bff'));
   const tones = [ink, pink, violet, gold];
   for (let i = 0; i < 60; i++) {
     const size = 3 + (i % 4);
@@ -93,14 +93,29 @@ export async function drawShareImage({
     const y = TOP + i * ROW;
     const first = s.rank === 1;
     const colour = token(`--piece-${pieces.get(s.player) ?? 'violet'}`, '#a78bfa');
-    // the row, outlined in the player's colour, the leader's in the ball's light
-    c.lineWidth = first ? 3 : 2;
-    c.strokeStyle = first ? brand(60, WIDTH - 60) : colour;
-    c.globalAlpha = first ? 1 : 0.55;
-    c.beginPath();
-    c.roundRect(60, y + 8, WIDTH - 120, ROW - 20, 26);
-    c.stroke();
+    // the player's card: standing on its colour, filled with it, the leader's edged in gold
+    const card = () => {
+      c.beginPath();
+      c.roundRect(60, y + 8, WIDTH - 120, ROW - 20, 26);
+    };
+    c.save();
+    c.translate(0, 8);
+    card();
+    c.fillStyle = colour;
+    c.fill();
+    c.fillStyle = 'rgb(0 0 0 / 45%)';
+    c.fill();
+    c.restore();
+    card();
+    c.fillStyle = token('--night', '#1e0848');
+    c.fill();
+    c.globalAlpha = 0.3;
+    c.fillStyle = colour;
+    c.fill();
     c.globalAlpha = 1;
+    c.lineWidth = 3;
+    c.strokeStyle = first ? gold : colour;
+    c.stroke();
     // the place
     c.textAlign = rtl ? 'right' : 'left';
     c.font = brandFont(48);
@@ -130,10 +145,12 @@ export async function drawShareImage({
     c.fillStyle = ink;
     c.font = text(700, 42);
     c.fillText(name, x(286), y + 82);
-    // the points, heavy, in the player's colour
+    // the points, heavy and white, standing on the player's colour
     c.textAlign = rtl ? 'left' : 'right';
     c.font = text(800, 64);
     c.fillStyle = colour;
+    c.fillText(String(s.total), x(WIDTH - 90), y + 94);
+    c.fillStyle = ink;
     c.fillText(String(s.total), x(WIDTH - 90), y + 90);
   });
 

@@ -148,9 +148,6 @@ async function main() {
   await page.getByRole('listitem').filter({ hasText: 'טל' }).getByText('2/25').waitFor();
   step('players: typing countries builds a prediction, kept after a reload');
 
-  await page.goto(`${base}/2026/season`);
-  const season = page.getByRole('table');
-  await season.getByRole('row', { name: /מתן/ }).getByText('175', { exact: true }).waitFor();
   await page.goto(`${base}/2026/semi-1`);
   await page.getByRole('link', { name: 'חצי גמר 1', exact: true }).waitFor();
   await page.getByRole('listitem').filter({ hasText: 'אורי' }).getByText('18').waitFor();
@@ -163,11 +160,35 @@ async function main() {
   await pick.getByText('אסטוניה', { exact: true }).last().waitFor();
   await pick.getByRole('button', { name: /שמירת הבחירה/ }).click();
   await page.getByRole('listitem').filter({ hasText: 'מתן' }).getByText('20').first().waitFor();
-  await page.goto(`${base}/2026/season`);
+  step('semis: a pick by tapping scores the semi');
+
+  // 2026 has no season table: not everyone predicted every stage.
+  assert.equal(await page.getByRole('link', { name: 'העונה', exact: true }).count(), 0);
+  await page.goto(`${base}/2026/settings`);
+  const seasonSwitch = page.getByRole('switch', { name: /טבלת עונה/ });
+  assert.equal(await seasonSwitch.getAttribute('aria-checked'), 'false');
+  await seasonSwitch.click();
+  await page.getByRole('link', { name: 'העונה', exact: true }).click();
+  await atHash(page, '#/2026/season');
   const matan = page.getByRole('table').getByRole('row', { name: /מתן/ });
   await matan.getByText('+5').waitFor();
   await matan.getByText('200', { exact: true }).waitFor();
-  step('semis: a pick by tapping scores the semi, and a perfect one earns the season bonus');
+  step('season: switched on in the settings, with the bonus of a perfect semi');
+
+  await page.goto(`${base}/2026/settings`);
+  await page.getByRole('switch', { name: /ג'וקר/ }).click();
+  await page.goto(`${base}/2026/players`);
+  await page
+    .getByRole('listitem')
+    .filter({ hasText: 'מתן' })
+    .getByRole('button', { name: /עריכה/ })
+    .click();
+  const editing = page.getByRole('dialog', { name: /החיזוי של מתן/ });
+  await editing.getByRole('button', { name: "ג'וקר: פינלנד" }).click();
+  await editing.getByRole('button', { name: /שמירת חיזוי/ }).click();
+  await page.goto(`${base}/2026/player/matan`);
+  await page.getByRole('dialog', { name: 'מתן' }).getByText('×2').waitFor();
+  step('joker: switched on in the settings, starred in the editor, counted twice');
 
   await page.goto(`${base}/2026/settings`);
   await page.getByRole('heading', { name: /המדינות בחצי גמר 2/ }).waitFor();

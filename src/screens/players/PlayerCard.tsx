@@ -26,7 +26,7 @@ export function PlayerCard({ game, player, piece, onEdit, onDelete }: Props) {
   const name = player.name[language];
 
   return (
-    <li className={`${styles.row} rise`} style={pieceColour(piece)}>
+    <li className={`${styles.row} piece-card rise`} style={pieceColour(piece)}>
       <Token name={name} piece={piece} />
       <div className={styles.info}>
         <span className={styles.name}>{name}</span>

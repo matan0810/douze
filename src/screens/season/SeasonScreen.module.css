@@ -12,7 +12,7 @@
 .table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 10px;
+  border-spacing: 0 14px;
   font-size: 0.95rem;
 }
 
@@ -29,21 +29,27 @@
 .table td,
 .table tbody th {
   padding: 14px 8px;
-  border-block: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  border-block: 2px solid var(--pc);
+  background: color-mix(in srgb, var(--pc) 22%, var(--card));
   color: var(--muted);
   text-align: center;
 }
 
+/* A row is a player's card: filled with their colour, standing on it. */
+.table tbody tr {
+  filter: drop-shadow(0 6px 0 color-mix(in srgb, var(--pc) 55%, #000));
+}
+
 .table tbody tr > :first-child {
-  border-inline-start: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
-  border-start-start-radius: 18px;
-  border-end-start-radius: 18px;
+  border-inline-start: 2px solid var(--pc);
+  border-start-start-radius: 22px;
+  border-end-start-radius: 22px;
 }
 
 .table tbody tr > :last-child {
-  border-inline-end: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
-  border-start-end-radius: 18px;
-  border-end-end-radius: 18px;
+  border-inline-end: 2px solid var(--pc);
+  border-start-end-radius: 22px;
+  border-end-end-radius: 22px;
 }
 
 .first > * {
@@ -69,7 +75,7 @@
   font-family: var(--font-brand);
   font-size: 1.3rem;
   font-weight: 800;
-  -webkit-text-stroke: 1px rgb(243 238 251 / 45%);
+  -webkit-text-stroke: 1px rgb(251 247 255 / 60%);
 }
 
 .gold,
@@ -98,7 +104,8 @@
 }
 
 .table td.total {
-  color: var(--pc);
+  color: var(--text);
+  text-shadow: 0 3px 0 color-mix(in srgb, var(--pc) 70%, #000);
   font-size: 1.6rem;
   font-weight: 800;
   line-height: 1;

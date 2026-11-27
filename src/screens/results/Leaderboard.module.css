@@ -13,28 +13,12 @@
   align-items: center;
   gap: 16px;
   padding: 18px 16px;
-  border: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
-  border-radius: 18px;
-  transition:
-    transform 0.15s ease,
-    border-color 0.15s ease;
+  border-radius: 22px;
+  transition: transform 0.15s ease;
 }
 
 .row:hover {
-  border-color: var(--pc);
   transform: translateY(-2px);
-}
-
-/* The leader: outlined in the ball's light. */
-.first {
-  border-color: transparent;
-  background:
-    linear-gradient(var(--night), var(--night)) padding-box,
-    var(--brand) border-box;
-}
-
-.first:hover {
-  border-color: transparent;
 }
 
 .place {
@@ -46,7 +30,7 @@
   font-size: 1.8rem;
   font-weight: 800;
   line-height: 1;
-  -webkit-text-stroke: 1px rgb(243 238 251 / 45%);
+  -webkit-text-stroke: 1px rgb(251 247 255 / 60%);
 }
 
 .gold,
@@ -112,7 +96,8 @@
 .score {
   flex: none;
   min-width: 3ch;
-  color: var(--pc);
+  color: var(--text);
+  text-shadow: 0 3px 0 color-mix(in srgb, var(--pc) 70%, #000);
   font-family: var(--font-display);
   font-size: 2.3rem;
   font-weight: 800;
