@@ -40,14 +40,6 @@
     }
   },
   {
-    "id": "belarus",
-    "code": "by",
-    "name": {
-      "he": "בלארוס",
-      "en": "Belarus"
-    }
-  },
-  {
     "id": "belgium",
     "code": "be",
     "name": {
@@ -285,14 +277,6 @@
     "name": {
       "he": "רומניה",
       "en": "Romania"
-    }
-  },
-  {
-    "id": "russia",
-    "code": "ru",
-    "name": {
-      "he": "רוסיה",
-      "en": "Russia"
     }
   },
   {

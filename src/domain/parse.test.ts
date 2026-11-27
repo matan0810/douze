@@ -66,14 +66,13 @@ describe('an edition', () => {
 });
 
 describe('the catalogue', () => {
-  it('holds every country of the last decade of contests, 2016 to 2026', () => {
+  it('holds every country of the last decade of contests, 2016 to 2026, but Russia and Belarus', () => {
     const decade = [
       'albania',
       'armenia',
       'australia',
       'austria',
       'azerbaijan',
-      'belarus',
       'belgium',
       'bosnia-and-herzegovina',
       'bulgaria',
@@ -104,7 +103,6 @@ describe('the catalogue', () => {
       'poland',
       'portugal',
       'romania',
-      'russia',
       'san-marino',
       'serbia',
       'slovenia',
