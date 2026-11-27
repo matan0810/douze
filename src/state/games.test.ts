@@ -30,7 +30,13 @@ describe('games on a device', () => {
 
   it('add a final created here', () => {
     const store = memory();
-    saveGame(store, { year: 2027, finalists: ['israel', 'italy'], result: null, players: [] });
+    saveGame(store, {
+      year: 2027,
+      finalists: ['israel', 'italy'],
+      result: null,
+      players: [],
+      semis: [],
+    });
     expect(loadGames(store).get(2027)?.finalists).toEqual(['israel', 'italy']);
   });
 

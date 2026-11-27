@@ -1,5 +1,6 @@
 import { isRecord } from './parse';
 import { isComplete } from './scoring';
+import { isCompleteQualifiers, MAX_SEMIS, qualifierCount, type Semi, type SemiPick } from './semis';
 import type { Bilingual, Edition, Player } from './types';
 
 /**
@@ -18,6 +19,8 @@ export interface Game {
   finalists: string[];
   result: string[] | null;
   players: GamePlayer[];
+  /** The year's semi-finals, each its own field, result and predictions (`semis.ts`). */
+  semis: Semi[];
 }
 
 /** Limits on what is entered or received: names, players, the field. */
@@ -61,11 +64,16 @@ export function gameFromEdition(edition: Edition, players: Player[]): Game {
       name: byId.get(p.player)?.name ?? typedName(p.player),
       order: [...p.order],
     })),
+    semis: edition.semis.map((semi) => ({
+      countries: [...semi.countries],
+      qualifiers: semi.qualifiers ? [...semi.qualifiers] : null,
+      predictions: semi.predictions.map((p) => ({ ...p, picks: [...p.picks] })),
+    })),
   };
 }
 
 export function emptyGame(year: number): Game {
-  return { year, finalists: [], result: null, players: [] };
+  return { year, finalists: [], result: null, players: [], semis: [] };
 }
 
 /** Keeps the countries of `order` that are finalists, each once, in its order. */
@@ -119,7 +127,40 @@ export function parseStoredGame(
     finalists: field,
     result: result && isComplete(result, field) ? result : null,
     players: parsed,
+    semis: parseStoredSemis(value.semis, known, ids),
   };
+}
+
+/** The semis of a saved game, read as leniently as the rest: what does not fit is dropped. */
+function parseStoredSemis(value: unknown, known: Set<string>, players: Set<string>): Semi[] {
+  if (!Array.isArray(value)) return [];
+  const used = new Set<string>();
+  return value.slice(0, MAX_SEMIS).flatMap((raw): Semi[] => {
+    if (!isRecord(raw)) return [];
+    const field = within(stringList(raw.countries, MAX_FINALISTS) ?? [], [...known]).filter(
+      (id) => !used.has(id),
+    );
+    field.forEach((id) => used.add(id));
+    const qualifiers = stringList(raw.qualifiers, MAX_FINALISTS);
+    const picks: SemiPick[] = (Array.isArray(raw.predictions) ? raw.predictions : []).flatMap(
+      (p): SemiPick[] => {
+        if (!isRecord(p) || typeof p.player !== 'string' || !players.has(p.player)) return [];
+        const reserve =
+          typeof p.reserve === 'string' && field.includes(p.reserve) ? p.reserve : null;
+        const chosen = within(stringList(p.picks, MAX_FINALISTS) ?? [], field).filter(
+          (id) => id !== reserve,
+        );
+        return [{ player: p.player, picks: chosen.slice(0, qualifierCount(field)), reserve }];
+      },
+    );
+    return [
+      {
+        countries: field,
+        qualifiers: qualifiers && isCompleteQualifiers(qualifiers, field) ? qualifiers : null,
+        predictions: picks.filter((p, i) => picks.findIndex((o) => o.player === p.player) === i),
+      },
+    ];
+  });
 }
 
 /** A new id for a player added on this device, unlike any in the game. */
@@ -141,7 +182,14 @@ export function addPlayer(game: Game, name: string, order: string[] = [], id?: s
 }
 
 export function removePlayer(game: Game, id: string): Game {
-  return { ...game, players: game.players.filter((p) => p.id !== id) };
+  return {
+    ...game,
+    players: game.players.filter((p) => p.id !== id),
+    semis: game.semis.map((semi) => ({
+      ...semi,
+      predictions: semi.predictions.filter((p) => p.player !== id),
+    })),
+  };
 }
 
 export function setOrder(game: Game, id: string, order: string[]): Game {
@@ -176,4 +224,77 @@ export function setResult(game: Game, result: string[] | null): Game {
 /** Whether the device's game differs from the archive's edition of the same year. */
 export function differs(game: Game, baseline: Game): boolean {
   return JSON.stringify(game) !== JSON.stringify(baseline);
+}
+
+/** Sets how many semis the year has (none, one or two); removing one drops what it held. */
+export function setSemiCount(game: Game, count: number): Game {
+  const n = Math.max(0, Math.min(MAX_SEMIS, Math.round(count)));
+  const semis = game.semis.slice(0, n);
+  while (semis.length < n) semis.push({ countries: [], qualifiers: null, predictions: [] });
+  return { ...game, semis };
+}
+
+function updateSemi(game: Game, index: number, change: (semi: Semi) => Semi): Game {
+  if (!game.semis[index]) return game;
+  return { ...game, semis: game.semis.map((semi, i) => (i === index ? change(semi) : semi)) };
+}
+
+/**
+ * Sets a semi's field. A country can be in one semi only, so it leaves the other; picks and
+ * the result keep only what is still in the field, and a result no longer complete goes.
+ */
+export function setSemiCountries(game: Game, index: number, countries: string[]): Game {
+  const field = [...new Set(countries)].slice(0, MAX_FINALISTS);
+  const taken = new Set(field);
+  const others = game.semis.map((semi, i) =>
+    i === index
+      ? semi
+      : narrowSemi(
+          semi,
+          semi.countries.filter((id) => !taken.has(id)),
+        ),
+  );
+  return updateSemi({ ...game, semis: others }, index, (semi) => narrowSemi(semi, field));
+}
+
+function narrowSemi(semi: Semi, field: string[]): Semi {
+  return {
+    countries: field,
+    qualifiers:
+      semi.qualifiers && isCompleteQualifiers(semi.qualifiers, field) ? semi.qualifiers : null,
+    predictions: semi.predictions.map((p) => ({
+      ...p,
+      picks: within(p.picks, field),
+      reserve: p.reserve && field.includes(p.reserve) ? p.reserve : null,
+    })),
+  };
+}
+
+/** Sets who qualified from a semi: a complete set, or nothing. */
+export function setSemiQualifiers(game: Game, index: number, qualifiers: string[] | null): Game {
+  return updateSemi(game, index, (semi) => ({
+    ...semi,
+    qualifiers:
+      qualifiers && isCompleteQualifiers(qualifiers, semi.countries) ? [...qualifiers] : null,
+  }));
+}
+
+/** Sets a player's pick in a semi: their qualifiers (within the field, at most the count). */
+export function setSemiPick(
+  game: Game,
+  index: number,
+  player: string,
+  picks: string[],
+  reserve: string | null,
+): Game {
+  return updateSemi(game, index, (semi) => {
+    const field = semi.countries;
+    const keep = reserve && field.includes(reserve) ? reserve : null;
+    const chosen = within(picks, field)
+      .filter((id) => id !== keep)
+      .slice(0, qualifierCount(field));
+    const pick = { player, picks: chosen, reserve: keep };
+    const others = semi.predictions.filter((p) => p.player !== player);
+    return { ...semi, predictions: [...others, pick] };
+  });
 }

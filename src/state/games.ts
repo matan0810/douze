@@ -51,7 +51,14 @@ export function fromLegacy(
   const finalists = value.countries
     .map((c) => (isRecord(c) && typeof c.id === 'string' ? c.id : ''))
     .filter((id) => known.has(id));
-  let game: Game = { year, finalists: [...new Set(finalists)], result: null, players: [] };
+  let game: Game = {
+    year,
+    finalists: [...new Set(finalists)],
+    result: null,
+    players: [],
+    // the first site had no semis: the archive's stand
+    semis: baselineGame(year, data).semis,
+  };
   for (const raw of value.players) {
     if (!isRecord(raw) || typeof raw.name !== 'string' || !Array.isArray(raw.prediction)) continue;
     const order = raw.prediction.filter((id): id is string => typeof id === 'string');

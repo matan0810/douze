@@ -150,5 +150,137 @@
         "united-kingdom"
       ]
     }
+  ],
+  "semis": [
+    {
+      "countries": [
+        "finland",
+        "israel",
+        "sweden",
+        "greece",
+        "serbia",
+        "lithuania",
+        "moldova",
+        "poland",
+        "montenegro",
+        "croatia",
+        "portugal",
+        "georgia",
+        "estonia",
+        "belgium",
+        "san-marino"
+      ],
+      "qualifiers": [
+        "finland",
+        "israel",
+        "sweden",
+        "greece",
+        "serbia",
+        "lithuania",
+        "moldova",
+        "poland",
+        "croatia",
+        "belgium"
+      ],
+      "predictions": [
+        {
+          "player": "ori",
+          "picks": [
+            "finland",
+            "israel",
+            "sweden",
+            "greece",
+            "serbia",
+            "lithuania",
+            "moldova",
+            "poland",
+            "montenegro",
+            "croatia"
+          ],
+          "reserve": "portugal"
+        },
+        {
+          "player": "adi",
+          "picks": [
+            "israel",
+            "greece",
+            "finland",
+            "estonia",
+            "sweden",
+            "moldova",
+            "lithuania",
+            "san-marino",
+            "serbia",
+            "georgia"
+          ],
+          "reserve": "poland"
+        }
+      ]
+    },
+    {
+      "countries": [
+        "bulgaria",
+        "romania",
+        "armenia",
+        "czechia",
+        "denmark",
+        "australia",
+        "ukraine",
+        "norway",
+        "albania",
+        "switzerland",
+        "cyprus",
+        "azerbaijan",
+        "luxembourg",
+        "malta",
+        "latvia"
+      ],
+      "qualifiers": [
+        "bulgaria",
+        "romania",
+        "czechia",
+        "denmark",
+        "australia",
+        "ukraine",
+        "norway",
+        "albania",
+        "cyprus",
+        "malta"
+      ],
+      "predictions": [
+        {
+          "player": "ori",
+          "picks": [
+            "bulgaria",
+            "romania",
+            "armenia",
+            "czechia",
+            "denmark",
+            "australia",
+            "ukraine",
+            "norway",
+            "albania",
+            "switzerland"
+          ],
+          "reserve": "cyprus"
+        },
+        {
+          "player": "matan",
+          "picks": [
+            "australia",
+            "ukraine",
+            "denmark",
+            "cyprus",
+            "armenia",
+            "albania",
+            "bulgaria",
+            "norway",
+            "romania",
+            "switzerland"
+          ],
+          "reserve": "malta"
+        }
+      ]
+    }
   ]
 }

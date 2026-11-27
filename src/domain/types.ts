@@ -1,4 +1,5 @@
 import type { Piece } from './pieces';
+import type { Semi } from './semis';
 
 /** A text in both interface languages. */
 export interface Bilingual {
@@ -39,6 +40,8 @@ export interface Edition {
   /** The official order of the final, first place first; null until it is known. */
   result: string[] | null;
   predictions: Prediction[];
+  /** The year's semi-finals, apart from the final (`semis.ts`); none for a year without. */
+  semis: Semi[];
 }
 
 /** Everything the site knows: the catalogue, the players and every edition, newest first. */

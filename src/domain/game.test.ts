@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { archive } from './archive';
 import {
   addPlayer,
+  setSemiCountries,
+  setSemiCount,
+  setSemiPick,
+  setSemiQualifiers,
+  removePlayer,
   cleanName,
   differs,
   emptyGame,
@@ -82,6 +87,7 @@ describe('a game saved on the device', () => {
       finalists: ['israel', 'italy'],
       result: null,
       players: [{ id: 'p1', name: { he: 'דנה', en: 'דנה' }, order: ['italy'] }],
+      semis: [],
     });
   });
 
@@ -91,4 +97,77 @@ describe('a game saved on the device', () => {
       expect(parseStoredGame(value, 2026, known)).toBeUndefined();
     },
   );
+});
+
+describe('the semis of a game', () => {
+  const base = setSemiCount({ ...emptyGame(2027), players: [] }, 2);
+  const withField = setSemiCountries(setSemiCountries(base, 0, ['israel', 'italy', 'france']), 1, [
+    'spain',
+    'malta',
+  ]);
+
+  it('number none, one or two', () => {
+    expect(setSemiCount(base, 5).semis).toHaveLength(2);
+    expect(setSemiCount(base, 1).semis).toHaveLength(1);
+    expect(setSemiCount(base, -1).semis).toHaveLength(0);
+  });
+
+  it('hold a country in one semi only: moving it takes it out of the other', () => {
+    const moved = setSemiCountries(withField, 1, ['spain', 'malta', 'israel']);
+    expect(moved.semis[0]?.countries).toEqual(['italy', 'france']);
+    expect(moved.semis[1]?.countries).toEqual(['spain', 'malta', 'israel']);
+  });
+
+  it('keep a pick within the field, the reserve apart, no more than the count', () => {
+    const game = setSemiPick(
+      withField,
+      0,
+      'p1',
+      ['israel', 'italy', 'france', 'atlantis'],
+      'france',
+    );
+    expect(game.semis[0]?.predictions).toEqual([
+      { player: 'p1', picks: ['israel', 'italy'], reserve: 'france' },
+    ]);
+  });
+
+  it('take only a complete result, and drop it when the field changes under it', () => {
+    let game = setSemiQualifiers(withField, 0, ['israel']);
+    expect(game.semis[0]?.qualifiers).toBeNull();
+    game = setSemiQualifiers(withField, 0, ['israel', 'italy']);
+    expect(game.semis[0]?.qualifiers).toEqual(['israel', 'italy']);
+    game = setSemiCountries(game, 0, ['israel', 'italy', 'france', 'malta']);
+    expect(game.semis[0]?.qualifiers).toBeNull();
+  });
+
+  it("forget a removed player's picks", () => {
+    const game = setSemiPick(withField, 0, 'p1', ['israel'], null);
+    expect(removePlayer(game, 'p1').semis[0]?.predictions).toEqual([]);
+  });
+
+  it('are read back from the device, and what does not fit is dropped', () => {
+    const stored = {
+      ...JSON.parse(JSON.stringify(game2026())),
+      semis: [
+        {
+          countries: ['israel', 'atlantis', 'italy'],
+          qualifiers: ['israel'],
+          predictions: [
+            { player: 'adi', picks: ['israel', 'italy', 'atlantis'], reserve: 'italy' },
+            { player: 'nobody', picks: ['israel'], reserve: null },
+          ],
+        },
+        { countries: ['israel', 'france'], qualifiers: null, predictions: [] },
+        { countries: ['spain'], qualifiers: null, predictions: [] },
+      ],
+    };
+    expect(parseStoredGame(stored, 2026, known)?.semis).toEqual([
+      {
+        countries: ['israel', 'italy'],
+        qualifiers: ['israel'],
+        predictions: [{ player: 'adi', picks: ['israel'], reserve: 'italy' }],
+      },
+      { countries: ['france'], qualifiers: null, predictions: [] },
+    ]);
+  });
 });
