@@ -66,6 +66,8 @@ const he = {
     here: 'כאן',
     back: 'חזרה למגירות',
     undo: 'ביטול האחרון',
+    skip: 'פספסתי, נחזור אליו בסוף',
+    returning: 'חוזרים לשיר שפספסת',
     restart: 'התחלה מחדש',
     confirmRestart: 'למחוק את התכנון ולהתחיל מחדש?',
     allPlaced: 'כל השירים במגירות. אפשר לשמור כחיזוי ולהמשיך לסדר בגרירה.',
@@ -448,6 +450,8 @@ const en: Strings = {
     here: 'Here',
     back: 'Back to the drawers',
     undo: 'Undo the last',
+    skip: 'Missed it: back to it at the end',
+    returning: 'Back to a song you missed',
     restart: 'Start again',
     confirmRestart: 'Delete the plan and start again?',
     allPlaced:

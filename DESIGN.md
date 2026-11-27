@@ -151,7 +151,8 @@ order is published.
   ten_, _Middle_, _Bottom_, then into its place among the songs already in that drawer;
   the drawers, top to bottom, are the prediction, saved as it like any other and then
   dragged into shape. It judges the place a song will get, not how much one likes it (a
-  ranking by liking is a separate idea, issue #4). The last song placed can be
+  ranking by liking is a separate idea, issue #4). A song missed while watching is
+  skipped and comes back after the last one, marked as returning. The last song placed can be
   taken back; a plan in progress is kept on the device until it is saved (`plan.ts`).
 - **The reveal** (per final, once there is a table): the places hidden, then told from
   the last to the first, one tap at a time (players level on a place together). Before the

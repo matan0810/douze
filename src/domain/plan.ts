@@ -14,10 +14,12 @@ export interface Plan {
   drawers: Record<Drawer, string[]>;
   /** The songs in the order they were placed, so the last one can be taken back. */
   placed: string[];
+  /** Songs missed while watching: they come up again once the others are placed. */
+  skipped: string[];
 }
 
 export function emptyPlan(): Plan {
-  return { drawers: { win: [], top: [], middle: [], bottom: [] }, placed: [] };
+  return { drawers: { win: [], top: [], middle: [], bottom: [] }, placed: [], skipped: [] };
 }
 
 /** The order songs come up in: the running order, then any finalist it lacks, in the field's. */
@@ -27,10 +29,28 @@ export function planOrder(game: Pick<Game, 'finalists' | 'runningOrder'>): strin
   return [...running, ...game.finalists.filter((id) => !running.includes(id))];
 }
 
-/** The next song to place, or undefined once every song is in a drawer. */
+/**
+ * The next song to place: the next in the running order not placed or skipped; after the
+ * last, the skipped ones, in the order they were skipped. Undefined once all are placed.
+ */
 export function nextSong(plan: Plan, order: readonly string[]): string | undefined {
   const placed = new Set(plan.placed);
-  return order.find((id) => !placed.has(id));
+  const skipped = new Set(plan.skipped);
+  return (
+    order.find((id) => !placed.has(id) && !skipped.has(id)) ??
+    plan.skipped.find((id) => !placed.has(id))
+  );
+}
+
+/** Whether the song coming up is one skipped earlier, back for its turn. */
+export function isReturning(plan: Plan, song: string | undefined): boolean {
+  return song !== undefined && plan.skipped.includes(song);
+}
+
+/** Sets a song aside, missed while watching: it comes up again after the others. */
+export function skip(plan: Plan, song: string): Plan {
+  if (plan.placed.includes(song)) return plan;
+  return { ...plan, skipped: [...plan.skipped.filter((id) => id !== song), song] };
 }
 
 /** Puts a song into a drawer at `index` (clamped), out of wherever it was. */
@@ -41,6 +61,7 @@ export function place(plan: Plan, song: string, drawer: Drawer, index: number): 
   return {
     drawers: { ...drawers, [drawer]: list },
     placed: [...plan.placed.filter((id) => id !== song), song],
+    skipped: plan.skipped.filter((id) => id !== song),
   };
 }
 
@@ -48,7 +69,7 @@ export function place(plan: Plan, song: string, drawer: Drawer, index: number): 
 export function undo(plan: Plan): Plan {
   const last = plan.placed.at(-1);
   if (!last) return plan;
-  return { drawers: removed(plan, last), placed: plan.placed.slice(0, -1) };
+  return { ...plan, drawers: removed(plan, last), placed: plan.placed.slice(0, -1) };
 }
 
 function removed(plan: Plan, song: string): Plan['drawers'] {
@@ -92,5 +113,12 @@ export function parsePlan(value: unknown, field: readonly string[]): Plan | unde
   const history = new Set(
     value.placed.filter((id): id is string => typeof id === 'string' && seen.has(id)),
   );
-  return { drawers: plan, placed: [...[...seen].filter((id) => !history.has(id)), ...history] };
+  const skipped = (Array.isArray(value.skipped) ? value.skipped : []).filter(
+    (id): id is string => typeof id === 'string' && known.has(id) && !seen.has(id),
+  );
+  return {
+    drawers: plan,
+    placed: [...[...seen].filter((id) => !history.has(id)), ...history],
+    skipped: [...new Set(skipped)],
+  };
 }

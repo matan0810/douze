@@ -5,11 +5,13 @@ import type { Piece } from '../../domain/pieces';
 import {
   DRAWERS,
   emptyPlan,
+  isReturning,
   nextSong,
   parsePlan,
   place,
   planOrder,
   planRanking,
+  skip,
   undo,
   type Drawer,
 } from '../../domain/plan';
@@ -61,7 +63,9 @@ export function PlanBoard({ game, player, piece, onDone }: Props) {
       )}
       {song ? (
         <section className={`piece-card ${styles.stage}`} aria-live="polite">
-          <span className="eyebrow">{t.plan.onStage}</span>
+          <span className="eyebrow">
+            {isReturning(plan, song) ? t.plan.returning : t.plan.onStage}
+          </span>
           <span className={styles.song}>
             <Flag country={country} size="xl" />
             <strong>{country?.name[language] ?? song}</strong>
@@ -86,6 +90,15 @@ export function PlanBoard({ game, player, piece, onDone }: Props) {
                   </button>
                 ))}
               </div>
+              {order.some((id) => id !== song && !plan.placed.includes(id)) && (
+                <button
+                  type="button"
+                  className="btn btn-quiet"
+                  onClick={() => setPlan(skip(plan, song))}
+                >
+                  {t.plan.skip}
+                </button>
+              )}
             </>
           )}
         </section>

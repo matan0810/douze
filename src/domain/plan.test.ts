@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { emptyGame, setFinalists, setRunningOrder } from './game';
-import { emptyPlan, nextSong, parsePlan, place, planOrder, planRanking, undo } from './plan';
+import {
+  emptyPlan,
+  isReturning,
+  nextSong,
+  parsePlan,
+  place,
+  planOrder,
+  planRanking,
+  skip,
+  undo,
+} from './plan';
 
 describe('planning mode', () => {
   const game = setRunningOrder(setFinalists(emptyGame(2027), ['a', 'b', 'c', 'd']), ['c', 'a']);
@@ -31,6 +41,19 @@ describe('planning mode', () => {
     expect(undo(emptyPlan())).toEqual(emptyPlan());
   });
 
+  it('a song missed while watching comes back after the last one', () => {
+    let plan = skip(emptyPlan(), 'c'); // c was on stage, and we missed it
+    expect(nextSong(plan, order)).toBe('a');
+    expect(isReturning(plan, 'a')).toBe(false);
+    for (const song of ['a', 'b', 'd']) plan = place(plan, song, 'middle', 9);
+    expect(nextSong(plan, order)).toBe('c');
+    expect(isReturning(plan, 'c')).toBe(true);
+    plan = place(plan, 'c', 'top', 0);
+    expect(plan.skipped).toEqual([]);
+    expect(nextSong(plan, order)).toBeUndefined();
+    expect(skip(plan, 'a')).toBe(plan); // a placed song cannot be skipped
+  });
+
   it('reads a saved plan, dropping what does not fit', () => {
     const saved = {
       drawers: { win: ['a', 'x'], top: ['a', 'b'], middle: 'no', bottom: [3] },
@@ -39,7 +62,11 @@ describe('planning mode', () => {
     expect(parsePlan(saved, ['a', 'b', 'c'])).toEqual({
       drawers: { win: ['a'], top: ['b'], middle: [], bottom: [] },
       placed: ['b', 'a'],
+      skipped: [],
     });
+    expect(
+      parsePlan({ ...saved, skipped: ['c', 'a', 'c', 'zz'] }, ['a', 'b', 'c'])?.skipped,
+    ).toEqual(['c']);
     expect(parsePlan({ drawers: {} }, ['a'])).toBeUndefined();
     expect(parsePlan(null, ['a'])).toBeUndefined();
   });

@@ -272,17 +272,21 @@ async function main() {
   await atHash(page, '#/2027/plan');
   await page.getByRole('button', { name: /נועה/ }).click();
   await page.getByText('שיר 1 מתוך 3').waitFor();
+  await page.getByRole('button', { name: /פספסתי/ }).click();
   await page.getByRole('button', { name: 'העשירייה', exact: true }).click();
   await page.getByRole('button', { name: 'העשירייה', exact: true }).click();
   await page.getByRole('button', { name: 'למקום 1 במגירה' }).click();
   await page.reload();
   await page.getByRole('button', { name: /נועה/ }).click();
   await page.getByText('שיר 3 מתוך 3').waitFor();
+  await page.getByText('חוזרים לשיר שפספסת').waitFor();
   await page.getByRole('button', { name: 'התחתית', exact: true }).click();
   await page.getByRole('button', { name: /שמירה כחיזוי של נועה/ }).click();
   await atHash(page, '#/2027/players');
   await page.getByRole('listitem').filter({ hasText: 'נועה' }).getByText('הושלם').waitFor();
-  step('planning mode: drawers, a place inside one, kept after a reload, saved as a prediction');
+  step(
+    'planning mode: drawers, a place inside one, a missed song back at the end, kept after a reload, saved',
+  );
 
   await page.getByRole('button', { name: 'Switch to English' }).click();
   assert.equal(await page.evaluate(() => document.documentElement.dir), 'ltr');
