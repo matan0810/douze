@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { careers, consensus, countryGrid, headToHead, insights } from './stats';
+import { careers, consensus, countryGrid, headToHead, insights, rivalries } from './stats';
 import { game2026 } from './testGame';
 
 describe('what the 2026 final taught us', () => {
@@ -81,5 +81,30 @@ describe('careers across the years', () => {
     const all = careers([game, later, local, local2]);
     expect(all.find((c) => c.key === 'ori')).toMatchObject({ finals: 2, titles: 1 });
     expect(all.find((c) => c.key === 'name:דנה')).toMatchObject({ finals: 2, titles: 2 });
+  });
+});
+
+describe('rivalries and surprises', () => {
+  it('2026: Matan above Adi and Ori, Adi above Ori, one final each', () => {
+    const pairs = rivalries([game2026()]).map((r) => [r.a.key, r.aWins, r.bWins, r.b.key]);
+    expect(pairs).toEqual(
+      expect.arrayContaining([
+        ['matan', 1, 0, 'adi'],
+        ['matan', 1, 0, 'ori'],
+        ['adi', 1, 0, 'ori'],
+      ]),
+    );
+    expect(pairs).toHaveLength(3);
+  });
+
+  it('adds the finals up, the same person joined by id', () => {
+    const r = rivalries([game2026(), { ...game2026(), year: 2027 }]);
+    expect(r.find((x) => x.a.key === 'matan' && x.b.key === 'adi')?.aWins).toBe(2);
+  });
+
+  it('every country has its surprise and who was closest: Israel beat our 5.7 by far', () => {
+    const israel = countryGrid(game2026()).find((row) => row.country === 'israel');
+    expect(israel?.surprise).toBeCloseTo(3.67, 1);
+    expect(israel?.closest).toEqual(['adi', 'matan']);
   });
 });

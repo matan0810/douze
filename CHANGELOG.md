@@ -19,6 +19,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   perfect semi-final.
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
+- New statistics of the final: a card per player (top-ten hits, the biggest miss, the
+  bold call, top against bottom), taste twins, the Israeli heart, the big five, and each
+  country's surprise and who was closest to it.
+- Rivalries on the all-years page: for every pair of us, who finished above whom, final by
+  final.
 - Planning mode: build a prediction while watching. Each song, in the running order,
   goes into a drawer (could win, top ten, middle, bottom) and then into its place there;
   the drawers become the prediction. A plan in progress survives a reload.

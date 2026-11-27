@@ -170,7 +170,19 @@ order is published.
     finished. Countries level on average keep the order of the field.
   - _The prophet_: who placed the winner highest.
   - _Agreement_ and _disagreement_: the smallest and largest spread of predicted places.
-  - _Country by country_: every prediction against the result, in the closeness colours.
+  - _What your prediction says about you_, a card per player (`profile.ts`): _top-ten
+    hits_ (of the real top ten, how many were in theirs: 2026 Matan 9, Adi and Ori 8);
+    _the biggest miss_ (Adi and Ori Lithuania, Matan Austria); _the bold call_, the place
+    furthest from the group's average that came out closer than it (Matan's Germany: 23rd
+    against our 18.3, and 23rd it was); and _top against bottom_, the average places off in
+    the real top half and bottom half (Matan 3.25 at the top; Ori better at the bottom).
+  - _What we learned about ourselves_: _taste twins_, the pair that predicted most alike
+    and the pair furthest apart (Adi and Ori 2.6 places apart on average, Ori and Matan
+    3.3); _the Israeli heart_, where each of us put Israel (`HOME`) against where it
+    finished (2nd; we said 5, 5 and 7); _the big five_ in the final, each of us against
+    the result (the United Kingdom last for all of us, and last).
+  - _Country by country_: every prediction against the result, in the closeness colours,
+    with each country's _surprise_ (our average less its real place) and who was closest.
   - _Head to head_: for every pair, in how many countries each was closer.
 - **Stickers** (`src/domain/badges.ts`), at most two per player, in this order: _Champion!_
   for first place; _So close!_ for second within 15 points of first; _N spot on_ for the
@@ -179,8 +191,9 @@ order is published.
   gives the champion, _Perfect!_ for all ten qualifiers and _11th in_ when the reserve went
   through (at most two); the season's, the champion and _Perfect!_ for a perfect semi. In
   2026: semi 1 Ori champion, Adi 11th in; semi 2 Ori and Matan champions, both 11th in.
-- **All the years**: each final with its winner, and the all-time table by titles, then
-  average share of the maximum, then points. The same person is joined across years by
+- **All the years**: each final with its winner, the all-time table by titles, then
+  average share of the maximum, then points, and the _rivalries_: for every pair of us, in
+  how many finals each finished above the other, like a fixture's score. The same person is joined across years by
   their archive id; players added on a device, by name.
 - **New final**: a year and its countries from the catalogue.
 

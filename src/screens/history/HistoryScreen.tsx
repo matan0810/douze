@@ -1,12 +1,13 @@
 import { archive } from '../../domain/archive';
 import { routeHash } from '../../domain/routes';
-import { careers, gameStandings } from '../../domain/stats';
+import { careers, gameStandings, rivalries } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
 import { Icon } from '../../ui/Icon';
 import { PageTitle } from '../../ui/PageTitle';
 import { PlaceBadge } from '../../ui/PlaceBadge';
 import { Token } from '../../ui/Token';
+import { Rivalries } from './Rivalries';
 import styles from './HistoryScreen.module.css';
 
 /** Every final with its winner, and the all-time table across them. */
@@ -117,6 +118,8 @@ export function HistoryScreen() {
           </div>
         )}
       </section>
+
+      <Rivalries rivalries={rivalries(finals)} />
     </div>
   );
 }

@@ -81,3 +81,19 @@
   font-stretch: var(--display-stretch);
   font-size: 1rem;
 }
+
+/* The surprise: better than we thought in the gold of an exact call, worse in ash. */
+.up {
+  color: var(--exact);
+  font-weight: 800;
+}
+
+.down {
+  color: var(--far);
+  font-weight: 800;
+}
+
+.closest {
+  display: inline-flex;
+  gap: 2px;
+}

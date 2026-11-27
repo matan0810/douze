@@ -221,12 +221,28 @@ async function main() {
   await page.getByRole('heading', { name: 'חוכמת ההמון' }).waitFor();
   await page.getByRole('heading', { name: /מדינה אחר מדינה/ }).waitFor();
   await page.getByRole('heading', { name: /ראש בראש/ }).waitFor();
-  step('stats: what we learned, country by country, head to head');
+  await page.getByRole('heading', { name: /מה החיזוי אומר עליכם/ }).waitFor();
+  await page.getByText('9 מתוך 10').waitFor();
+  await page.getByRole('heading', { name: /הלב הישראלי/ }).waitFor();
+  await page.getByRole('heading', { name: /החמש הגדולות/ }).waitFor();
+  step('stats: what we learned, each of us, the group, country by country, head to head');
 
   await page.goto(`${base}/history`);
   await page.getByRole('link', { name: /2026/ }).first().waitFor();
   await page.getByRole('heading', { name: /טבלת כל הזמנים/ }).waitFor();
-  step('history: winners by year and the all-time table');
+  await page.getByRole('heading', { name: /יריבויות/ }).waitFor();
+  // each number beside its own player: Matan, who finished above Adi, has the 1
+  const fixture = page.getByRole('listitem').filter({ hasText: 'מתן' }).filter({ hasText: 'עדי' });
+  const [matanX, oneX] = await Promise.all([
+    fixture.getByText('מתן').boundingBox(),
+    fixture.getByText('1', { exact: true }).boundingBox(),
+  ]);
+  const zeroX = await fixture.getByText('0', { exact: true }).boundingBox();
+  assert.ok(
+    matanX && oneX && zeroX && Math.abs(matanX.x - oneX.x) < Math.abs(matanX.x - zeroX.x),
+    'the rivalry score puts each number beside its player',
+  );
+  step('history: winners by year, the all-time table and the rivalries');
 
   await page.goto(`${base}/new`);
   await page.getByLabel('שנה').fill('2027');

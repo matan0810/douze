@@ -101,18 +101,29 @@ export interface GridRow {
   average: number;
   /** Each scored player's predicted place, in the order of `scoredPlayers`. */
   predicted: number[];
+  /** Our average place less the real one: above zero, it did better than we thought. */
+  surprise: number;
+  /** Who put it nearest its real place (all of them, if level). */
+  closest: string[];
 }
 
 /** Country by country: where each of us put it, against where it finished. */
 export function countryGrid(game: Game): GridRow[] {
   const players = scoredPlayers(game);
   const { average } = consensus(game);
-  return (game.result ?? []).map((country, i) => ({
-    country,
-    actual: i + 1,
-    average: average.get(country) ?? 0,
-    predicted: players.map((p) => p.order.indexOf(country) + 1),
-  }));
+  return (game.result ?? []).map((country, i) => {
+    const predicted = players.map((p) => p.order.indexOf(country) + 1);
+    const off = predicted.map((place) => Math.abs(place - (i + 1)));
+    const nearest = Math.min(...off);
+    return {
+      country,
+      actual: i + 1,
+      average: average.get(country) ?? 0,
+      predicted,
+      surprise: (average.get(country) ?? 0) - (i + 1),
+      closest: players.filter((_, k) => off[k] === nearest).map((p) => p.id),
+    };
+  });
 }
 
 export interface Duel {
@@ -174,7 +185,7 @@ export function careers(games: readonly Game[]): Career[] {
     for (const s of gameStandings(game)) {
       const player = byId.get(s.player);
       if (!player) continue;
-      const key = /^p[0-9a-z]+(-\d+)?$/.test(player.id) ? `name:${player.name.he}` : player.id;
+      const key = personKey(player);
       const known = all.get(key);
       const entry: Career = known ?? {
         key,
@@ -199,4 +210,56 @@ export function careers(games: readonly Game[]): Career[] {
   return [...all.values()].sort(
     (a, b) => b.titles - a.titles || b.average - a.average || b.points - a.points,
   );
+}
+
+/** The same person across finals: the archive's id, or the name of one added on a device. */
+export function personKey(player: Pick<GamePlayer, 'id' | 'name'>): string {
+  return /^p[0-9a-z]+(-\d+)?$/.test(player.id) ? `name:${player.name.he}` : player.id;
+}
+
+export interface Rivalry {
+  a: { key: string; name: Bilingual };
+  b: { key: string; name: Bilingual };
+  /** Finals where a finished above b, b above a, and level. */
+  aWins: number;
+  bWins: number;
+  level: number;
+}
+
+/**
+ * Every pair of people across every final both were scored in: who finished above whom.
+ * The pair with more finals together comes first; within a pair, the one ahead is `a`.
+ */
+export function rivalries(games: readonly Game[]): Rivalry[] {
+  const pairs = new Map<string, Rivalry>();
+  for (const game of games) {
+    const table = gameStandings(game);
+    const people = table.flatMap((s) => {
+      const player = game.players.find((p) => p.id === s.player);
+      return player ? [{ key: personKey(player), name: player.name, rank: s.rank }] : [];
+    });
+    people.forEach((x, i) =>
+      people.slice(i + 1).forEach((y) => {
+        const [a, b] = x.key < y.key ? [x, y] : [y, x];
+        const id = `${a.key}|${b.key}`;
+        const pair = pairs.get(id) ?? {
+          a: { key: a.key, name: a.name },
+          b: { key: b.key, name: b.name },
+          aWins: 0,
+          bWins: 0,
+          level: 0,
+        };
+        if (a.rank < b.rank) pair.aWins++;
+        else if (b.rank < a.rank) pair.bWins++;
+        else pair.level++;
+        pairs.set(id, pair);
+      }),
+    );
+  }
+  const finals = (r: Rivalry) => r.aWins + r.bWins + r.level;
+  return [...pairs.values()]
+    .map((r) =>
+      r.bWins > r.aWins ? { a: r.b, b: r.a, aWins: r.bWins, bWins: r.aWins, level: r.level } : r,
+    )
+    .sort((x, y) => finals(y) - finals(x) || y.aWins - y.bWins - (x.aWins - x.bWins));
 }
