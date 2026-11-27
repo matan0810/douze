@@ -10,6 +10,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-27
+
 ### Added
 
 - Predictions from every phone, in a group: a manager publishes a year from the group's
@@ -21,6 +23,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - The official result in a group: once a stage has closed, a manager enters it (starting
   from their phone's copy when it has one), and everyone's table appears. Only managers
   can enter or correct it.
+
+### Fixed
+
+- When two phones took over the same name at the same moment, the newer one could be
+  signed out instead of the older.
 
 ## [1.4.0] - 2026-11-27
 
