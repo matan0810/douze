@@ -1,3 +1,4 @@
+import { routeHash } from '../../domain/routes';
 import { archive } from '../../domain/archive';
 import { badges } from '../../domain/badges';
 import type { Game } from '../../domain/game';
@@ -53,10 +54,19 @@ export function LeaderboardPanel({ game, table, live }: Props) {
           <p className={styles.hint}>{t.results.clickPlayer}</p>
         </div>
         {!live && table.length > 0 && (
-          <button type="button" className="btn btn-line" onClick={shareImage}>
-            <Icon name="image" size={15} />
-            {t.results.shareImage}
-          </button>
+          <div className={styles.actions}>
+            <a
+              className="btn btn-line"
+              href={routeHash({ name: 'final', year: game.year, view: 'reveal' })}
+            >
+              <Icon name="crown" size={15} />
+              {t.reveal.open}
+            </a>
+            <button type="button" className="btn btn-line" onClick={shareImage}>
+              <Icon name="image" size={15} />
+              {t.results.shareImage}
+            </button>
+          </div>
         )}
       </div>
       <div className={styles.body}>

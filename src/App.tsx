@@ -8,6 +8,7 @@ import { HistoryScreen } from './screens/history/HistoryScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
 import { NewFinalScreen } from './screens/new/NewFinalScreen';
 import { PlayersScreen } from './screens/players/PlayersScreen';
+import { RevealScreen } from './screens/reveal/RevealScreen';
 import { SeasonScreen } from './screens/season/SeasonScreen';
 import { SemiScreen } from './screens/semi/SemiScreen';
 import { SettingsScreen } from './screens/settings/SettingsScreen';
@@ -48,6 +49,7 @@ export function App() {
       'semi-2': t.stage.semi(2),
       season: t.stage.season,
       settings: t.settings.open,
+      reveal: t.reveal.open,
     };
     const page =
       route.name === 'final' ? `${views[route.view]} · ${t.final(route.year)}` : names[route.name];
@@ -84,6 +86,7 @@ function screen(route: Route, known: boolean) {
         return <ResultsScreen key={route.year} year={route.year} open={route.id} />;
       if (route.view === 'players') return <PlayersScreen key={route.year} year={route.year} />;
       if (route.view === 'stats') return <StatsScreen key={route.year} year={route.year} />;
+      if (route.view === 'reveal') return <RevealScreen key={route.year} year={route.year} />;
       if (route.view === 'season') return <SeasonScreen key={route.year} year={route.year} />;
       if (route.view === 'settings') return <SettingsScreen key={route.year} year={route.year} />;
       {

@@ -19,6 +19,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   perfect semi-final.
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
+- The reveal ceremony: the table told from the last place to the first, one tap at a
+  time, with a drum roll before the first place and _Douze points!_ for the champion.
 - Stickers on the semi-final and season tables: the champion, _Perfect!_ for all ten
   qualifiers, and _11th in_ when the 11th place went through too.
 - A countdown on the home page to the next final whose date is set.

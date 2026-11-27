@@ -1,0 +1,154 @@
+.page {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: 48px var(--gutter);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card,
+.hidden {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 92px;
+  padding: 16px 20px;
+  border-radius: 24px;
+}
+
+/* A place still hidden: a dashed outline and a question mark, waiting for its turn. */
+.hidden {
+  border: 2px dashed var(--line-strong);
+  color: var(--faint);
+}
+
+.secret {
+  flex: 1;
+  font-family: var(--font-brand);
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.place {
+  flex: none;
+  min-width: 2.2em;
+  color: transparent;
+  font-family: var(--font-brand);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-stroke: 1px rgb(251 247 255 / 60%);
+}
+
+.gold,
+.silver,
+.bronze {
+  -webkit-text-stroke: 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.gold {
+  background-image: var(--gold-foil);
+}
+
+.silver {
+  background-image: var(--silver-foil);
+}
+
+.bronze {
+  background-image: var(--bronze-foil);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.points {
+  color: var(--text);
+  text-shadow: 0 3px 0 color-mix(in srgb, var(--pc) 70%, #000);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.douze {
+  --tilt: -4deg;
+  width: fit-content;
+  margin: 0 auto 24px;
+  padding: 8px 24px;
+  border-radius: var(--pill);
+  background: var(--brand-gold);
+  color: var(--on-piece);
+  font-family: var(--font-brand);
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+  font-weight: 800;
+  transform: rotate(var(--tilt));
+}
+
+/* The button stays within reach of a thumb, under the places. */
+.bar {
+  position: sticky;
+  inset-block-end: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-block-start: 28px;
+}
+
+.next {
+  min-width: min(100%, 320px);
+  min-height: 56px;
+  font-size: 1.1rem;
+}
+
+/* Before the first place: the button's light beats like a drum; the button keeps still. */
+.drumroll {
+  animation: drum 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes drum {
+  from {
+    box-shadow:
+      var(--press) var(--key-shadow),
+      0 0 0 0 rgb(255 230 109 / 60%);
+  }
+
+  to {
+    box-shadow:
+      var(--press) var(--key-shadow),
+      0 0 0 12px rgb(255 230 109 / 0%);
+  }
+}
+
+@media (max-width: 480px) {
+  .card,
+  .hidden {
+    gap: 10px;
+    min-height: 76px;
+    padding: 12px 14px;
+  }
+
+  .place {
+    font-size: 1.5rem;
+  }
+
+  .name {
+    font-size: 1.15rem;
+  }
+
+  .points {
+    font-size: 2rem;
+  }
+}

@@ -12,6 +12,7 @@ describe('addresses', () => {
     ['#/2026/semi-2', { name: 'final', year: 2026, view: 'semi-2' }],
     ['#/2026/season', { name: 'final', year: 2026, view: 'season' }],
     ['#/2026/settings', { name: 'final', year: 2026, view: 'settings' }],
+    ['#/2026/reveal', { name: 'final', year: 2026, view: 'reveal' }],
     ['#/2026/player/matan', { name: 'player', year: 2026, id: 'matan' }],
     ['#/history', { name: 'history' }],
     ['#/new', { name: 'new' }],

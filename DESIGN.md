@@ -141,6 +141,10 @@ order is published.
   once; nothing is saved until Save. Each player opens their breakdown, country by
   country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
   language).
+- **The reveal** (per final, once there is a table): the places hidden, then told from
+  the last to the first, one tap at a time (players level on a place together). Before the
+  first place the button's light beats like a drum; the champion's card lands with
+  _Douze points!_ and the ball's facets. Reached from the table.
 - **Stages**: a year with semis shows chips above the table, _Final · Semi-final 1 ·
   Semi-final 2 · Season_, and a link to the year's settings on every one of them.
 - **Semi-final** (per year and semi): who qualified, marked by tapping the countries; each
@@ -176,7 +180,7 @@ order is published.
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
-`#/<year>/season`, `#/<year>/settings`, `#/<year>/player/<id>` a breakdown over the table,
+`#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/player/<id>` a breakdown over the table,
 `#/history`, `#/new`. Unknown
 addresses show home and are rewritten, and so does an unknown path under the site: Pages'
 404 page is a copy of the site.

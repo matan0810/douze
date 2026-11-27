@@ -127,6 +127,16 @@ async function main() {
   assert.equal((await download).suggestedFilename(), 'eurorank-2026.png');
   step('results: the table as an image');
 
+  await page.getByRole('link', { name: /טקס חשיפה/ }).click();
+  await atHash(page, '#/2026/reveal');
+  await page.getByRole('button', { name: 'חשיפת מקום 3' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'אורי' }).getByText('139').waitFor();
+  await page.getByRole('button', { name: 'חשיפת מקום 2' }).click();
+  await page.getByRole('button', { name: 'ובמקום הראשון...' }).click();
+  await page.getByText('Douze points!').waitFor();
+  await page.getByRole('listitem').filter({ hasText: 'מתן' }).getByText('158').waitFor();
+  step('reveal: the table told from the last place to the first, tap by tap');
+
   await page.goto(`${base}/2026/players`);
   await page.getByLabel('הוספת שחקן חדש').fill('טל');
   await page.getByRole('button', { name: 'הוספה', exact: true }).click();
@@ -254,6 +264,7 @@ async function main() {
     '/2026/semi-1',
     '/2026/season',
     '/2026/settings',
+    '/2026/reveal',
     '/history',
     '/new',
     '/2026/player/matan',
