@@ -1,18 +1,22 @@
 import type { Game, GamePlayer } from '../../domain/game';
+import type { Piece } from '../../domain/pieces';
 import { isComplete } from '../../domain/scoring';
 import { useI18n } from '../../i18n/context';
 import { Icon } from '../../ui/Icon';
+import { pieceColour } from '../../ui/pieceColour';
+import { Token } from '../../ui/Token';
 import styles from './PlayerCard.module.css';
 
 interface Props {
   game: Game;
   player: GamePlayer;
+  piece: Piece;
   onEdit: () => void;
   onDelete: () => void;
 }
 
 /** A player: their name, how far their prediction is, and what can be done with it. */
-export function PlayerCard({ game, player, onEdit, onDelete }: Props) {
+export function PlayerCard({ game, player, piece, onEdit, onDelete }: Props) {
   const { t, language } = useI18n();
   const total = game.finalists.length;
   const count = player.order.length;
@@ -20,7 +24,8 @@ export function PlayerCard({ game, player, onEdit, onDelete }: Props) {
   const name = player.name[language];
 
   return (
-    <li className={`${styles.row} rise`}>
+    <li className={`${styles.row} rise`} style={pieceColour(piece)}>
+      <Token name={name} piece={piece} />
       <div className={styles.info}>
         <span className={styles.name}>{name}</span>
         <span className={`${styles.status} ${complete ? styles.complete : ''} num`}>

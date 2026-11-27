@@ -1,3 +1,4 @@
+import type { Piece } from '../domain/pieces';
 import type { Standing } from '../domain/scoring';
 import type { Strings } from '../i18n/strings';
 
@@ -5,6 +6,7 @@ interface Input {
   title: string;
   table: Standing[];
   names: ReadonlyMap<string, string>;
+  pieces: ReadonlyMap<string, Piece>;
   t: Strings;
 }
 
@@ -19,11 +21,17 @@ function token(name: string, fallback: string): string {
 
 /**
  * The leaderboard as a picture for a chat, in the site's look and the page's language:
- * the velvet night with the ball's reflections, the wordmark, and every player on a
- * hairline row with their place in Syne (the first three in their metals) and their
- * points thin and large; the leader's in the ball's light.
+ * the velvet night with the ball's reflections, the wordmark, and every player on a row
+ * outlined in their colour, with their place in Syne (the first three in their metals),
+ * their token, and their points in their colour; the leader's row in the ball's light.
  */
-export async function drawShareImage({ title, table, names, t }: Input): Promise<Blob | null> {
+export async function drawShareImage({
+  title,
+  table,
+  names,
+  pieces,
+  t,
+}: Input): Promise<Blob | null> {
   await document.fonts.ready;
   await document.fonts.load('800 60px Syne');
   const height = TOP + table.length * ROW + 140;
@@ -34,8 +42,7 @@ export async function drawShareImage({ title, table, names, t }: Input): Promise
   if (!c) return null;
   const rtl = t.dir === 'rtl';
   c.direction = rtl ? 'rtl' : 'ltr';
-  const text = (weight: number, size: number) =>
-    `${weight} ${size}px 'Noto Sans Hebrew', sans-serif`;
+  const text = (weight: number, size: number) => `${weight} ${size}px Rubik, sans-serif`;
   const brandFont = (size: number) => `800 ${size}px Syne, sans-serif`;
   // x measured from the reading start
   const x = (fromStart: number) => (rtl ? WIDTH - fromStart : fromStart);
@@ -85,34 +92,49 @@ export async function drawShareImage({ title, table, names, t }: Input): Promise
   table.forEach((s, i) => {
     const y = TOP + i * ROW;
     const first = s.rank === 1;
-    // the row's hairline, in the ball's light for the leader
-    c.fillStyle = first ? brand(60, WIDTH - 60) : 'rgb(255 255 255 / 12%)';
-    c.fillRect(60, y + ROW - 1, WIDTH - 120, first ? 2 : 1);
+    const colour = token(`--piece-${pieces.get(s.player) ?? 'violet'}`, '#a78bfa');
+    // the row, outlined in the player's colour, the leader's in the ball's light
+    c.lineWidth = first ? 3 : 2;
+    c.strokeStyle = first ? brand(60, WIDTH - 60) : colour;
+    c.globalAlpha = first ? 1 : 0.55;
+    c.beginPath();
+    c.roundRect(60, y + 8, WIDTH - 120, ROW - 20, 26);
+    c.stroke();
+    c.globalAlpha = 1;
     // the place
     c.textAlign = rtl ? 'right' : 'left';
-    c.font = brandFont(54);
+    c.font = brandFont(48);
     const metal = metals[s.rank - 1];
     if (metal) {
-      const g = c.createLinearGradient(0, y + 30, 0, y + 80);
-      metal.forEach((colour, k) => g.addColorStop(k / 2, colour));
+      const g = c.createLinearGradient(0, y + 40, 0, y + 84);
+      metal.forEach((stop, k) => g.addColorStop(k / 2, stop));
       c.fillStyle = g;
-      c.fillText(String(s.rank).padStart(2, '0'), x(70), y + 82);
+      c.fillText(String(s.rank).padStart(2, '0'), x(90), y + 84);
     } else {
       c.strokeStyle = 'rgb(243 238 251 / 45%)';
       c.lineWidth = 1.5;
-      c.strokeText(String(s.rank).padStart(2, '0'), x(70), y + 82);
+      c.strokeText(String(s.rank).padStart(2, '0'), x(90), y + 84);
     }
+    // the token
+    const name = names.get(s.player) ?? s.player;
+    c.fillStyle = colour;
+    c.beginPath();
+    c.arc(x(232), y + 68, 30, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = token('--on-piece', '#1a0b2e');
+    c.textAlign = 'center';
+    c.font = text(800, 30);
+    c.fillText(name.charAt(0), x(232), y + 79);
     // the name
+    c.textAlign = rtl ? 'right' : 'left';
     c.fillStyle = ink;
-    c.font = text(500, 44);
-    c.fillText(names.get(s.player) ?? s.player, x(210), y + 78);
-    // the points, thin and large
+    c.font = text(700, 42);
+    c.fillText(name, x(286), y + 82);
+    // the points, heavy, in the player's colour
     c.textAlign = rtl ? 'left' : 'right';
-    c.font = text(200, 76);
-    c.fontStretch = 'condensed';
-    c.fillStyle = first ? brand(rtl ? 60 : WIDTH - 260, rtl ? 260 : WIDTH - 60) : ink;
-    c.fillText(String(s.total), x(WIDTH - 70), y + 88);
-    c.fontStretch = 'normal';
+    c.font = text(800, 64);
+    c.fillStyle = colour;
+    c.fillText(String(s.total), x(WIDTH - 90), y + 90);
   });
 
   c.textAlign = 'center';

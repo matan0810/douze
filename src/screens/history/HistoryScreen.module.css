@@ -117,7 +117,10 @@
 }
 
 .who {
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
 }
 
 .titles {

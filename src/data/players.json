@@ -4,20 +4,23 @@
     "name": {
       "he": "עדי",
       "en": "Adi"
-    }
+    },
+    "piece": "cyan"
   },
   {
     "id": "ori",
     "name": {
       "he": "אורי",
       "en": "Ori"
-    }
+    },
+    "piece": "violet"
   },
   {
     "id": "matan",
     "name": {
       "he": "מתן",
       "en": "Matan"
-    }
+    },
+    "piece": "pink"
   }
 ]

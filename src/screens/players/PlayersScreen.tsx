@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { archive } from '../../domain/archive';
 import { addPlayer, removePlayer, setOrder } from '../../domain/game';
+import { playerPieces } from '../../domain/pieces';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
 import { Icon } from '../../ui/Icon';
@@ -19,6 +21,7 @@ export function PlayersScreen({ year }: { year: number }) {
   const [editing, setEditing] = useState<string | null>(null);
   if (!game) return null;
   const player = game.players.find((p) => p.id === editing);
+  const pieces = playerPieces(game, archive.players);
 
   const add = () => {
     if (!name.trim()) return;
@@ -78,6 +81,7 @@ export function PlayersScreen({ year }: { year: number }) {
                   key={p.id}
                   game={game}
                   player={p}
+                  piece={pieces.get(p.id) ?? 'violet'}
                   onEdit={() => setEditing(p.id)}
                   onDelete={() => {
                     if (window.confirm(t.players.confirmDelete(p.name[language])))

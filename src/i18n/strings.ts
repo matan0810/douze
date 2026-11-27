@@ -23,6 +23,19 @@ const he = {
     newFinal: 'A NEW FINAL',
     home: (year: number) => `EUROVISION · ${year}`,
   },
+  badge: {
+    champion: 'אלוף!',
+    almost: 'כמעט!',
+    almostTitle: (gap: number) => `רק ${gap} נקודות מהמקום הראשון`,
+    sharpshooter: (n: number) => `${n} בול`,
+    sharpshooterTitle: 'הכי הרבה מקומות מדויקים',
+    prophet: 'נביא',
+    prophetTitle: (place: number) => `שם את הזוכה הכי גבוה: מקום ${place}`,
+  },
+  facts: {
+    countries: (n: number) => `${n} מדינות`,
+    players: (n: number) => `${n} שחקנים`,
+  },
   nav: {
     label: 'ניווט ראשי',
     home: 'דף הבית',
@@ -229,6 +242,19 @@ const en: Strings = {
     history: 'ALL THE YEARS',
     newFinal: 'A NEW FINAL',
     home: (year) => `EUROVISION · ${year}`,
+  },
+  badge: {
+    champion: 'Champion!',
+    almost: 'So close!',
+    almostTitle: (gap) => `Only ${gap} points behind first`,
+    sharpshooter: (n) => `${n} spot on`,
+    sharpshooterTitle: 'The most exact places',
+    prophet: 'Prophet',
+    prophetTitle: (place) => `Put the winner highest: place ${place}`,
+  },
+  facts: {
+    countries: (n) => `${n} countries`,
+    players: (n) => `${n} players`,
   },
   nav: {
     label: 'Main',

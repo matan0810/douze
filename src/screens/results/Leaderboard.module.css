@@ -1,63 +1,49 @@
 .list {
   display: flex;
   flex-direction: column;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Each player's row: clear on the night, outlined in their colour. */
 .row {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 22px 8px;
-  border-block-end: 1px solid var(--line);
-  transition: background-color 0.2s ease;
+  gap: 16px;
+  padding: 18px 16px;
+  border: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  border-radius: 18px;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .row:hover {
-  background: rgb(255 255 255 / 2%);
+  border-color: var(--pc);
+  transform: translateY(-2px);
 }
 
-/* The leader: a wash of the ball's light, and its line under the row. */
+/* The leader: outlined in the ball's light. */
 .first {
-  position: relative;
-  background: linear-gradient(
-    100deg,
-    rgb(249 168 212 / 8%),
-    rgb(192 132 252 / 5%),
-    transparent 75%
-  );
-  border-block-end-color: transparent;
+  border-color: transparent;
+  background:
+    linear-gradient(var(--night), var(--night)) padding-box,
+    var(--brand) border-box;
 }
 
-.first::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: -1px;
-  height: 1px;
-  background: var(--brand);
+.first:hover {
+  border-color: transparent;
 }
 
-[dir='rtl'] .first {
-  background: linear-gradient(
-    260deg,
-    rgb(249 168 212 / 8%),
-    rgb(192 132 252 / 5%),
-    transparent 75%
-  );
-}
-
-/* The place: a large numeral, drawn in outline; the first three in their metals. */
 .place {
   flex: none;
-  /* As wide as its two digits: the metal's gradient covers only the element's box. */
   width: max-content;
   min-width: 2.2em;
   color: transparent;
   font-family: var(--font-brand);
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 800;
   line-height: 1;
   -webkit-text-stroke: 1px rgb(243 238 251 / 45%);
@@ -94,55 +80,43 @@
 
 .name {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  overflow: hidden;
   font-size: 1.1rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.crown {
-  display: inline-flex;
-  color: var(--gold);
+  font-weight: 700;
 }
 
 .track {
   display: block;
-  height: 1px;
-  background: var(--line-strong);
+  height: 5px;
+  border-radius: var(--pill);
+  background: rgb(255 255 255 / 8%);
 }
 
 .fill {
   display: block;
-  height: 1px;
-  background: rgb(243 238 251 / 60%);
-  animation: grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.first .fill {
-  height: 2px;
-  margin-block-start: -0.5px;
-  background: var(--brand);
+  height: 100%;
+  border-radius: var(--pill);
+  background: var(--pc);
+  animation: grow 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
   color: var(--faint);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
+  font-size: 0.72rem;
 }
 
 .score {
   flex: none;
   min-width: 3ch;
+  color: var(--pc);
   font-family: var(--font-display);
-  font-size: 2.5rem;
-  font-weight: var(--display-weight);
-  font-stretch: var(--display-stretch);
+  font-size: 2.3rem;
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.02em;
   text-align: end;
 }
 
@@ -160,15 +134,15 @@
 
 @media (max-width: 480px) {
   .row {
-    gap: 14px;
-    padding-inline: 4px;
+    gap: 10px;
+    padding: 14px 12px;
   }
 
   .place {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   .score {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }

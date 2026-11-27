@@ -128,7 +128,12 @@ export function CountryPicker({ field, selected, onChange, emptyHint }: Props) {
           )}
         </div>
         {open && (
-          <ul id={listId} role="listbox" aria-label={t.picker.suggestions} className={styles.menu}>
+          <ul
+            id={listId}
+            role="listbox"
+            aria-label={t.picker.suggestions}
+            className={`${styles.menu} fade`}
+          >
             {matches.length === 0 && <li className={styles.noMatch}>{t.picker.noMatch}</li>}
             {matches.map((c, i) => (
               <li key={c.id} role="option" aria-selected={i === active}>

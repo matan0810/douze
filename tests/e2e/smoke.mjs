@@ -100,6 +100,19 @@ async function main() {
   const board = page.getByRole('region', { name: /טבלת מובילים/ });
   await board.getByText('158', { exact: true }).waitFor();
   assert.equal(await board.getByRole('listitem').count(), 3);
+  // Playwright counts a transparent element as visible: check that the rows really land.
+  await page.waitForFunction(
+    () => {
+      const rows = [...document.querySelectorAll('ol > li.land')];
+      return rows.length === 3 && rows.every((r) => getComputedStyle(r).opacity === '1');
+    },
+    null,
+    { timeout: 5000 },
+  );
+  await board.getByText('158', { exact: true }).waitFor();
+  await board.getByText('אלוף!').waitFor();
+  await board.getByText('כמעט!').waitFor();
+  await board.getByText('3 בול').waitFor();
   await board.getByRole('link', { name: /מתן/ }).click();
   await atHash(page, '#/2026/player/matan');
   const breakdown = page.getByRole('dialog', { name: 'מתן' });
@@ -107,7 +120,7 @@ async function main() {
   assert.equal(await breakdown.getByRole('row').count(), 26, 'a row per country and a header');
   await page.keyboard.press('Escape');
   await atHash(page, '#/2026');
-  step('results: the 2026 table, and a breakdown with its own address');
+  step('results: the 2026 table lands, with its stickers, and a breakdown with its own address');
 
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: /תמונה לשיתוף/ }).click();

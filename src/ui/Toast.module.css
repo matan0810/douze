@@ -16,5 +16,4 @@
   background: var(--velvet);
   color: var(--text);
   font-size: 0.9rem;
-  animation: rise 0.25s ease-out both;
 }

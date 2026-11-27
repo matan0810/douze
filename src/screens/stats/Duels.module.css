@@ -1,7 +1,7 @@
 .list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 0 32px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -11,8 +11,9 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 18px 0;
-  border-block-end: 1px solid var(--line);
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
 }
 
 .names {
@@ -21,6 +22,13 @@
   justify-content: space-between;
   gap: 8px;
   font-weight: 500;
+}
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
 }
 
 .winner {
@@ -36,8 +44,10 @@
 
 .bar {
   display: flex;
-  height: 2px;
-  background: var(--line);
+  gap: 2px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--pill);
 }
 
 .a {

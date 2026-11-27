@@ -1,3 +1,4 @@
+import { archive } from '../../domain/archive';
 import { routeHash } from '../../domain/routes';
 import { careers, gameStandings } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
@@ -5,6 +6,7 @@ import { useGames } from '../../state/context';
 import { Icon } from '../../ui/Icon';
 import { PageTitle } from '../../ui/PageTitle';
 import { PlaceBadge } from '../../ui/PlaceBadge';
+import { Token } from '../../ui/Token';
 import styles from './HistoryScreen.module.css';
 
 /** Every final with its winner, and the all-time table across them. */
@@ -91,7 +93,14 @@ export function HistoryScreen() {
                       <PlaceBadge place={i + 1} />
                     </td>
                     <td className={styles.start}>
-                      <span className={styles.who}>{c.name[language]}</span>
+                      <span className={styles.who}>
+                        <Token
+                          name={c.name[language]}
+                          piece={archive.players.find((p) => p.id === c.key)?.piece ?? 'violet'}
+                          size="sm"
+                        />
+                        {c.name[language]}
+                      </span>
                     </td>
                     <td className={`${styles.titles} num`}>
                       {c.titles > 0 && <Icon name="crown" size={14} />}

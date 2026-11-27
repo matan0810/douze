@@ -1,0 +1,28 @@
+.token {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--on-piece);
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 8%);
+}
+
+.sm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+}
+
+.md {
+  width: 44px;
+  height: 44px;
+  font-size: 1.15rem;
+}
+
+.lg {
+  width: 60px;
+  height: 60px;
+  font-size: 1.6rem;
+}

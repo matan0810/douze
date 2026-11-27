@@ -4,6 +4,7 @@ import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
 import { Icon, type IconName } from '../../ui/Icon';
+import { Sticker } from '../../ui/Sticker';
 import { Wordmark } from '../../ui/Wordmark';
 import styles from './HomeScreen.module.css';
 
@@ -38,9 +39,26 @@ export function HomeScreen() {
     <div className={styles.page}>
       <section className={`${styles.hero} rise`}>
         <span className={`eyebrow text-brand ${styles.eyebrow}`}>{t.eyebrow.home(year)}</span>
-        <h1 className={styles.title}>
-          <Wordmark size="hero" />
-        </h1>
+        <div className={styles.stage}>
+          <h1 className={styles.title}>
+            <Wordmark size="hero" />
+          </h1>
+          {game && (
+            <span className={styles.facts} aria-hidden="true">
+              <span className={`${styles.fact} ${styles.factA}`}>
+                <Sticker delay={0.5}>{t.facts.countries(game.finalists.length)}</Sticker>
+              </span>
+              <span className={`${styles.fact} ${styles.factB}`}>
+                <Sticker delay={0.7}>{t.facts.players(game.players.length)}</Sticker>
+              </span>
+              <span className={`${styles.fact} ${styles.factC}`}>
+                <Sticker tone="gold" delay={0.9}>
+                  {t.final(year)}
+                </Sticker>
+              </span>
+            </span>
+          )}
+        </div>
         <p className={styles.slogan}>{t.slogan}</p>
         <p className={styles.lead}>{t.heroLine}</p>
         {leader && leaderName && (

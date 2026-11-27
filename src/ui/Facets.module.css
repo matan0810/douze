@@ -1,0 +1,21 @@
+/* A picture over the page: physical top and left, in either direction. */
+.burst {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.facet {
+  position: absolute;
+  top: -20px;
+  border-radius: 2px;
+  animation: fall linear both;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}

@@ -237,7 +237,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
 
 - **Stack:** React, TypeScript (strict), Vite, CSS Modules, Vitest, Playwright for the
   browser test. Node 22 (`.nvmrc`). Runtime dependencies: React, `@dnd-kit` (dragging rows
-  by pointer, touch and keyboard) and the Noto Sans Hebrew and Syne fonts.
+  by pointer, touch and keyboard) and the Rubik and Syne fonts.
 - **Hosting:** GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to
   `master` (Settings → Pages → Source: GitHub Actions); the repository's name in
   `package.json` is the site's path. The old `gh-pages` branch is no longer used.
@@ -263,7 +263,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   - What a visitor enters on their own device stays on it; the repository's data is the
     archive. No server, no account. Sharing between phones comes with a server (issue #1);
     no more link features until then (the owner's decision, 2026-11-26).
-  - The look is "light on velvet" and the brand is Douze, both the owner's choice
+  - The look is "a game show on velvet" and the brand is Douze, both the owner's choice
     (`DESIGN.md`, section 2): do not redesign either unasked. No emoji in the interface:
     an icon from `src/ui/Icon.tsx`. A change to the mark goes into
     `scripts/ball.ts`, then `node scripts/brand.ts` redraws every brand file.

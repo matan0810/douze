@@ -1,3 +1,5 @@
+import { archive } from '../../domain/archive';
+import { playerPieces } from '../../domain/pieces';
 import { countryGrid, headToHead, insights, scoredPlayers } from '../../domain/stats';
 import { useI18n } from '../../i18n/context';
 import { useGame } from '../../state/context';
@@ -32,7 +34,13 @@ export function StatsScreen({ year }: { year: number }) {
         <div className={styles.sections}>
           <InsightCards found={found} names={names} />
           <CountryGrid rows={countryGrid(game)} players={players} />
-          {players.length > 1 && <Duels duels={headToHead(game)} names={names} />}
+          {players.length > 1 && (
+            <Duels
+              duels={headToHead(game)}
+              names={names}
+              pieces={playerPieces(game, archive.players)}
+            />
+          )}
         </div>
       )}
     </div>

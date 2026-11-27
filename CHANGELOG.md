@@ -10,6 +10,17 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Changed
+
+- Douze feels like a game: every player has a colour and a token of their own, on every
+  screen and in the image of the table; rounded shapes and a rounded, heavy typeface
+  (Rubik); buttons that press like keys; and stickers of reward on the table: _Champion!_,
+  _So close!_, the most exact places, and the _Prophet_ who put the winner highest.
+- The table lands like a scoreboard on the night: from the last place to the first, the
+  points counting up, the stickers slapped on, and a burst of the mirror ball's facets for
+  the winner. All of it stays still for anyone who asked their device for less motion.
+- The home page wears the final's facts as stickers around the name.
+
 ## [1.2.0] - 2026-11-27
 
 A new name, a new address: the site is Douze, at https://matan0810.github.io/douze. Breaking

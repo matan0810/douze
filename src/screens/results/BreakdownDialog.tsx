@@ -1,8 +1,10 @@
-import { countryById } from '../../domain/archive';
+import { archive, countryById } from '../../domain/archive';
 import type { Game } from '../../domain/game';
 import { isComplete, scorePrediction } from '../../domain/scoring';
 import { useI18n } from '../../i18n/context';
+import { playerPieces } from '../../domain/pieces';
 import { Dialog } from '../../ui/Dialog';
+import { Token } from '../../ui/Token';
 import { Flag } from '../../ui/Flag';
 import { closeness } from './closeness';
 import styles from './BreakdownDialog.module.css';
@@ -34,6 +36,11 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
         score && (
           <>
             <div className={styles.who}>
+              <Token
+                name={name}
+                piece={playerPieces(game, archive.players).get(found?.id ?? '') ?? 'violet'}
+                size="lg"
+              />
               <div>
                 <h2 className={styles.name}>{name}</h2>
                 <div className={styles.summary}>

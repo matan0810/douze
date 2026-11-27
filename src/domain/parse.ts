@@ -1,3 +1,4 @@
+import { isPiece } from './pieces';
 import type { Archive, Bilingual, Country, Edition, Player, Prediction } from './types';
 
 /**
@@ -65,7 +66,9 @@ export function parsePlayers(value: unknown): Player[] {
   const players = list(value, 'players').map((raw, i) => {
     const where = `players[${i}]`;
     if (!isRecord(raw)) fail(where, 'expected a player');
-    return { id: id(raw.id, `${where}.id`), name: bilingual(raw.name, where) };
+    if (raw.piece !== undefined && !isPiece(raw.piece)) fail(`${where}.piece`, 'expected a piece');
+    const player: Player = { id: id(raw.id, `${where}.id`), name: bilingual(raw.name, where) };
+    return isPiece(raw.piece) ? { ...player, piece: raw.piece } : player;
   });
   unique(
     players.map((p) => p.id),

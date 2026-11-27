@@ -1,9 +1,9 @@
-/* Douze: light on velvet (DESIGN.md, section 2).
-   The site is a velvet night; its only colour is the light of the mirror ball: one brand
-   gradient, used sparingly, and the three metals for the first three places. Everything is
-   precise: hairlines instead of boxes, corners of 2px, no glow, no shadow. Components use
-   these tokens and classes, never raw values, and logical properties throughout, so Hebrew
-   and English share every rule. */
+/* Douze: a game show on velvet (DESIGN.md, section 2).
+   The night stays a velvet night with the mirror ball's light; on it, the game: every
+   player a colour and a token, rounded shapes, heavy rounded type, stickers of reward and
+   buttons that press. Surfaces stay clear: colour is in the pieces, never in the fills.
+   Components use these tokens and classes, never raw values, and logical properties
+   throughout, so Hebrew and English share every rule. */
 @import './fonts.css';
 
 :root {
@@ -49,6 +49,17 @@
   --silver-foil: linear-gradient(180deg, #ffffff, #c9ced6 55%, #8a93a0);
   --bronze-foil: linear-gradient(180deg, #ffd9b0, #e08a4b 55%, #8a4a1c);
 
+  /* The players' game pieces (src/domain/pieces.ts), and the ink that sits on them */
+  --piece-pink: #f472b6;
+  --piece-cyan: #22d3ee;
+  --piece-violet: #a78bfa;
+  --piece-gold: #fbbf24;
+  --piece-lime: #a3e635;
+  --piece-coral: #fb7185;
+  --piece-sky: #60a5fa;
+  --piece-orange: #fb923c;
+  --on-piece: #1a0b2e;
+
   /* How close a predicted place was, in the brand's own light */
   --exact: #fde68a;
   --near: #f9a8d4;
@@ -56,13 +67,16 @@
   --far: #7d7291;
 
   /* Type: text, display (titles and scores, thin), and the brand's Latin face */
-  --font: 'Noto Sans Hebrew', system-ui, sans-serif;
+  --font: Rubik, system-ui, sans-serif;
   --font-display: var(--font);
-  --display-weight: 200;
-  --display-stretch: 75%;
+  --display-weight: 800;
+  --display-stretch: 100%;
   --font-brand: Syne, var(--font);
 
-  --radius: 2px;
+  --radius: 14px;
+  --radius-small: 8px;
+  --pill: 999px;
+  --press: 0 4px 0;
   --tap: 40px;
   --gutter: 16px;
   --page: 1152px;
@@ -192,6 +206,7 @@ button:disabled {
 }
 
 .btn {
+  --key-shadow: rgb(0 0 0 / 45%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -200,18 +215,26 @@ button:disabled {
   padding: 8px 18px;
   border: 1px solid transparent;
   border-radius: var(--radius);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 0.9rem;
+  font-weight: 700;
   text-align: center;
+  box-shadow: var(--press) var(--key-shadow);
   transition:
     filter 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
 }
 
 .btn:not(:disabled):hover {
   filter: brightness(1.1);
+}
+
+/* A button is a key: it stands on its shadow, and goes down when pressed. */
+.btn:not(:disabled):active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--key-shadow, rgb(0 0 0 / 45%));
 }
 
 .btn:disabled {
@@ -224,6 +247,7 @@ button:disabled {
 
 /* The one main action of a screen. */
 .btn-primary {
+  --key-shadow: #9d3d7a;
   background: var(--brand);
   color: var(--velvet);
 }
@@ -233,6 +257,7 @@ button:disabled {
   border-color: var(--line-strong);
   background: transparent;
   color: var(--faint);
+  box-shadow: none;
   opacity: 1;
 }
 
@@ -250,6 +275,7 @@ button:disabled {
 
 /* A step back or a reset: words only. */
 .btn-quiet {
+  box-shadow: none;
   min-height: 32px;
   padding-inline: 4px;
   background: transparent;
@@ -262,6 +288,10 @@ button:disabled {
 .btn-quiet:not(:disabled):hover {
   color: var(--text);
   filter: none;
+}
+
+.btn-quiet:not(:disabled):active {
+  box-shadow: none;
 }
 
 .input {
@@ -357,6 +387,49 @@ button:disabled {
 @keyframes fade {
   from {
     opacity: 0;
+  }
+}
+
+/* Entrances of the game: a row lands with a little bounce; a sticker is slapped on. Shared
+   classes, since an animation named inside a CSS Module would be renamed locally. */
+.land {
+  animation: jump 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.slapped {
+  animation: slap 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+/* A row lands in its place with a little bounce. */
+@keyframes jump {
+  0% {
+    opacity: 0;
+    transform: translateY(32px) scale(0.92);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A sticker is slapped on. */
+@keyframes slap {
+  0% {
+    transform: scale(0) rotate(-24deg);
+  }
+
+  70% {
+    transform: scale(1.25) rotate(var(--tilt, -6deg));
+  }
+
+  100% {
+    transform: rotate(var(--tilt, -6deg));
   }
 }
 

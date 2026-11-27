@@ -18,12 +18,15 @@ waits for a server (issue #1): links without one were tried in 1.1.0 and removed
 
 ## 2. Look
 
-**Light on velvet** (chosen by the owner on 2026-11-26, after the first site's look and
-several directions): the site is a velvet night, and its only colour is the light of the
-mirror ball. Precise and calm: hairlines instead of boxes, corners of 2 px, no glow and no
-shadow, thin large type, and emoji replaced by line icons. The structure comes from the
-"scoreboard noir" direction, the colours from "velvet". It is not to be redesigned without
-the owner asking.
+**A game show on velvet** (chosen by the owner on 2026-11-27). The night of "light on
+velvet" stays: the velvet room, the mirror ball's reflections, the brand, the eyebrows and
+the Syne numerals. On it, the site plays: every player is a game piece with a colour and a
+token, shapes are rounded, titles and scores heavy and rounded, buttons press like keys,
+stickers reward, and the table lands and counts up like a scoreboard on the night. Surfaces
+stay clear on the night (the owner's "background like A"): colour lives in the pieces, the
+outlines, the numbers and the stickers, never in a filled card. Before it: the first site's
+look, then "light on velvet" (precise, 2026-11-26), which the owner found too serious for a
+game. It is not to be redesigned without the owner asking.
 
 **The brand: Douze.** The name comes from "douze points", the twelve points, the phrase
 everyone knows from the Eurovision scoreboard. It is written in Latin letters in both
@@ -47,23 +50,30 @@ of joining the winning two.
   cannot redirect it). The keys saved on devices keep the first name (`eurorank:…`).
 
 - **Tokens and shared forms** are in `src/styles/global.css`: the night, the brand
-  gradient and its hairline, the metals, the closeness colours, the fonts; and the forms
-  `frame` (a hairline; `frame-lit` for what matters most), `text-brand`, `eyebrow`, buttons
-  (`btn-primary` for the one main action, `btn-line` for the rest, `btn-quiet` for a step
-  back), `input`, `note`. Components use them and their own CSS Modules, with logical
-  properties.
-- **Colour.** Velvet black and ivory. The brand gradient (pink, violet, gold) only where the
-  eye should go: the main action, the leader, the tab shown, the first word of a title, the
-  eyebrow. Gold, silver and bronze only for the first three places.
+  gradient and its hairline, the metals, the pieces, the closeness colours, the fonts, the
+  radii; and the forms `frame`, `text-brand`, `eyebrow`, buttons (`btn-primary` for the one
+  main action, `btn-line` for the rest, `btn-quiet` for a step back), `input`, `note`, and
+  the entrances `rise`, `fade`, `land` and `slapped` (shared classes: an animation named
+  inside a CSS Module is renamed locally and never runs). Components use them and their own
+  CSS Modules, with logical properties.
+- **Game pieces.** Each player has a colour (`src/domain/pieces.ts`): the archive's
+  players name theirs in `players.json` (Matan pink, Adi cyan, Ori violet); a player added
+  on a device takes the first one free in that final. Their token is a disc in that colour
+  with their initial; their row is outlined in it, their bar and points are in it, on every
+  screen and in the share image.
+- **Shapes.** Corners of 14 px (`--radius`), rows and cards 18 to 22 px, stickers and
+  chips round (`--pill`). Buttons stand on a 4 px shadow and go down when pressed.
+- **Colour.** Velvet black and ivory, the players' pieces, and the brand gradient (pink,
+  violet, gold) where the eye should go: the main action, the leader's outline, the tab
+  shown, the first word of a title, the eyebrow. Gold, silver and bronze only for the first
+  three places.
 - **Closeness**, wherever a predicted place meets the actual one, in the brand's light:
   exact in gold, within 2 in pink, within 5 in violet, beyond in ash (`closeness.ts`, the
   `--exact`, `--near`, `--off`, `--far` tokens).
-- **Type.** One family, Noto Sans Hebrew (variable, bundled), in two voices: text at regular
-  width and weight (`--font`), and the display voice, thin and narrow (`--font-display`,
-  `--display-weight` 200, `--display-stretch` 75%), for titles, scores and big numbers: a
-  couture headline beside the wide wordmark. Syne (`--font-brand`) for the wordmark, the
-  eyebrows and large numerals only (its digits are unreadable small). Chosen 2026-11-26 after
-  two rounds of specimens, at the owner's request that it be chosen for him (issue #2).
+- **Type.** Rubik (variable, bundled): rounded and friendly, regular for text and heavy
+  (800) for titles, scores and big numbers (`--font`, `--font-display`, `--display-weight`).
+  Syne (`--font-brand`) for the wordmark, the eyebrows and large numerals only (its digits
+  are unreadable small). Earlier: Noto Sans Hebrew, thin and narrow, for "light on velvet".
 - **Eyebrows**: a spaced Latin line above every title, the same in both languages
   (_LEADERBOARD · 2026_, _THE PLAYERS · 2026_, _STATISTICS · 2026_, _ALL THE YEARS_).
 - **Places**: two-digit numerals. In the table, large in Syne, outlined, the first three
@@ -73,9 +83,13 @@ of joining the winning two.
   in colour; a hairline ring keeps white ones visible.
 - **The room**: a spotlight from above and the square reflections of the ball, slowly
   catching the light, instead of stars.
-- **Motion**: content rises a few pixels into place, rows one after another; the table's
-  lines draw themselves; live mode blinks a pink "on air" light. All of it stops with
-  reduced motion.
+- **Stickers** of reward on the table (rules in section 4), slapped on at a tilt; and the
+  final's facts stuck around the wordmark on the home page (countries, players, the year).
+- **Motion**: the table's rows land from the last place to the first, 0.35 s apart, with a
+  bounce; the points count up as they land; the stickers are slapped on after; when the
+  leader lands, a burst of the ball's facets falls over the screen (once per showing of the
+  table, 4 seconds). Elsewhere content rises a few pixels into place, and live mode blinks
+  a pink "on air" light. All of it stops with reduced motion: numbers appear at once.
 - **Phones**: the bar keeps only the icon of each link below 900 px, and below 420 px the
   home link steps aside (the name leads home) and the wordmark is smaller; the results page
   puts the table above the official order below 1024 px.
@@ -115,6 +129,10 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
   - _Agreement_ and _disagreement_: the smallest and largest spread of predicted places.
   - _Country by country_: every prediction against the result, in the closeness colours.
   - _Head to head_: for every pair, in how many countries each was closer.
+- **Stickers** (`src/domain/badges.ts`), at most two per player, in this order: _Champion!_
+  for first place; _So close!_ for second within 15 points of first; _N spot on_ for the
+  most exact places (at least two); _Prophet_ for whoever put the winner highest. In 2026:
+  Matan champion and prophet, Adi so close (13 behind), Ori 3 spot on.
 - **All the years**: each final with its winner, and the all-time table by titles, then
   average share of the maximum, then points. The same person is joined across years by
   their archive id; players added on a device, by name.

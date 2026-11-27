@@ -1,3 +1,5 @@
+import type { Piece } from './pieces';
+
 /** A text in both interface languages. */
 export interface Bilingual {
   he: string;
@@ -16,6 +18,8 @@ export interface Country {
 export interface Player {
   id: string;
   name: Bilingual;
+  /** Their colour on every screen (`pieces.ts`). */
+  piece?: Piece;
 }
 
 /** One player's predicted order of the final: country ids, first place first. */

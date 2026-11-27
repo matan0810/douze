@@ -20,7 +20,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div className={styles.region} role="status" aria-live="polite">
         {message && (
-          <div key={message.at} className={styles.toast}>
+          <div key={message.at} className={`${styles.toast} rise`}>
             {message.text}
           </div>
         )}
