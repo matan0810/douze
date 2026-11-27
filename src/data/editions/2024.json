@@ -1,0 +1,181 @@
+{
+  "year": 2024,
+  "host": {
+    "he": "מאלמו",
+    "en": "Malmö"
+  },
+  "hostCountry": "sweden",
+  "final": "2024-05-11",
+  "season": false,
+  "finalists": [
+    "armenia",
+    "austria",
+    "croatia",
+    "cyprus",
+    "estonia",
+    "finland",
+    "france",
+    "georgia",
+    "germany",
+    "greece",
+    "ireland",
+    "israel",
+    "italy",
+    "latvia",
+    "lithuania",
+    "luxembourg",
+    "norway",
+    "portugal",
+    "serbia",
+    "slovenia",
+    "spain",
+    "sweden",
+    "switzerland",
+    "ukraine",
+    "united-kingdom"
+  ],
+  "result": null,
+  "predictions": [
+    {
+      "player": "adi",
+      "order": [
+        "croatia",
+        "switzerland",
+        "france",
+        "israel",
+        "ukraine",
+        "ireland",
+        "lithuania",
+        "finland",
+        "italy",
+        "spain",
+        "greece",
+        "estonia",
+        "armenia",
+        "united-kingdom",
+        "sweden",
+        "serbia",
+        "cyprus",
+        "austria",
+        "portugal",
+        "luxembourg",
+        "georgia",
+        "germany",
+        "slovenia",
+        "latvia",
+        "norway"
+      ]
+    },
+    {
+      "player": "ori",
+      "order": [
+        "switzerland",
+        "croatia",
+        "france",
+        "italy",
+        "ukraine",
+        "israel",
+        "armenia",
+        "ireland",
+        "finland",
+        "lithuania",
+        "greece",
+        "estonia",
+        "spain",
+        "sweden",
+        "cyprus",
+        "united-kingdom",
+        "norway",
+        "germany",
+        "austria",
+        "luxembourg",
+        "slovenia",
+        "serbia",
+        "georgia",
+        "latvia",
+        "portugal"
+      ]
+    },
+    {
+      "player": "matan",
+      "order": [
+        "croatia",
+        "israel",
+        "switzerland",
+        "france",
+        "ireland",
+        "ukraine",
+        "estonia",
+        "italy",
+        "lithuania",
+        "finland",
+        "norway",
+        "armenia",
+        "cyprus",
+        "georgia",
+        "greece",
+        "serbia",
+        "austria",
+        "portugal",
+        "sweden",
+        "spain",
+        "luxembourg",
+        "slovenia",
+        "united-kingdom",
+        "latvia",
+        "germany"
+      ]
+    }
+  ],
+  "semis": [
+    {
+      "countries": [
+        "australia",
+        "azerbaijan",
+        "croatia",
+        "cyprus",
+        "finland",
+        "iceland",
+        "ireland",
+        "lithuania",
+        "luxembourg",
+        "moldova",
+        "poland",
+        "portugal",
+        "serbia",
+        "slovenia",
+        "ukraine"
+      ],
+      "qualifiers": [
+        "cyprus",
+        "serbia",
+        "lithuania",
+        "ireland",
+        "ukraine",
+        "croatia",
+        "slovenia",
+        "finland",
+        "portugal",
+        "luxembourg"
+      ],
+      "predictions": [
+        {
+          "player": "matan",
+          "picks": [
+            "cyprus",
+            "lithuania",
+            "ireland",
+            "ukraine",
+            "croatia",
+            "finland",
+            "portugal",
+            "luxembourg",
+            "australia",
+            "slovenia"
+          ],
+          "reserve": "serbia"
+        }
+      ]
+    }
+  ]
+}

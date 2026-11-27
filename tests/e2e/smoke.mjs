@@ -200,6 +200,24 @@ async function main() {
   await page.getByRole('dialog', { name: 'מתן' }).getByText('×2').waitFor();
   step('joker: switched on in the settings, starred in the editor, counted twice');
 
+  // The earlier years are in the archive and have addresses of their own.
+  await page.goto(`${base}/2024/semi-1`);
+  await atHash(page, '#/2024/semi-1');
+  await page.getByRole('listitem').filter({ hasText: 'מתן' }).getByText('19').first().waitFor();
+  await page.goto(`${base}/2025/semi-1`);
+  await atHash(page, '#/2025/semi-1');
+  assert.equal(
+    (await page
+      .getByRole('listitem')
+      .filter({ hasText: /אורי|מתן/ })
+      .count()) >= 2,
+    true,
+  );
+  await page.goto(`${base}/2024/players`);
+  await atHash(page, '#/2024/players');
+  await page.getByRole('listitem').filter({ hasText: 'עדי' }).getByText('הושלם').waitFor();
+  step('earlier years: 2024 and 2025 open at their own addresses, with their semi tables');
+
   await page.goto(`${base}/2026/settings`);
   await page.getByRole('heading', { name: /המדינות בחצי גמר 2/ }).waitFor();
   await page.getByRole('button', { name: 'עריכה' }).nth(1).click();

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { archive } from './archive';
+import { gameFromEdition } from './game';
 import { season2026 } from './testSeason';
 import { isCompletePick, qualifierCount, scoreSemiPick, semiStandings } from './semis';
 import { seasonStandings } from './season';
@@ -82,5 +83,49 @@ describe('the 2026 semi-finals, from the real data', () => {
       bonus: 5,
       total: 145 + 20 + 5,
     });
+  });
+});
+
+describe('the earlier years in the archive', () => {
+  const edition = (year: number) => {
+    const found = archive.editions.find((e) => e.year === year);
+    if (!found) throw new Error(`no ${year} in the archive`);
+    return found;
+  };
+  const scores = (year: number, semi: number) =>
+    Object.fromEntries(
+      semiStandings(gameFromEdition(edition(year), archive.players).semis[semi] ?? emptySemi).map(
+        (s) => [s.player, s.points],
+      ),
+    );
+  const emptySemi = { countries: [], qualifiers: null, predictions: [] };
+
+  it('know the fields of the finals: 25 in 2024 (the Netherlands was disqualified), 26 in 2025', () => {
+    expect(edition(2024).finalists).toHaveLength(25);
+    expect(edition(2025).finalists).toHaveLength(26);
+    expect(
+      edition(2024)
+        .predictions.map((p) => p.player)
+        .sort(),
+    ).toEqual(['adi', 'matan', 'ori']);
+    expect(
+      edition(2025)
+        .predictions.map((p) => p.player)
+        .sort(),
+    ).toEqual(['matan', 'ori']);
+  });
+
+  it('score 2024 semi 1 for Matan: 9 of his 10 went through, and his 11th, Serbia, too', () => {
+    expect(scores(2024, 0)).toEqual({ matan: 19 });
+  });
+
+  it('score 2025: semi 1 Ori and Matan level on 15, semi 2 Ori 15', () => {
+    expect(scores(2025, 0)).toEqual({ ori: 15, matan: 15 });
+    expect(scores(2025, 1)).toEqual({ ori: 15 });
+  });
+
+  it('keep the semis out of the season: not everyone played every stage', () => {
+    expect(edition(2024).season).toBe(false);
+    expect(edition(2025).season).toBe(false);
   });
 });

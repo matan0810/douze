@@ -1,0 +1,220 @@
+{
+  "year": 2025,
+  "host": {
+    "he": "באזל",
+    "en": "Basel"
+  },
+  "hostCountry": "switzerland",
+  "final": "2025-05-17",
+  "season": false,
+  "finalists": [
+    "albania",
+    "armenia",
+    "austria",
+    "denmark",
+    "estonia",
+    "finland",
+    "france",
+    "germany",
+    "greece",
+    "iceland",
+    "israel",
+    "italy",
+    "latvia",
+    "lithuania",
+    "luxembourg",
+    "malta",
+    "netherlands",
+    "norway",
+    "poland",
+    "portugal",
+    "san-marino",
+    "spain",
+    "sweden",
+    "switzerland",
+    "ukraine",
+    "united-kingdom"
+  ],
+  "result": null,
+  "predictions": [
+    {
+      "player": "ori",
+      "order": [
+        "austria",
+        "sweden",
+        "france",
+        "finland",
+        "switzerland",
+        "estonia",
+        "italy",
+        "israel",
+        "albania",
+        "germany",
+        "netherlands",
+        "malta",
+        "iceland",
+        "spain",
+        "ukraine",
+        "greece",
+        "poland",
+        "luxembourg",
+        "san-marino",
+        "latvia",
+        "denmark",
+        "lithuania",
+        "norway",
+        "armenia",
+        "portugal",
+        "united-kingdom"
+      ]
+    },
+    {
+      "player": "matan",
+      "order": [
+        "austria",
+        "sweden",
+        "finland",
+        "france",
+        "estonia",
+        "netherlands",
+        "iceland",
+        "germany",
+        "albania",
+        "israel",
+        "greece",
+        "malta",
+        "switzerland",
+        "poland",
+        "luxembourg",
+        "spain",
+        "ukraine",
+        "latvia",
+        "italy",
+        "denmark",
+        "san-marino",
+        "portugal",
+        "norway",
+        "armenia",
+        "lithuania",
+        "united-kingdom"
+      ]
+    }
+  ],
+  "semis": [
+    {
+      "countries": [
+        "albania",
+        "azerbaijan",
+        "belgium",
+        "croatia",
+        "cyprus",
+        "estonia",
+        "iceland",
+        "netherlands",
+        "norway",
+        "poland",
+        "portugal",
+        "san-marino",
+        "slovenia",
+        "sweden",
+        "ukraine"
+      ],
+      "qualifiers": [
+        "albania",
+        "estonia",
+        "iceland",
+        "netherlands",
+        "norway",
+        "poland",
+        "portugal",
+        "san-marino",
+        "sweden",
+        "ukraine"
+      ],
+      "predictions": [
+        {
+          "player": "ori",
+          "picks": [
+            "sweden",
+            "cyprus",
+            "croatia",
+            "estonia",
+            "iceland",
+            "poland",
+            "albania",
+            "belgium",
+            "ukraine",
+            "norway"
+          ],
+          "reserve": "netherlands"
+        },
+        {
+          "player": "matan",
+          "picks": [
+            "iceland",
+            "estonia",
+            "sweden",
+            "norway",
+            "belgium",
+            "netherlands",
+            "croatia",
+            "cyprus",
+            "albania",
+            "ukraine"
+          ],
+          "reserve": "poland"
+        }
+      ]
+    },
+    {
+      "countries": [
+        "armenia",
+        "australia",
+        "austria",
+        "czechia",
+        "denmark",
+        "finland",
+        "georgia",
+        "greece",
+        "ireland",
+        "israel",
+        "latvia",
+        "lithuania",
+        "luxembourg",
+        "malta",
+        "montenegro",
+        "serbia"
+      ],
+      "qualifiers": [
+        "armenia",
+        "austria",
+        "denmark",
+        "finland",
+        "greece",
+        "israel",
+        "latvia",
+        "lithuania",
+        "luxembourg",
+        "malta"
+      ],
+      "predictions": [
+        {
+          "player": "ori",
+          "picks": [
+            "finland",
+            "austria",
+            "israel",
+            "luxembourg",
+            "australia",
+            "ireland",
+            "malta",
+            "czechia",
+            "greece",
+            "lithuania"
+          ],
+          "reserve": "armenia"
+        }
+      ]
+    }
+  ]
+}
