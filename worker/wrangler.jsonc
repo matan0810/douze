@@ -1,0 +1,18 @@
+// Cloudflare Worker behind Douze: groups, predictions from every phone, live moments.
+// See SERVER.md in project-template for the standard it follows, and issue #1 for the plan.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "douze-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  // Keeps the Worker's own log lines (Workers Logs, free). Cloudflare's automatic per-request
+  // log is off: it would store request headers. The Worker logs one line per request itself,
+  // without addresses, tokens or bodies.
+  "observability": {
+    "enabled": true,
+    "logs": { "invocation_logs": false },
+  },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://matan0810.github.io,http://localhost:5173",
+  },
+}

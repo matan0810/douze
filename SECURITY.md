@@ -25,16 +25,39 @@ longer does. The Content Security Policy (`vite.config.ts`)
 enforces it, and the browser test fails if any request leaves the site. A new host needs a
 reason, a change to the policy and a line here.
 
+## The server (groundwork, issue #1)
+
+The Worker `douze-api` (`worker/`, on Cloudflare; the standard is the template's `SERVER.md`)
+has one address so far, `GET /health`, and holds no data and no secret. It is not yet
+called by the site, so the Content Security Policy is unchanged: when the site first calls it,
+its host goes into `connect-src` with this line. Held to the standard from the start:
+
+- Deny by default: an unknown path is a plain 404, an unknown method a 405.
+- CORS answers the site's own origins only (`ALLOWED_ORIGINS` in `wrangler.jsonc`).
+- A request body is capped (`shared/limits.ts`) by its declared and its real size.
+- An unexpected error is a plain 500 that names nothing; the log has only the kind of error,
+  and one line per request without address, header or body.
+- Every answer is `no-store`, `nosniff` and sent with no referrer.
+- Secrets will be 256-bit random tokens stored as SHA-256 hashes, compared in constant time
+  (`shared/tokens.ts`); who may do what is one table, checked cell by cell
+  (`shared/capabilities.ts`).
+
+The deploy token (`CLOUDFLARE_API_TOKEN`) and the account id are repository secrets, used
+only by `deploy-worker.yml`, which has read-only permissions and keeps no checkout token.
+
 ## Threats and what answers them
 
-| Threat                      | Answer                                                                                 | Checked by                                                |
-| --------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Script injection (XSS)      | Text is rendered as React text; CSP allows only the site's own files; Trusted Types on | e2e: CSP present, no violations                           |
-| Tampered saved choices      | Parsed and checked; a bad value means the default                                      | unit (`storage.test.ts`, `game.test.ts`, `games.test.ts`) |
-| A disguised download name   | ASCII names only, no path or direction characters                                      | unit (`download.test.ts`), e2e                            |
-| A compromised dependency    | Few runtime dependencies; `npm audit` blocks high advisories; no install scripts       | CI                                                        |
-| A compromised workflow step | Read-only permissions by default; checkouts keep no token                              | review                                                    |
-| A forged release            | Releases only from the deploy workflow; version, commit and date checked               | unit (`changelog.test.ts`)                                |
+| Threat                             | Answer                                                                                 | Checked by                                                |
+| ---------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Script injection (XSS)             | Text is rendered as React text; CSP allows only the site's own files; Trusted Types on | e2e: CSP present, no violations                           |
+| Tampered saved choices             | Parsed and checked; a bad value means the default                                      | unit (`storage.test.ts`, `game.test.ts`, `games.test.ts`) |
+| A disguised download name          | ASCII names only, no path or direction characters                                      | unit (`download.test.ts`), e2e                            |
+| A compromised dependency           | Few runtime dependencies; `npm audit` blocks high advisories; no install scripts       | CI                                                        |
+| A compromised workflow step        | Read-only permissions by default; checkouts keep no token                              | review                                                    |
+| A forged release                   | Releases only from the deploy workflow; version, commit and date checked               | unit (`changelog.test.ts`)                                |
+| A request the server should refuse | Deny by default; origin, size and method checked; errors name nothing                  | unit (`worker/src/app.test.ts`), the real runtime         |
+| A guessed or leaked secret         | 256-bit tokens, hashes only stored, constant-time comparison                           | unit (`shared/server.test.ts`)                            |
+| A role doing too much              | One table of capabilities, deny by default, walked cell by cell                        | unit (`shared/server.test.ts`)                            |
 
 ## Known limits, accepted
 

@@ -1,3 +1,5 @@
+import { LIMITS } from '../../shared/config';
+import { cleanName as cleanNameTo } from '../../shared/names';
 import { DATE_PATTERN, isRecord } from './parse';
 import { isComplete } from './scoring';
 import { isCompleteQualifiers, MAX_SEMIS, qualifierCount, type Semi, type SemiPick } from './semis';
@@ -43,8 +45,8 @@ export interface Game {
 }
 
 /** Limits on what is entered or received: names, players, the field. */
-export const MAX_NAME = 30;
-export const MAX_PLAYERS = 40;
+export const MAX_NAME = LIMITS.nameMax;
+export const MAX_PLAYERS = LIMITS.membersPerGroup;
 export const MAX_FINALISTS = 40;
 /** The first contest (1956), the same lower bound the data checks use in `parse.ts`. */
 export const MIN_YEAR = 1956;
@@ -58,14 +60,7 @@ export function isYear(value: unknown): value is number {
 
 /** A name as typed: trimmed, inner spaces collapsed, no control or direction marks, capped. */
 export function cleanName(raw: string): string {
-  return (
-    raw
-      // eslint-disable-next-line no-control-regex
-      .replace(/[\u0000-\u001f\u007f‎‏‪-‮⁦-⁩]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, MAX_NAME)
-  );
+  return cleanNameTo(raw, MAX_NAME);
 }
 
 /** A name typed on a device is the same in both languages. */

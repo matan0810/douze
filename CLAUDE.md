@@ -249,7 +249,12 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
 - **Hosting:** GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to
   `master` (Settings → Pages → Source: GitHub Actions); the repository's name in
   `package.json` is the site's path. The old `gh-pages` branch is no longer used.
-- **Commands:** `npm run dev` (local site), `npm run check` (types, lint, format, unit tests),
+- **The server (in progress, issue #1):** a Cloudflare Worker, `worker/`, deployed by
+  `.github/workflows/deploy-worker.yml` from `master` once the `CLOUDFLARE_API_TOKEN` and
+  `CLOUDFLARE_ACCOUNT_ID` secrets exist (until then the job skips and passes). It follows
+  the template's `SERVER.md`: `shared/` holds what the site and the Worker both use (limits,
+  roles, secrets, names) and stays free of DOM and Worker APIs.
+- **Commands:** `npm run dev` (local site), `npm run worker:dev` (the Worker locally), `npm run check` (types, lint, format, unit tests),
   `npm run build && npm run e2e` (browser test), `npm run bump -- patch|minor|major` (release).
 - **Layout:** `src/domain/` the rules with no UI (scoring, data checks, games,
   statistics, addresses); `src/data/` the country catalogue, the players and one file per
@@ -271,6 +276,10 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   - What a visitor enters on their own device stays on it; the repository's data is the
     archive. No server, no account. Sharing between phones comes with a server (issue #1);
     no more link features until then (the owner's decision, 2026-11-26).
+  - The Worker's main file, `worker/src/index.ts`, exports only the default handler: Cloudflare
+    treats every named export of it as an entry point. The logic is in `worker/src/app.ts`,
+    tested in plain Node with web-standard `Request` and `Response`, and tried in the real
+    runtime with `npm run worker:dev` before a deploy.
   - The look is "the party" and the brand is Douze, both the owner's choice
     (`DESIGN.md`, section 2): do not redesign either unasked. No emoji in the interface:
     an icon from `src/ui/Icon.tsx`. A change to the mark goes into

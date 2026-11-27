@@ -19,6 +19,8 @@ Live at https://matan0810.github.io/douze.
 | Path                     | What                                                                                                   |
 | ------------------------ | ------------------------------------------------------------------------------------------------------ |
 | `src/domain/`            | Scoring, data checks, games, statistics, addresses: no UI                                              |
+| `shared/`                | What the site and the Worker both use: limits, roles, secrets, names (no DOM, no Worker APIs)          |
+| `worker/`                | The Cloudflare Worker: `npm run worker:dev`, deployed by `deploy-worker.yml` (issue #1)                |
 | `src/data/`              | Countries, players, and one file per year in `editions/`                                               |
 | `src/state/`             | The finals of this device, saved and read back                                                         |
 | `src/screens/`           | One folder per screen: home, players, results, semi, season, settings, plan, reveal, stats, history, … |
