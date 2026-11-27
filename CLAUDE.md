@@ -125,6 +125,14 @@ Checks green, browser checked when the UI changed, CHANGELOG updated, pushed to 
 - Accessible by default: real `<button>`s and `<a>`s, a visible label or an `aria-label`,
   every screen has its own address.
 - No new runtime dependency without a reason in the commit body.
+- **Brand and link card, in every project.** A name, a mark and a tagline go wherever the
+  site's address travels: the tab's title, the favicon, the home-screen icons and the web
+  manifest, and a link card of 1200 × 630 that chats (WhatsApp, Telegram) show, through Open
+  Graph and Twitter tags with the card's address absolute. The files are drawn by a script
+  and committed, and the browser test checks the tags and that the card is served. The name
+  and the mark are the owner's choice (section 2: options rendered and shown before
+  building). Here: the mark in `scripts/ball.ts`, the files by `node scripts/brand.ts`, the
+  tags in `vite.config.ts`.
 
 ## 6. Security baseline
 
