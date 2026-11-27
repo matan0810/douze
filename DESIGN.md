@@ -15,7 +15,7 @@ them is made here first (CLAUDE.md, section 4).
 The archive (`src/data/`) is what the repository says; everything else lives on the device
 that entered it. Sharing between phones comes with the server (issue #1, the template's
 `SERVER.md`), in phases: groups first (section 4, _Groups_), then predictions, results and
-the live night from every phone. Links without a server were tried in 1.1.0 and removed. A
+the live night from every phone. Links without a server were tried in 0.2.0 and removed. A
 build without the server's address (`VITE_API_URL`) has no groups at all: no link, no screen.
 
 ## 2. Look

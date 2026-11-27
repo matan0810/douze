@@ -175,6 +175,10 @@ Semantic versioning, `MAJOR.MINOR.PATCH`:
 The version lives in `package.json` and `package-lock.json`, kept in step by `npm run bump`
 and checked by a test, and is shown in the interface.
 
+Until the first full production release the version is 0.x (the owner's decision,
+2026-11-28): the site has had no public use, so `minor` is the usual bump and nothing is
+`major`. That release, when issue #6 is done, is 1.0.0.
+
 ## 9. Releasing (only on the owner's order)
 
 A release is a push to `master` whose version has no tag yet. After the deploy, the deploy

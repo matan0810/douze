@@ -4,13 +4,18 @@ All changes a visitor or the owner would notice are recorded here. The format fo
 [Keep a Changelog](https://keepachangelog.com/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
-Version 1.0.0 was never numbered at the time. It was reconstructed from the git history and
+Versions below 1.0.0 are pre-release: the site has had no public use yet, and the first full
+production release will be 1.0.0 (issue #6). The first six releases were numbered 1.0.0 to
+1.5.0 and renumbered 0.1.0 to 0.6.0 on 2026-11-28, at the owner's request, each at the commit
+it was first released at.
+
+Version 0.1.0 was never numbered at the time. It was reconstructed from the git history and
 the deploy runs: the one state of `master` that reached the live site as a working site, on
 2026-05-18, by a manual deploy to the old `gh-pages` branch.
 
 ## [Unreleased]
 
-## [1.5.0] - 2026-11-27
+## [0.6.0] - 2026-11-27
 
 ### Added
 
@@ -29,7 +34,7 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - When two phones took over the same name at the same moment, the newer one could be
   signed out instead of the older.
 
-## [1.4.0] - 2026-11-27
+## [0.5.0] - 2026-11-27
 
 ### Added
 
@@ -60,7 +65,7 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - The browser tab is titled _Douze_ on the home page and by the page and the year elsewhere,
   so the Latin name no longer scrambles the order of the Hebrew words.
 
-## [1.3.0] - 2026-11-27
+## [0.4.0] - 2026-11-27
 
 ### Added
 
@@ -112,7 +117,7 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   the winner. All of it stays still for anyone who asked their device for less motion.
 - The home page wears the final's facts as stickers around the name.
 
-## [1.2.0] - 2026-11-27
+## [0.3.0] - 2026-11-27
 
 A new name, a new address: the site is Douze, at https://matan0810.github.io/douze. Breaking
 the old address would make this a major version; the owner chose a minor one, since the
@@ -152,7 +157,7 @@ site had not been in real use yet.
 - On small phones (360 pixels wide and less) the bar no longer cuts off the language switch:
   the name stays and leads home, and the separate home link steps aside.
 
-## [1.1.0] - 2026-11-26
+## [0.2.0] - 2026-11-26
 
 The second generation of the site, rebuilt on the method and tools of the project template,
 in the look of the first.
@@ -204,7 +209,7 @@ in the look of the first.
 - Saved data and received links are checked strictly; a tampered value is ignored.
 - No dependency runs code when it is installed, and CI leaves no token on disk.
 
-## [1.0.0] - 2026-05-18
+## [0.1.0] - 2026-05-18
 
 The first site: published after the 2026 final, with its result in it.
 
