@@ -78,12 +78,19 @@ describe('what the server answers', () => {
           locked: false,
           done: [member],
           entries: [{ member, entry: { order: field, joker: null } }],
+          result: null,
         },
       ],
     };
     expect(parseYearView(view)?.stages[0]?.entries).toHaveLength(1);
     expect(parseYearView({ ...view, stages: [view.stages[0], view.stages[0]] })).toBeUndefined();
     expect(parseYearView({ ...view, year: 1900 })).toBeUndefined();
+    const withResult = { ...view.stages[0], result: [...field].reverse() };
+    expect(parseYearView({ ...view, stages: [withResult] })?.stages[0]?.result).toEqual(
+      [...field].reverse(),
+    );
+    const partial = { ...view.stages[0], result: field.slice(1) };
+    expect(parseYearView({ ...view, stages: [partial] })).toBeUndefined();
   });
 
   it('reads the list of years', () => {

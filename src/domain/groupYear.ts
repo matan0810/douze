@@ -1,5 +1,11 @@
 import type { Member } from '../../shared/groups';
-import { isFinalEntry, type Stage, type StageSetup, type YearView } from '../../shared/years';
+import {
+  isFinalEntry,
+  type Stage,
+  type StageSetup,
+  type StageView,
+  type YearView,
+} from '../../shared/years';
 import { emptyGame, type Game } from './game';
 import type { Semi } from './semis';
 
@@ -84,23 +90,21 @@ const sameField = (a: readonly string[], b: readonly string[]) =>
 
 /**
  * The group's year as a final the site can score: the predictions it may see, and the
- * result and the qualifiers this device knows for the same countries (until the server
- * keeps results, issue #1).
+ * results a manager entered on the server. The group's results are its own: a phone's copy
+ * of the year does not stand in for them.
  */
-export function groupGame(view: YearView, members: readonly Member[], base?: Game): Game {
+export function groupGame(view: YearView, members: readonly Member[]): Game {
   const game = emptyGame(view.year);
   const names = new Map(members.map((m) => [m.id, m.name]));
   const stage = (name: Stage) => view.stages.find((s) => s.stage === name);
   const final = stage('final');
-  const semis = (['semi-1', 'semi-2'] as const).flatMap((name, index): Semi[] => {
+  const semis = (['semi-1', 'semi-2'] as const).flatMap((name): Semi[] => {
     const semi = stage(name);
     if (!semi) return [];
-    const known = base?.semis[index];
     return [
       {
         countries: semi.countries,
-        qualifiers:
-          known?.qualifiers && sameField(known.countries, semi.countries) ? known.qualifiers : null,
+        qualifiers: semi.result,
         predictions: semi.entries.flatMap(({ member, entry }) =>
           isFinalEntry(entry) ? [] : [{ player: member, ...entry }],
         ),
@@ -115,12 +119,23 @@ export function groupGame(view: YearView, members: readonly Member[], base?: Gam
   return {
     ...game,
     finalists: final?.countries ?? [],
-    result:
-      final && base?.result && sameField(base.finalists, final.countries) ? base.result : null,
+    result: final?.result ?? null,
     players,
     semis,
     options: { season: false, joker: final?.joker ?? false },
   };
+}
+
+/**
+ * What a manager starts from when entering a stage's result: this phone's copy of it, when
+ * the phone knows the same stage with the same countries (the archive, for a past year).
+ */
+export function knownResult(stage: StageView, base: Game | undefined): string[] | null {
+  if (!base) return null;
+  if (stage.stage === 'final')
+    return base.result && sameField(base.finalists, stage.countries) ? base.result : null;
+  const semi = base.semis[stage.stage === 'semi-1' ? 0 : 1];
+  return semi?.qualifiers && sameField(semi.countries, stage.countries) ? semi.qualifiers : null;
 }
 
 function jokerOf(entry: { joker: string | null }) {

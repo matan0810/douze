@@ -4,6 +4,8 @@ import {
   isStage,
   MAX_GROUP_YEARS,
   parseEntry,
+  parseResult,
+  parseSetResult,
   parseStageSetup,
   qualifierCount,
   STAGES,
@@ -59,12 +61,21 @@ async function stages(sql: Sql, groupId: string, year: number) {
   const rows = await all(
     sql
       .prepare(
-        'SELECT stage, countries, lock_at, joker FROM stages WHERE group_id = ?1 AND year = ?2',
+        'SELECT stage, countries, lock_at, joker, result FROM stages WHERE group_id = ?1 AND year = ?2',
       )
       .bind(groupId, year),
   );
   return rows
-    .map((row) => ({ stage: stageOf(row), setup: setupOf(row) }))
+    .map((row) => {
+      const stage = stageOf(row);
+      const setup = setupOf(row);
+      const raw = row.result;
+      const result =
+        typeof raw === 'string'
+          ? parseStored(raw, (value) => parseResult(stage, value, setup.countries))
+          : null;
+      return { stage, setup, result };
+    })
     .sort((a, b) => STAGES.indexOf(a.stage) - STAGES.indexOf(b.stage));
 }
 
@@ -77,7 +88,7 @@ async function yearView(sql: Sql, groupId: string, year: number, me: string): Pr
       )
       .bind(groupId, year),
   );
-  const views = (await stages(sql, groupId, year)).map(({ stage, setup }): StageView => {
+  const views = (await stages(sql, groupId, year)).map(({ stage, setup, result }): StageView => {
     const locked = now >= setup.lockAt;
     const mine = rows.filter((row) => stageOf(row) === stage);
     return {
@@ -91,6 +102,7 @@ async function yearView(sql: Sql, groupId: string, year: number, me: string): Pr
           member: text(row, 'member_id'),
           entry: parseStored(text(row, 'body'), (value) => parseEntry(stage, value, setup)),
         })),
+      result,
     };
   });
   return { year, now, stages: views };
@@ -250,6 +262,34 @@ export async function closeStage(
       )
       .bind(Date.now(), groupId, year, stage),
     ...log(sql, groupId, who.member.name, 'stage.close', `${year} ${stage}`),
+  ]);
+  return json(await yearView(sql, groupId, year, who.member.id));
+}
+
+/**
+ * The official result of a stage, by a manager, once it has closed: before that, a result
+ * would be there for everyone to copy. Sent again, it replaces the last; null takes it back.
+ */
+export async function setResult(
+  request: Request,
+  env: Env,
+  groupId: string,
+  year: number,
+  stage: Stage,
+): Promise<Response> {
+  const sql = env.DB;
+  const who = await writer(request, sql, groupId);
+  allow(who, 'results.write');
+  const setup = (await stages(sql, groupId, year)).find((s) => s.stage === stage)?.setup;
+  if (!setup) throw new HttpError(404, 'No such stage', 'not-found');
+  if (Date.now() < setup.lockAt)
+    throw new HttpError(409, 'Close the predictions first', 'not-closed');
+  const { result } = await body(request, (value) => parseSetResult(stage, value, setup.countries));
+  await sql.batch([
+    sql
+      .prepare('UPDATE stages SET result = ?1 WHERE group_id = ?2 AND year = ?3 AND stage = ?4')
+      .bind(result ? JSON.stringify(result) : null, groupId, year, stage),
+    ...log(sql, groupId, who.member.name, 'result.set', `${year} ${stage}`),
   ]);
   return json(await yearView(sql, groupId, year, who.member.id));
 }

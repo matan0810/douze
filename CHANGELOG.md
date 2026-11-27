@@ -17,7 +17,10 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   everyone enters their own final and semi picks from their own phone. Predictions stay
   open through the show, until the results start to be read: then a manager closes them
   (or the stage closes by itself after the show). Until then each sees only their own and
-  who has finished; after, everyone's, and the table once the result is known.
+  who has finished; after, everyone's.
+- The official result in a group: once a stage has closed, a manager enters it (starting
+  from their phone's copy when it has one), and everyone's table appears. Only managers
+  can enter or correct it.
 
 ## [1.4.0] - 2026-11-27
 

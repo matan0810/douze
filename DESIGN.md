@@ -241,9 +241,13 @@ order is published.
     which is Israel's; that is when the votes start to be read. The server's clock decides.
   - Until a stage closes, each member sees only their own prediction and who has finished
     (a finished final has every country placed; a semi, its qualifiers and a reserve).
-    Once it closes, everyone sees everyone's, and the table, scored by the rules of section
-    3, as soon as the official result is known on the phone looking at it (the server keeps
-    results in the next phase, issue #1).
+    Once it closes, everyone sees everyone's.
+  - **The official result** of a closed stage is entered by a manager: the final's whole
+    order, a semi's qualifiers. It starts from the manager's phone's copy when it has the
+    same countries (the archive, for a past year). It is a fact, entered once; correcting
+    it is there for a mistake, and only managers can (the owner, 2026-11-28). With it,
+    everyone's table appears, scored by the rules of section 3. A phone's own copy of the
+    year never stands in for the group's result.
   - Publishing again updates the stages. A stage's countries can change until it closes;
     each prediction keeps what still fits. After that they stay. A group keeps up to 30
     years.

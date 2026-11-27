@@ -211,3 +211,41 @@ describe('a prediction', () => {
     expect(left.stages.map((s) => s.stage)).toEqual(['final']);
   });
 });
+
+describe('the official result', () => {
+  it('is entered by a manager once the stage has closed, and seen by everyone', async () => {
+    const { owner, player, base } = await season();
+    const early = await call('PUT', `${base}/final/result`, {
+      token: owner.token,
+      body: { result: final },
+    });
+    expect(early.status).toBe(409);
+    expect(await early.json()).toMatchObject({ code: 'not-closed' });
+    await call('POST', `${base}/final/close`, { token: owner.token });
+    expect(
+      (await call('PUT', `${base}/final/result`, { token: player.token, body: { result: final } }))
+        .status,
+    ).toBe(403);
+    const set = await view(
+      await call('PUT', `${base}/final/result`, { token: owner.token, body: { result: final } }),
+    );
+    expect(set.stages[0]?.result).toEqual(final);
+    const seen = await view(await call('GET', base, { token: player.token }));
+    expect(seen.stages[0]?.result).toEqual(final);
+  });
+
+  it("is whole: the final's every country, a semi's qualifiers; null takes it back", async () => {
+    const { owner, base } = await season();
+    await call('POST', `${base}/final/close`, { token: owner.token });
+    await call('POST', `${base}/semi-1/close`, { token: owner.token });
+    const put = (stage: string, result: unknown) =>
+      call('PUT', `${base}/${stage}/result`, { token: owner.token, body: { result } });
+    expect((await put('final', final.slice(1))).status).toBe(400);
+    expect((await put('final', [...final.slice(1), 'sweden'])).status).toBe(400);
+    expect((await put('semi-1', semi.slice(0, 3))).status).toBe(400);
+    const semiSet = await view(await put('semi-1', semi.slice(0, 4)));
+    expect(semiSet.stages[1]?.result).toEqual(semi.slice(0, 4));
+    const cleared = await view(await put('semi-1', null));
+    expect(cleared.stages[1]?.result).toBeNull();
+  });
+});

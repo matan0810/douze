@@ -142,6 +142,7 @@ export const AUDIT_ACTIONS = [
   'stage.set',
   'stage.remove',
   'stage.close',
+  'result.set',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
@@ -164,6 +165,7 @@ export const ERROR_CODES = [
   'confirm-wrong',
   'owner-stays',
   'locked',
+  'not-closed',
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 

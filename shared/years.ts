@@ -123,6 +123,27 @@ export function isCompleteEntry(entry: Entry, countries: readonly string[]): boo
   return entry.picks.length === qualifierCount(countries) && entry.reserve !== null;
 }
 
+/**
+ * The official result of a stage: the final's whole order, or a semi's qualifiers. Only a
+ * manager sets it, once the stage has closed; it is a fact, not something everyone edits.
+ */
+export function parseResult(stage: Stage, value: unknown, countries: readonly string[]) {
+  const field = new Set(countries);
+  const list = countryList(value, countries.length);
+  if (!list || !list.every((id) => field.has(id))) return undefined;
+  const size = stage === 'final' ? countries.length : qualifierCount(countries);
+  return list.length === size ? list : undefined;
+}
+
+/** What a manager sends: a result, or null to take it back. */
+export function parseSetResult(stage: Stage, value: unknown, countries: readonly string[]) {
+  const json = record(value, ['result']);
+  if (!json) return undefined;
+  if (json.result === null) return { result: null };
+  const result = parseResult(stage, json.result, countries);
+  return result ? { result } : undefined;
+}
+
 export interface StageView extends StageSetup {
   stage: Stage;
   /** Whether the lock has passed, by the server's clock. */
@@ -131,6 +152,8 @@ export interface StageView extends StageSetup {
   done: string[];
   /** This member's prediction, and everyone's once the stage is locked. */
   entries: { member: string; entry: Entry }[];
+  /** The official result, once a manager has entered it. */
+  result: string[] | null;
 }
 
 export interface YearView {
@@ -149,6 +172,7 @@ function parseStageView(value: unknown): StageView | undefined {
     'locked',
     'done',
     'entries',
+    'result',
   ]);
   if (!json || !isStage(json.stage) || typeof json.locked !== 'boolean') return undefined;
   const stage = json.stage;
@@ -166,7 +190,9 @@ function parseStageView(value: unknown): StageView | undefined {
     return item && isId(item.member) && entry ? [{ member: item.member, entry }] : [];
   });
   if (done.length !== json.done.length || entries.length !== json.entries.length) return undefined;
-  return { stage, ...setup, locked: json.locked, done, entries };
+  const result = json.result === null ? null : parseResult(stage, json.result, setup.countries);
+  if (result === undefined) return undefined;
+  return { stage, ...setup, locked: json.locked, done, entries, result };
 }
 
 /** As many entries as a group can have members. */

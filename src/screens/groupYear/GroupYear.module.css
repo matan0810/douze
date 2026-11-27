@@ -152,3 +152,9 @@
   white-space: nowrap;
   translate: -50% 0;
 }
+
+.result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

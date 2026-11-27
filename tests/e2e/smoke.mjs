@@ -441,10 +441,18 @@ async function main() {
   await page.getByRole('button', { name: 'סגירת הניחושים עכשיו' }).click();
   await page.getByText(/הניחושים נסגרו ביום/).waitFor();
   await page.getByRole('heading', { name: 'החיזויים של כולם' }).waitFor();
+  await page.getByText('הטבלה תופיע כשמנהל יזין את התוצאה הרשמית.').waitFor();
+  await page.getByRole('button', { name: 'הזנת התוצאה הרשמית' }).click();
+  const official = page.getByRole('dialog', { name: 'התוצאה הרשמית' });
+  // Started from this phone's copy of 2026, the archive's.
+  await official.getByText('25 / 25 מדינות').waitFor();
+  await official.getByRole('button', { name: 'שמירת התוצאה' }).click();
   await page.getByText('25 בול').waitFor();
   await adi.reload();
   await adi.getByRole('heading', { name: 'החיזויים של כולם' }).waitFor();
+  await adi.getByText('25 בול').waitFor();
   assert.equal(await adi.getByRole('button', { name: 'הזנת חיזוי' }).count(), 0);
+  assert.equal(await adi.getByRole('button', { name: 'הזנת התוצאה הרשמית' }).count(), 0);
   for (const p of [page, adi]) {
     await p.getByRole('link', { name: 'חזרה לקבוצה' }).click();
     await p.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();

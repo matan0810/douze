@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { YearView } from '../../shared/years';
 import { archive } from './archive';
 import { gameFromEdition } from './game';
-import { autoClose, groupGame, localMoment, stagesFromGame } from './groupYear';
+import { autoClose, groupGame, knownResult, localMoment, stagesFromGame } from './groupYear';
 import { standings } from './scoring';
 
 const edition = archive.editions.find((e) => e.year === 2026);
@@ -73,12 +73,13 @@ describe("the group's year as a final", () => {
           member: members[i]?.id ?? '',
           entry: { order: p.order, joker: null },
         })),
+        result: edition.result,
       },
     ],
   };
 
-  it('scores like the archive when the predictions are the same', () => {
-    const game = groupGame(view, members, game2026);
+  it('scores like the archive with the same predictions and the result a manager entered', () => {
+    const game = groupGame(view, members);
     const result = game.result ?? [];
     expect(result).toEqual(game2026.result);
     const points = (g: typeof game) =>
@@ -92,8 +93,17 @@ describe("the group's year as a final", () => {
     expect(points(game)).toEqual(points(game2026));
   });
 
-  it('has no result when this device knows the year with other countries', () => {
+  it('has no result until a manager enters one, whatever this phone knows', () => {
+    const open = { ...view, stages: view.stages.map((st) => ({ ...st, result: null })) };
+    expect(groupGame(open, members).result).toBeNull();
+  });
+
+  it("offers this phone's result to a manager only for the same countries", () => {
+    const [final] = view.stages;
+    if (!final) throw new Error('a final');
+    expect(knownResult(final, game2026)).toEqual(game2026.result);
     const other = { ...game2026, finalists: game2026.finalists.slice(1) };
-    expect(groupGame(view, members, other).result).toBeNull();
+    expect(knownResult(final, other)).toBeNull();
+    expect(knownResult(final, undefined)).toBeNull();
   });
 });

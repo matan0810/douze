@@ -1,6 +1,6 @@
 import { can } from '../../../shared/capabilities';
 import type { Entry, Stage } from '../../../shared/years';
-import { groupGame } from '../../domain/groupYear';
+import { groupGame, knownResult } from '../../domain/groupYear';
 import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { api } from '../../net/api';
@@ -10,6 +10,7 @@ import { useToast } from '../../ui/toastContext';
 import { useGroupView } from '../groups/useGroupView';
 import { LockLine } from './LockLine';
 import { MyEntry } from './MyEntry';
+import { ResultEntry } from './ResultEntry';
 import { Revealed } from './Revealed';
 import { StagesBar } from './StagesBar';
 import { useYearView } from './useYearView';
@@ -94,6 +95,17 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
     toast(t.groupYear.closed);
   };
 
+  const setResult = async (result: string[] | null) => {
+    const answer = await api.setResult(id, mine.token, year, stage.stage, result);
+    if (!answer.ok) {
+      toast(t.errors[answer.error]);
+      return false;
+    }
+    show(answer.value);
+    toast(t.groupYear.resultSaved);
+    return true;
+  };
+
   return (
     <div className={styles.page}>
       {title(view.name)}
@@ -105,12 +117,16 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
         />
         <MyEntry key={stage.stage} stage={stage} me={view.me.id} onSave={save} />
         <WhoIsDone stage={stage} members={view.members} />
-        {stage.locked ? (
-          <Revealed
+        {stage.locked && can(view.me.role, 'results.write') && (
+          <ResultEntry
+            key={`result-${stage.stage}`}
             stage={stage}
-            game={groupGame(year$, view.members, base)}
-            members={view.members}
+            known={knownResult(stage, base)}
+            onSave={setResult}
           />
+        )}
+        {stage.locked ? (
+          <Revealed stage={stage} game={groupGame(year$, view.members)} members={view.members} />
         ) : (
           <p className="note">{t.groupYear.hidden}</p>
         )}

@@ -34,7 +34,8 @@ else. A new host needs a reason, a change to the policy and a line here.
 The Worker `douze-api` (`worker/`, on Cloudflare; the standard is the template's `SERVER.md`)
 keeps the groups in a D1 database (`worker/migrations/`): each group's name, its members'
 names and roles, the hashes of their devices' tokens and of the invitation, the log, and
-each year's stages (countries, when they close) and members' predictions of them. Nothing
+each year's stages (countries, when they close, the official result) and members'
+predictions of them. Nothing
 else: no address, no e-mail, no account.
 
 - **Who is who.** Level 2 of `SERVER.md`, without Google for now: a device holds a 256-bit
@@ -53,7 +54,8 @@ else: no address, no e-mail, no account.
 - **Predictions stay private until a stage closes.** The server answers a member's own
   prediction and only the list of who has finished; everyone's only once the stage's close
   time, by the server's clock, has passed (`worker/src/years.ts`). A prediction is refused
-  once it has. Only managers set stages or close them.
+  once it has. Only managers set stages, close them and enter results, and a result only
+  once its stage has closed.
 - **Limits** (`shared/limits.ts`, `shared/config.ts`), counted in the database
   (`worker/src/rate.ts`): bodies 32 KiB; 40 members a group, five phones a player; five new
   groups a day from one address and 2000 in all; ten joins or wrong secrets an hour from

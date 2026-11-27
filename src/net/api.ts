@@ -129,6 +129,16 @@ export const api = {
       { method: 'POST', path: `/groups/${id}/years/${year}/${stage}/close`, token },
       parseYearView,
     ),
+  setResult: (id: string, token: string, year: number, stage: Stage, result: string[] | null) =>
+    call(
+      {
+        method: 'PUT',
+        path: `/groups/${id}/years/${year}/${stage}/result`,
+        token,
+        body: { result },
+      },
+      parseYearView,
+    ),
   saveEntry: (id: string, token: string, year: number, stage: Stage, entry: Entry) =>
     call(
       { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}/entry`, token, body: entry },
