@@ -25,7 +25,8 @@ export function GroupCards({ game, names, pieces }: Props) {
   const pairs = twins(game);
   const [near, far] = [pairs[0], pairs.length > 1 ? pairs.at(-1) : undefined];
   const home = calls(game, [HOME])[0];
-  const big = calls(game, BIG_FIVE);
+  const host = game.hostCountry;
+  const big = calls(game, host ? [host, ...BIG_FIVE.filter((id) => id !== host)] : BIG_FIVE);
   const places = (row: { predicted: { player: string; place: number }[] }) => (
     <span className={styles.places}>
       {row.predicted.map((p) => {
@@ -75,6 +76,7 @@ export function GroupCards({ game, names, pieces }: Props) {
                   <span className={styles.country}>
                     <Flag country={countryById.get(row.country)} size="sm" />
                     {countryById.get(row.country)?.name[language]}
+                    {row.country === host && <span className={styles.tag}>{t.stats.hostTag}</span>}
                     <span className={`${styles.actual} num`}>
                       {t.stats.finished} {row.actual}
                     </span>

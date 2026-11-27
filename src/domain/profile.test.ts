@@ -58,6 +58,12 @@ describe('what the 2026 predictions say', () => {
     ]);
   });
 
+  it('2026 knows its host: Austria, 24th', () => {
+    const game = game2026();
+    expect(game.hostCountry).toBe('austria');
+    expect(calls(game, ['austria'])[0]?.actual).toBe(24);
+  });
+
   it('the big five in the final: all of us put the UK last, and it was', () => {
     const big = calls(game2026(), BIG_FIVE);
     expect(big.map((c) => c.country)).toEqual(['france', 'germany', 'italy', 'united-kingdom']);

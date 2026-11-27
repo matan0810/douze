@@ -224,7 +224,8 @@ async function main() {
   await page.getByRole('heading', { name: /מה החיזוי אומר עליכם/ }).waitFor();
   await page.getByText('9 מתוך 10').waitFor();
   await page.getByRole('heading', { name: /הלב הישראלי/ }).waitFor();
-  await page.getByRole('heading', { name: /החמש הגדולות/ }).waitFor();
+  await page.getByRole('heading', { name: /המארחת והחמש הגדולות/ }).waitFor();
+  await page.getByText('מארחת', { exact: true }).waitFor();
   step('stats: what we learned, each of us, the group, country by country, head to head');
 
   await page.goto(`${base}/history`);

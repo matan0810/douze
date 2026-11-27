@@ -20,7 +20,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
 - New statistics of the final: a card per player (top-ten hits, the biggest miss, the
-  bold call, top against bottom), taste twins, the Israeli heart, the big five, and each
+  bold call, top against bottom), taste twins, the Israeli heart, the host and the big
+  five, and each
   country's surprise and who was closest to it.
 - Rivalries on the all-years page: for every pair of us, who finished above whom, final by
   final.
@@ -34,8 +35,9 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 - A countdown on the home page to the next final whose date is set.
 - Jokers, switched on in a year's settings: each player stars one country in their
   prediction of the final, and the points for its place count twice.
-- Hungary, Bosnia and Herzegovina, Russia and Belarus join the countries to choose from:
-  every country of the last ten contests is there for a new season.
+- Hungary and Bosnia and Herzegovina join the countries to choose from: every country of
+  the last ten contests but Russia and Belarus is there for a new season.
+- Each year knows its host country (2026: Austria), set in the year's settings.
 - A settings page for each year: the countries of the final and of each semi-final, set
   separately, since the host and the big five go straight to the final; the number of
   semi-finals; whether they add up to a season table (off for 2026, where not everyone

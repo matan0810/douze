@@ -4,6 +4,7 @@ import {
   addPlayer,
   DEFAULT_OPTIONS,
   setDate,
+  setHostCountry,
   setJoker,
   setOptions,
   setRunningOrder,
@@ -223,6 +224,12 @@ describe('the options of a year', () => {
       'france',
       'israel',
     ]);
+  });
+
+  it('a host country is one of the catalogue, or none', () => {
+    const known = new Set(['israel', 'austria']);
+    expect(setHostCountry(game, 'austria', known).hostCountry).toBe('austria');
+    expect(setHostCountry(game, 'atlantis', known).hostCountry).toBeNull();
   });
 
   it('options change one at a time', () => {

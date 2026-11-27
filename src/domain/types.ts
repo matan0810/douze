@@ -35,6 +35,8 @@ export interface Prediction {
 export interface Edition {
   year: number;
   host: Bilingual;
+  /** The host country, a catalogue id: it goes straight to the final, like the big five. */
+  hostCountry: string | null;
   /** The date of the grand final, YYYY-MM-DD. */
   final: string;
   /** The countries in the grand final, in the catalogue's order. */

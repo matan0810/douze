@@ -35,6 +35,8 @@ export interface Game {
   semis: Semi[];
   /** The date of the final, YYYY-MM-DD, or null when not known. */
   date: string | null;
+  /** The host country, a catalogue id, or null when not known. */
+  hostCountry: string | null;
   /** The order the final's songs are performed in; may be partial or empty. */
   runningOrder: string[];
   options: GameOptions;
@@ -88,6 +90,7 @@ export function gameFromEdition(edition: Edition, players: Player[]): Game {
       predictions: semi.predictions.map((p) => ({ ...p, picks: [...p.picks] })),
     })),
     date: edition.final,
+    hostCountry: edition.hostCountry,
     runningOrder: [...edition.runningOrder],
     options: { season: edition.season, joker: edition.joker },
   };
@@ -101,6 +104,7 @@ export function emptyGame(year: number): Game {
     players: [],
     semis: [],
     date: null,
+    hostCountry: null,
     runningOrder: [],
     options: { ...DEFAULT_OPTIONS },
   };
@@ -161,6 +165,10 @@ export function parseStoredGame(
     players: parsed,
     semis: parseStoredSemis(value.semis, known, ids),
     date: typeof value.date === 'string' && DATE_PATTERN.test(value.date) ? value.date : null,
+    hostCountry:
+      typeof value.hostCountry === 'string' && known.has(value.hostCountry)
+        ? value.hostCountry
+        : null,
     runningOrder: within(stringList(value.runningOrder, MAX_FINALISTS) ?? [], field),
     options: {
       season: typeof options.season === 'boolean' ? options.season : DEFAULT_OPTIONS.season,
@@ -285,6 +293,11 @@ export function setOptions(game: Game, options: Partial<GameOptions>): Game {
 /** Sets the date of the final: YYYY-MM-DD, or none. */
 export function setDate(game: Game, date: string | null): Game {
   return { ...game, date: date && DATE_PATTERN.test(date) ? date : null };
+}
+
+/** Sets the host country: one of the catalogue, or none. */
+export function setHostCountry(game: Game, country: string | null, known: Set<string>): Game {
+  return { ...game, hostCountry: country && known.has(country) ? country : null };
 }
 
 export function setRunningOrder(game: Game, order: string[]): Game {

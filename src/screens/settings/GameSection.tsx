@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { setDate, setOptions, setRunningOrder, type Game } from '../../domain/game';
+import { archive } from '../../domain/archive';
+import { setDate, setHostCountry, setOptions, setRunningOrder, type Game } from '../../domain/game';
 import { useI18n } from '../../i18n/context';
 import { useGames } from '../../state/context';
 import { Switch } from '../../ui/Switch';
@@ -8,8 +9,12 @@ import styles from './SettingsScreen.module.css';
 
 /** The year's game: what is switched on, the date of the final and its running order. */
 export function GameSection({ game }: { game: Game }) {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { update } = useGames();
+  const known = new Set(archive.countries.map((c) => c.id));
+  const countries = [...archive.countries].sort((a, b) =>
+    a.name[language].localeCompare(b.name[language], language),
+  );
   const [ordering, setOrdering] = useState(false);
   const year = game.year;
   return (
@@ -30,6 +35,24 @@ export function GameSection({ game }: { game: Game }) {
           on={game.options.joker}
           onChange={(joker) => update(year, (g) => setOptions(g, { joker }))}
         />
+        <label className={styles.field}>
+          <span className={styles.text}>
+            <span className={styles.label}>{t.settings.hostCountry}</span>
+            <span className={styles.hint}>{t.settings.hostCountryHint}</span>
+          </span>
+          <select
+            className={`input ${styles.date}`}
+            value={game.hostCountry ?? ''}
+            onChange={(e) => update(year, (g) => setHostCountry(g, e.target.value || null, known))}
+          >
+            <option value="">{t.settings.noHost}</option>
+            {countries.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name[language]}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className={styles.field}>
           <span className={styles.text}>
             <span className={styles.label}>{t.settings.date}</span>

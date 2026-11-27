@@ -179,9 +179,14 @@ export function parseEdition(value: unknown, countries: Country[], players: Play
     value.runningOrder === undefined
       ? []
       : order(value.runningOrder, `${where}.runningOrder`, inFinal);
+  const hostCountry =
+    value.hostCountry === undefined ? null : id(value.hostCountry, `${where}.hostCountry`);
+  if (hostCountry && !known.has(hostCountry))
+    fail(`${where}.hostCountry`, `${hostCountry} is not in the catalogue`);
   return {
     year,
     host: bilingual(value.host, `${where}.host`),
+    hostCountry,
     final: value.final,
     finalists,
     result,

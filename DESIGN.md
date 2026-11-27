@@ -107,6 +107,9 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 - Only a **complete** prediction is scored: every finalist, each exactly once.
 - The table is ordered by points; a tie goes to more exact places, then to more places
   within one. Players still level share the rank.
+- **Joker**, in a year whose settings switch it on: each player stars one country in their
+  prediction, and its place points count twice (`JOKER_FACTOR`); its podium bonus does
+  not. The most a prediction can earn rises by 10 (290 for 25 countries). 2026 has none.
 - The rule lives in `src/domain/scoring.ts`; its tests include the real 2026 final
   (Matan 158, Adi 145, Ori 139).
 
@@ -163,7 +166,11 @@ order is published.
 - **Season**: the final, each semi, the bonus and the total, by total.
 - **Settings** (per year): the countries of the final and of each semi, the number of semis
   (none, one or two; removing one asks first) and the way back to the archive. The players
-  page links here to change the final's countries.
+  page links here to change the final's countries. And the game: whether the semis and the
+  final add up to a season table (on by default; off for 2026, where not everyone
+  predicted every stage), whether players have jokers (off by default; section 3), the
+  host country (2026: Austria), the date of the final (for the countdown) and its running
+  order (for planning mode).
 - **Statistics** (per final, once there is a result and a complete prediction):
   - _The surprise_ and _the letdown_: the countries that finished furthest above and below
     our average prediction.
@@ -180,8 +187,9 @@ order is published.
   - _What we learned about ourselves_: _taste twins_, the pair that predicted most alike
     and the pair furthest apart (Adi and Ori 2.6 places apart on average, Ori and Matan
     3.3); _the Israeli heart_, where each of us put Israel (`HOME`) against where it
-    finished (2nd; we said 5, 5 and 7); _the big five_ in the final, each of us against
-    the result (the United Kingdom last for all of us, and last).
+    finished (2nd; we said 5, 5 and 7); _the host and the big five_, the countries in the
+    final without a semi, each of us against the result (the United Kingdom last for all
+    of us, and last; Austria, the host, 24th).
   - _Country by country_: every prediction against the result, in the closeness colours,
     with each country's _surprise_ (our average less its real place) and who was closest.
   - _Head to head_: for every pair, in how many countries each was closer.
