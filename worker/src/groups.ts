@@ -178,12 +178,14 @@ export async function join(request: Request, env: Env, groupId: string): Promise
   if (!wanted.takeover) throw new HttpError(409, 'This name is taken', 'name-taken');
   const memberId = text(held, 'id');
   const name = text(held, 'name');
-  // A player's oldest devices give way, so no name is held by more than the limit.
+  // A player's oldest devices give way, so no name is held by more than the limit; devices
+  // added in the same millisecond go by the order they were added (rowid).
   await sql.batch([
     sql
       .prepare(
         `DELETE FROM devices WHERE member_id = ?1 AND token_hash NOT IN
-           (SELECT token_hash FROM devices WHERE member_id = ?1 ORDER BY added_at DESC LIMIT ?2)`,
+           (SELECT token_hash FROM devices WHERE member_id = ?1
+             ORDER BY added_at DESC, rowid DESC LIMIT ?2)`,
       )
       .bind(memberId, LIMITS.devicesPerPlayer - 1),
     addDevice(sql, tokenHash, memberId, groupId),
