@@ -1,0 +1,171 @@
+.page {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 48px var(--gutter);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.players {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 22px;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: start;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* The song on stage: the card of whoever is planning, with the choice under it. */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 20px;
+  border-radius: 26px;
+  text-align: center;
+}
+
+.song {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.count {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.drawerButtons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.drawerButtons :global(.btn) {
+  min-height: 56px;
+  font-size: 1rem;
+}
+
+.slots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.slotList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot {
+  width: 100%;
+  min-height: var(--tap);
+  border: 2px dashed var(--brand-gold);
+  border-radius: var(--pill);
+  background: transparent;
+  color: var(--brand-gold);
+  font-weight: 800;
+}
+
+.slot:hover {
+  background: color-mix(in srgb, var(--brand-gold) 14%, transparent);
+}
+
+.placed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.drawers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.drawerTitle {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+}
+
+.empty {
+  color: var(--faint);
+  font-size: 0.82rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .drawers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

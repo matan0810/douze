@@ -19,6 +19,9 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   perfect semi-final.
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
+- Planning mode: build a prediction while watching. Each song, in the running order,
+  goes into a drawer (could win, top ten, middle, bottom) and then into its place there;
+  the drawers become the prediction. A plan in progress survives a reload.
 - The reveal ceremony: the table told from the last place to the first, one tap at a
   time, with a drum roll before the first place and _Douze points!_ for the champion.
 - Stickers on the semi-final and season tables: the champion, _Perfect!_ for all ten

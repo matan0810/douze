@@ -30,6 +30,7 @@ const PATHS = {
   duel: 'M4 20L14 10M14 10l2-6 4 4-6 2M20 20L10 10M10 10L8 4 4 8l6 2',
   scoring: 'M4 4h16v16H4zM8 9h8M8 13h8M8 17h5',
   joker: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z',
+  plan: 'M4 4h16v6H4zM4 14h16v6H4zM10 7h4M10 17h4',
   settings: 'M4 7h9M17 7h3M15 5v4M4 17h3M11 17h9M9 15v4',
 } as const;
 

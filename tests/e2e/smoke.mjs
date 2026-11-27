@@ -248,6 +248,25 @@ async function main() {
   await countdown.getByText('10', { exact: true }).waitFor();
   step('countdown: the date of the final, set in the settings, counted down on the home page');
 
+  await page.goto(`${base}/2027/players`);
+  await page.getByLabel('הוספת שחקן חדש').fill('נועה');
+  await page.getByRole('button', { name: 'הוספה', exact: true }).click();
+  await page.getByRole('link', { name: /מצב תכנון/ }).click();
+  await atHash(page, '#/2027/plan');
+  await page.getByRole('button', { name: /נועה/ }).click();
+  await page.getByText('שיר 1 מתוך 3').waitFor();
+  await page.getByRole('button', { name: 'העשירייה', exact: true }).click();
+  await page.getByRole('button', { name: 'העשירייה', exact: true }).click();
+  await page.getByRole('button', { name: 'למקום 1 במגירה' }).click();
+  await page.reload();
+  await page.getByRole('button', { name: /נועה/ }).click();
+  await page.getByText('שיר 3 מתוך 3').waitFor();
+  await page.getByRole('button', { name: 'התחתית', exact: true }).click();
+  await page.getByRole('button', { name: /שמירה כחיזוי של נועה/ }).click();
+  await atHash(page, '#/2027/players');
+  await page.getByRole('listitem').filter({ hasText: 'נועה' }).getByText('הושלם').waitFor();
+  step('planning mode: drawers, a place inside one, kept after a reload, saved as a prediction');
+
   await page.getByRole('button', { name: 'Switch to English' }).click();
   assert.equal(await page.evaluate(() => document.documentElement.dir), 'ltr');
   await page.reload();
@@ -265,6 +284,7 @@ async function main() {
     '/2026/season',
     '/2026/settings',
     '/2026/reveal',
+    '/2026/plan',
     '/history',
     '/new',
     '/2026/player/matan',

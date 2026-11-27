@@ -10,6 +10,7 @@ export const FINAL_VIEWS = [
   'season',
   'settings',
   'reveal',
+  'plan',
 ] as const;
 export type FinalView = (typeof FINAL_VIEWS)[number];
 

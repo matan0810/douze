@@ -141,6 +141,14 @@ order is published.
   once; nothing is saved until Save. Each player opens their breakdown, country by
   country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
   language).
+- **Planning mode** (per final, from the players page): a prediction built while
+  watching. The songs come up in the running order (set on the year's settings; without
+  one, in the order of the field). Each goes into one of four drawers, _Could win_, _Top
+  ten_, _Middle_, _Bottom_, then into its place among the songs already in that drawer;
+  the drawers, top to bottom, are the prediction, saved as it like any other and then
+  dragged into shape. It judges the place a song will get, not how much one likes it (a
+  ranking by liking is a separate idea, issue on GitHub). The last song placed can be
+  taken back; a plan in progress is kept on the device until it is saved (`plan.ts`).
 - **The reveal** (per final, once there is a table): the places hidden, then told from
   the last to the first, one tap at a time (players level on a place together). Before the
   first place the button's light beats like a drum; the champion's card lands with
@@ -180,7 +188,7 @@ order is published.
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
-`#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/player/<id>` a breakdown over the table,
+`#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/plan`, `#/<year>/player/<id>` a breakdown over the table,
 `#/history`, `#/new`. Unknown
 addresses show home and are rewritten, and so does an unknown path under the site: Pages'
 404 page is a copy of the site.

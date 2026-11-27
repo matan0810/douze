@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { archive } from '../../domain/archive';
 import { addPlayer, removePlayer, setJoker, setOrder } from '../../domain/game';
 import { playerPieces } from '../../domain/pieces';
+import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
 import { Icon } from '../../ui/Icon';
@@ -66,6 +67,16 @@ export function PlayersScreen({ year }: { year: number }) {
               </button>
             </div>
           </form>
+
+          {game.players.length > 0 && game.finalists.length > 0 && (
+            <a
+              className={`btn btn-line ${styles.plan}`}
+              href={routeHash({ name: 'final', year, view: 'plan' })}
+            >
+              <Icon name="plan" size={16} />
+              {t.plan.open}
+            </a>
+          )}
 
           {game.players.length === 0 ? (
             <div className="empty fade">
