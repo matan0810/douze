@@ -101,6 +101,7 @@ async function main() {
     'apple-touch-icon.png',
     'manifest.webmanifest',
     'brand/card.jpg',
+    'brand/icon-maskable-512.png',
     'brand/ball.svg',
   ]) {
     const response = await page.request.get(`${url}${file}`);

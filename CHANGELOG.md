@@ -31,6 +31,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 - Years before 2026 had no address of their own and fell back to the home page. A year now
   opens at its own address, back to the first contest in 1956.
+- On an Android home screen the icon was the mirror ball on a white plate. It now fills the
+  icon, on its night sky, whatever shape the phone cuts it to.
 
 ### Changed
 

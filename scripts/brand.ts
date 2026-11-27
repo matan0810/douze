@@ -42,10 +42,15 @@ function stars(count: number, width: number, height: number) {
   }).join('');
 }
 
-const icon = (size: number) =>
+/**
+ * The ball on the night sky, filling the square. `ball` is its share of the side: a maskable
+ * icon keeps it inside the middle that every Android mask shows (two thirds of the side, for
+ * the smallest), so a round or rounded home screen cuts only sky.
+ */
+const icon = (size: number, ball = 0.76) =>
   page(`<div style="position:relative;width:${size}px;height:${size}px;${SKY};overflow:hidden">
     ${stars(Math.round(size / 12), size, size)}
-    <img src="${svg(favicon)}" style="position:absolute;inset:${size * 0.12}px;width:${size * 0.76}px;height:${size * 0.76}px"></div>`);
+    <img src="${svg(favicon)}" style="position:absolute;inset:${(size * (1 - ball)) / 2}px;width:${size * ball}px;height:${size * ball}px"></div>`);
 
 const card =
   page(`<div style="position:relative;width:1200px;height:630px;${SKY};overflow:hidden;font-family:Rubik">
@@ -63,6 +68,7 @@ const shots: [string, string, number, number][] = [
   ['public/apple-touch-icon.png', icon(180), 180, 180],
   ['public/brand/icon-192.png', icon(192), 192, 192],
   ['public/brand/icon-512.png', icon(512), 512, 512],
+  ['public/brand/icon-maskable-512.png', icon(512, 0.58), 512, 512],
   ['public/brand/card.jpg', card, 1200, 630],
 ];
 for (const [path, html, width, height] of shots) {
