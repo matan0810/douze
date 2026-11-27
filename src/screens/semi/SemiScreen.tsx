@@ -39,7 +39,7 @@ export function SemiScreen({ year, index }: { year: number; index: number }) {
     return (
       <div className={styles.page}>
         {title}
-        <StageTabs year={year} semis={game.semis.length} view={view} />
+        <StageTabs year={year} semis={game.semis.length} season={game.options.season} view={view} />
         <div className="empty frame">
           <p>{t.semi.noCountries}</p>
           <a
@@ -61,7 +61,7 @@ export function SemiScreen({ year, index }: { year: number; index: number }) {
   return (
     <div className={styles.page}>
       {title}
-      <StageTabs year={year} semis={game.semis.length} view={view} />
+      <StageTabs year={year} semis={game.semis.length} season={game.options.season} view={view} />
       <div className={table.length ? styles.split : styles.single}>
         <div className={styles.side}>
           <QualifiersPanel

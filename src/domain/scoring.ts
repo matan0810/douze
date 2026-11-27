@@ -1,13 +1,16 @@
 /**
  * The scoring rule (DESIGN.md, section 3). For every country in the final, a prediction
  * earns 10 points less one for each place it is off, never below zero; the exact winner,
- * runner-up and third earn a bonus on top. Only a complete prediction (every finalist,
- * each once) is scored.
+ * runner-up and third earn a bonus on top. In a year with jokers, the place points of each
+ * player's joker count twice. Only a complete prediction (every finalist, each once) is
+ * scored.
  */
 
 export const BASE_POINTS = 10;
 /** The bonus for placing first, second and third exactly. */
 export const PODIUM_BONUS = [15, 10, 5] as const;
+/** How many times the joker's place points count. */
+export const JOKER_FACTOR = 2;
 
 export interface CountryScore {
   country: string;
@@ -18,6 +21,8 @@ export interface CountryScore {
   off: number;
   base: number;
   bonus: number;
+  /** The player's joker: its place points count JOKER_FACTOR times. */
+  joker: boolean;
   points: number;
 }
 
@@ -42,10 +47,11 @@ export function bonusPoints(predicted: number, actual: number): number {
   return predicted === actual ? (PODIUM_BONUS[actual - 1] ?? 0) : 0;
 }
 
-/** The most a prediction can earn in a final of `size` countries. */
-export function maxScore(size: number): number {
+/** The most a prediction can earn in a final of `size` countries, with or without jokers. */
+export function maxScore(size: number, jokers = false): number {
   const bonus = PODIUM_BONUS.slice(0, size).reduce((sum, b) => sum + b, 0);
-  return size * BASE_POINTS + bonus;
+  const joker = jokers && size ? (JOKER_FACTOR - 1) * BASE_POINTS : 0;
+  return size * BASE_POINTS + bonus + joker;
 }
 
 /** Whether `order` holds every country of `finalists` exactly once, and nothing else. */
@@ -65,6 +71,9 @@ export function scorePrediction(
   player: string,
   order: readonly string[],
   result: readonly string[],
+  /** The player's joker, in a year with jokers; undefined in a year without. */
+  joker?: string,
+  jokers = joker !== undefined,
 ) {
   const predictedPlace = new Map(order.map((id, index) => [id, index + 1]));
   const rows: CountryScore[] = result.map((country, index) => {
@@ -73,10 +82,12 @@ export function scorePrediction(
     const off = Math.abs(predicted - actual);
     const base = basePoints(off);
     const bonus = bonusPoints(predicted, actual);
-    return { country, predicted, actual, off, base, bonus, points: base + bonus };
+    const isJoker = country === joker;
+    const points = base * (isJoker ? JOKER_FACTOR : 1) + bonus;
+    return { country, predicted, actual, off, base, bonus, joker: isJoker, points };
   });
   const total = rows.reduce((sum, row) => sum + row.points, 0);
-  const max = maxScore(result.length);
+  const max = maxScore(result.length, jokers);
   return {
     player,
     total,
@@ -98,13 +109,15 @@ export interface Standing extends Score {
  * by more exact places, then more within one; still level, they share the rank.
  */
 export function standings(
-  predictions: readonly { player: string; order: readonly string[] }[],
+  predictions: readonly { player: string; order: readonly string[]; joker?: string }[],
   result: readonly string[],
   finalists: readonly string[],
+  /** Whether the year has jokers: without, a joker in the data counts nothing. */
+  jokers = false,
 ): Standing[] {
   const scores = predictions
     .filter((p) => isComplete(p.order, finalists))
-    .map((p) => scorePrediction(p.player, p.order, result))
+    .map((p) => scorePrediction(p.player, p.order, result, jokers ? p.joker : undefined, jokers))
     .sort((a, b) => b.total - a.total || b.exact - a.exact || b.close - a.close);
   return scores.map((score, index) => {
     let rank = index + 1;

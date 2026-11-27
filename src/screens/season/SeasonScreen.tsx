@@ -32,8 +32,10 @@ export function SeasonScreen({ year }: { year: number }) {
         lead={t.season.lead}
         aside={<YearSelect year={year} view="season" />}
       />
-      <StageTabs year={year} semis={game.semis.length} view="season" />
-      {rows.length === 0 ? (
+      <StageTabs year={year} semis={game.semis.length} season={game.options.season} view="season" />
+      {!game.options.season ? (
+        <p className="empty frame">{t.settings.seasonOff}</p>
+      ) : rows.length === 0 ? (
         <p className="empty frame">{t.season.none}</p>
       ) : (
         <div className={styles.wrap}>

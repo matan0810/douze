@@ -12,10 +12,13 @@ interface Props {
   country: Country;
   place: number;
   onRemove: () => void;
+  /** In a year with jokers: whether this is the joker, and the way to make it one. */
+  joker?: boolean;
+  onJoker?: () => void;
 }
 
 /** One chosen country: a handle to drag it, its place, its flag and name, and remove. */
-export function SortableRow({ country, place, onRemove }: Props) {
+export function SortableRow({ country, place, onRemove, joker, onJoker }: Props) {
   const { t, language } = useI18n();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: country.id,
@@ -43,6 +46,18 @@ export function SortableRow({ country, place, onRemove }: Props) {
       <span className={styles.other} lang={language === 'he' ? 'en' : 'he'}>
         {other}
       </span>
+      {onJoker && (
+        <button
+          type="button"
+          className={joker ? `${styles.joker} ${styles.jokerOn}` : styles.joker}
+          aria-pressed={joker}
+          aria-label={t.picker.joker(country.name[language])}
+          title={t.picker.joker(country.name[language])}
+          onClick={onJoker}
+        >
+          <Icon name="joker" size={16} />
+        </button>
+      )}
       <button
         type="button"
         className={styles.remove}

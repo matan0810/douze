@@ -7,6 +7,7 @@ import {
   isYear,
   parseStoredGame,
   sameName,
+  setFinalists,
   setResult,
   type Game,
 } from '../domain/game';
@@ -51,14 +52,11 @@ export function fromLegacy(
   const finalists = value.countries
     .map((c) => (isRecord(c) && typeof c.id === 'string' ? c.id : ''))
     .filter((id) => known.has(id));
-  let game: Game = {
-    year,
-    finalists: [...new Set(finalists)],
-    result: null,
-    players: [],
-    // the first site had no semis: the archive's stand
-    semis: baselineGame(year, data).semis,
-  };
+  // The first site had no semis, settings or dates: the archive's stand.
+  const baseline = baselineGame(year, data);
+  let game: Game = setFinalists({ ...baseline, finalists: [], result: null, players: [] }, [
+    ...new Set(finalists),
+  ]);
   for (const raw of value.players) {
     if (!isRecord(raw) || typeof raw.name !== 'string' || !Array.isArray(raw.prediction)) continue;
     const order = raw.prediction.filter((id): id is string => typeof id === 'string');

@@ -15,7 +15,7 @@ import type { Archive, Bilingual, Country, Edition, Player, Prediction } from '.
 
 export const ID_PATTERN = /^[a-z][a-z0-9-]{0,39}$/;
 const CODE_PATTERN = /^[a-z]{2}$/;
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+export const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -151,7 +151,11 @@ export function parseEdition(value: unknown, countries: Country[], players: Play
       if (!isRecord(raw)) fail(at, 'expected a prediction');
       const player = id(raw.player, `${at}.player`);
       if (!people.has(player)) fail(at, `${player} is not in players.json`);
-      return { player, order: order(raw.order, `${at}.order`, inFinal) };
+      const prediction: Prediction = { player, order: order(raw.order, `${at}.order`, inFinal) };
+      if (raw.joker === undefined) return prediction;
+      const joker = id(raw.joker, `${at}.joker`);
+      if (!inFinal.has(joker)) fail(`${at}.joker`, `${joker} is not in the final`);
+      return { ...prediction, joker };
     },
   );
   unique(
@@ -166,6 +170,15 @@ export function parseEdition(value: unknown, countries: Country[], players: Play
     semis.flatMap((s) => s.countries),
     `${where}.semis (a country in two semis)`,
   );
+  const flag = (raw: unknown, at: string, fallback: boolean) => {
+    if (raw === undefined) return fallback;
+    if (typeof raw !== 'boolean') fail(at, 'expected true or false');
+    return raw;
+  };
+  const runningOrder =
+    value.runningOrder === undefined
+      ? []
+      : order(value.runningOrder, `${where}.runningOrder`, inFinal);
   return {
     year,
     host: bilingual(value.host, `${where}.host`),
@@ -174,6 +187,9 @@ export function parseEdition(value: unknown, countries: Country[], players: Play
     result,
     predictions,
     semis,
+    runningOrder,
+    season: flag(value.season, `${where}.season`, true),
+    joker: flag(value.joker, `${where}.joker`, false),
   };
 }
 

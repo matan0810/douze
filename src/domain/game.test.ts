@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { archive } from './archive';
 import {
   addPlayer,
+  DEFAULT_OPTIONS,
+  setDate,
+  setJoker,
+  setOptions,
+  setRunningOrder,
   setSemiCountries,
   setSemiCount,
   setSemiPick,
@@ -83,12 +88,37 @@ describe('a game saved on the device', () => {
       ],
     };
     expect(parseStoredGame(stored, 2027, known)).toEqual({
+      ...emptyGame(2027),
+      finalists: ['israel', 'italy'],
+      players: [{ id: 'p1', name: { he: 'דנה', en: 'דנה' }, order: ['italy'] }],
+    });
+  });
+
+  it('keeps the options, the date, the running order and jokers that fit', () => {
+    const stored = {
       year: 2027,
       finalists: ['israel', 'italy'],
       result: null,
-      players: [{ id: 'p1', name: { he: 'דנה', en: 'דנה' }, order: ['italy'] }],
-      semis: [],
-    });
+      players: [
+        { id: 'p1', name: { he: 'א', en: 'א' }, order: [], joker: 'italy' },
+        { id: 'p2', name: { he: 'ב', en: 'ב' }, order: [], joker: 'atlantis' },
+      ],
+      date: '2027-05-15',
+      runningOrder: ['italy', 'atlantis', 'israel'],
+      options: { season: false, joker: true },
+    };
+    const game = parseStoredGame(stored, 2027, known);
+    expect(game?.players.map((p) => p.joker)).toEqual(['italy', undefined]);
+    expect(game?.date).toBe('2027-05-15');
+    expect(game?.runningOrder).toEqual(['italy', 'israel']);
+    expect(game?.options).toEqual({ season: false, joker: true });
+    const bad = parseStoredGame(
+      { ...stored, date: '15/5', options: { joker: 'yes' } },
+      2027,
+      known,
+    );
+    expect(bad?.date).toBeNull();
+    expect(bad?.options).toEqual(DEFAULT_OPTIONS);
   });
 
   it.each([null, 'x', { year: 2026 }, { year: 2027, finalists: [], players: [], result: null }])(
@@ -169,5 +199,33 @@ describe('the semis of a game', () => {
       },
       { countries: ['france'], qualifiers: null, predictions: [] },
     ]);
+  });
+});
+
+describe('the options of a year', () => {
+  const game = setFinalists({ ...emptyGame(2027) }, ['israel', 'italy', 'france']);
+  const withPlayer = addPlayer(game, 'דנה', ['israel', 'italy', 'france'], 'p1');
+
+  it('a joker is a finalist, and leaves with it', () => {
+    expect(setJoker(withPlayer, 'p1', 'italy').players[0]?.joker).toBe('italy');
+    expect(setJoker(withPlayer, 'p1', 'spain').players[0]?.joker).toBeUndefined();
+    const narrowed = setFinalists(setJoker(withPlayer, 'p1', 'italy'), ['israel', 'france']);
+    expect(narrowed.players[0]?.joker).toBeUndefined();
+  });
+
+  it('a date is YYYY-MM-DD or nothing', () => {
+    expect(setDate(game, '2027-05-15').date).toBe('2027-05-15');
+    expect(setDate(game, 'soon').date).toBeNull();
+  });
+
+  it('the running order keeps only finalists', () => {
+    expect(setRunningOrder(game, ['france', 'spain', 'israel']).runningOrder).toEqual([
+      'france',
+      'israel',
+    ]);
+  });
+
+  it('options change one at a time', () => {
+    expect(setOptions(game, { joker: true }).options).toEqual({ season: true, joker: true });
   });
 });

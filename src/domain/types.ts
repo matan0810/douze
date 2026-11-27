@@ -27,6 +27,8 @@ export interface Player {
 export interface Prediction {
   player: string;
   order: string[];
+  /** The country whose points count double, in a year with the joker on (`scoring.ts`). */
+  joker?: string;
 }
 
 /** One year's grand final. */
@@ -42,6 +44,12 @@ export interface Edition {
   predictions: Prediction[];
   /** The year's semi-finals, apart from the final (`semis.ts`); none for a year without. */
   semis: Semi[];
+  /** The order the final's songs were performed in; empty when not entered. */
+  runningOrder: string[];
+  /** Whether the semis and the final add up to a season table this year. */
+  season: boolean;
+  /** Whether each player has a joker in the final this year. */
+  joker: boolean;
 }
 
 /** Everything the site knows: the catalogue, the players and every edition, newest first. */

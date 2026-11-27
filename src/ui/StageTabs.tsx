@@ -7,16 +7,18 @@ interface Props {
   year: number;
   /** How many semis the year has: with none, the final is the only stage and no tabs show. */
   semis: number;
+  /** Whether the year has a season table. */
+  season: boolean;
   view: FinalView;
 }
 
 /** The stages of a year's game: the final, each semi, and the season that adds them up. */
-export function StageTabs({ year, semis, view }: Props) {
+export function StageTabs({ year, semis, season, view }: Props) {
   const { t } = useI18n();
   const stages: { view: FinalView; label: string }[] = [
     { view: 'table', label: t.stage.final },
     ...Array.from({ length: semis }, (_, i) => ({ view: semiView(i), label: t.stage.semi(i + 1) })),
-    ...(semis ? [{ view: 'season' as const, label: t.stage.season }] : []),
+    ...(semis && season ? [{ view: 'season' as const, label: t.stage.season }] : []),
   ];
   const current = view === 'results' ? 'table' : view;
   return (

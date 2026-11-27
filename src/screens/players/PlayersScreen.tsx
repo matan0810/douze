@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { archive } from '../../domain/archive';
-import { addPlayer, removePlayer, setOrder } from '../../domain/game';
+import { addPlayer, removePlayer, setJoker, setOrder } from '../../domain/game';
 import { playerPieces } from '../../domain/pieces';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
@@ -101,11 +101,17 @@ export function PlayersScreen({ year }: { year: number }) {
       {player && (
         <PredictionEditor
           key={player.id}
-          name={player.name[language]}
+          title={t.players.editorTitle(player.name[language])}
           field={game.finalists}
           initial={player.order}
-          onSave={(order) => {
-            update(year, (g) => setOrder(g, player.id, order));
+          jokers={game.options.joker}
+          initialJoker={player.joker ?? null}
+          onSave={(order, joker) => {
+            update(year, (g) =>
+              g.options.joker
+                ? setJoker(setOrder(g, player.id, order), player.id, joker)
+                : setOrder(g, player.id, order),
+            );
             setEditing(null);
           }}
           onClose={() => setEditing(null)}

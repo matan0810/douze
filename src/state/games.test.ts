@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addPlayer } from '../domain/game';
+import { addPlayer, emptyGame } from '../domain/game';
 import { game2026 } from '../domain/testGame';
 import { fromLegacy, GAME_PREFIX, loadGames, saveGame, type Store } from './games';
 
@@ -30,13 +30,7 @@ describe('games on a device', () => {
 
   it('add a final created here', () => {
     const store = memory();
-    saveGame(store, {
-      year: 2027,
-      finalists: ['israel', 'italy'],
-      result: null,
-      players: [],
-      semis: [],
-    });
+    saveGame(store, { ...emptyGame(2027), finalists: ['israel', 'italy'] });
     expect(loadGames(store).get(2027)?.finalists).toEqual(['israel', 'italy']);
   });
 

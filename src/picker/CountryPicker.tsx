@@ -31,6 +31,9 @@ interface Props {
   selected: readonly string[];
   onChange: (next: string[]) => void;
   emptyHint?: string;
+  /** In a year with jokers: the chosen joker, and the way to change it. */
+  joker?: string | null;
+  onJoker?: (joker: string | null) => void;
 }
 
 /** How many suggestions show at once: enough to see the choice, short enough on a phone. */
@@ -40,7 +43,7 @@ const SHOWN = 8;
  * Builds a ranking: type a name (Hebrew or English) and press Enter to put the country in
  * the next place; drag a row's handle, or use it with the arrow keys, to move it.
  */
-export function CountryPicker({ field, selected, onChange, emptyHint }: Props) {
+export function CountryPicker({ field, selected, onChange, emptyHint, joker, onJoker }: Props) {
   const { t, language } = useI18n();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -164,6 +167,7 @@ export function CountryPicker({ field, selected, onChange, emptyHint }: Props) {
           <p className={styles.hint}>
             <GripIcon size={12} />
             {t.picker.dragHint}
+            {onJoker && <span className={styles.jokerHint}>{t.picker.jokerHint}</span>}
           </p>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
             <SortableContext items={[...selected]} strategy={verticalListSortingStrategy}>
@@ -174,6 +178,8 @@ export function CountryPicker({ field, selected, onChange, emptyHint }: Props) {
                     country={country}
                     place={i + 1}
                     onRemove={() => onChange(selected.filter((id) => id !== country.id))}
+                    joker={onJoker ? joker === country.id : undefined}
+                    onJoker={onJoker && (() => onJoker(joker === country.id ? null : country.id))}
                   />
                 ))}
               </ol>

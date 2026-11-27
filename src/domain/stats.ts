@@ -7,9 +7,19 @@ export function scoredPlayers(game: Game): GamePlayer[] {
   return game.players.filter((p) => isComplete(p.order, game.finalists));
 }
 
+/** A game's players as the scoring rule takes them: their joker only in a year with jokers. */
+export function scoringEntries(game: Game) {
+  return scoredPlayers(game).map((p) => ({
+    player: p.id,
+    order: p.order,
+    ...(game.options.joker && p.joker ? { joker: p.joker } : {}),
+  }));
+}
+
 export function gameStandings(game: Game): Standing[] {
-  const players = scoredPlayers(game).map((p) => ({ player: p.id, order: p.order }));
-  return game.result ? standings(players, game.result, game.finalists) : [];
+  return game.result
+    ? standings(scoringEntries(game), game.result, game.finalists, game.options.joker)
+    : [];
 }
 
 /**

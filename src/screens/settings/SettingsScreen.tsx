@@ -9,6 +9,7 @@ import { PageTitle } from '../../ui/PageTitle';
 import { StageTabs } from '../../ui/StageTabs';
 import { YearSelect } from '../../ui/YearSelect';
 import { FieldSection } from './FieldSection';
+import { GameSection } from './GameSection';
 import styles from './SettingsScreen.module.css';
 
 /** What is being chosen in the dialog: the final's field, or a semi's. */
@@ -49,7 +50,12 @@ export function SettingsScreen({ year }: { year: number }) {
         lead={t.settings.lead}
         aside={<YearSelect year={year} view="settings" />}
       />
-      <StageTabs year={year} semis={game.semis.length} view="settings" />
+      <StageTabs
+        year={year}
+        semis={game.semis.length}
+        season={game.options.season}
+        view="settings"
+      />
 
       <div className={styles.stack}>
         <FieldSection
@@ -90,6 +96,8 @@ export function SettingsScreen({ year }: { year: number }) {
             onEdit={() => open({ stage: 'semi', index: i }, semi.countries)}
           />
         ))}
+
+        <GameSection game={game} />
 
         {edited(year) && (
           <section className={`${styles.section} ${styles.reset}`}>

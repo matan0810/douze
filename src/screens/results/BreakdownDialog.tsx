@@ -6,6 +6,7 @@ import { playerPieces } from '../../domain/pieces';
 import { Dialog } from '../../ui/Dialog';
 import { Token } from '../../ui/Token';
 import { Flag } from '../../ui/Flag';
+import { Icon } from '../../ui/Icon';
 import { closeness } from './closeness';
 import styles from './BreakdownDialog.module.css';
 
@@ -22,7 +23,10 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
   const { t, language } = useI18n();
   const found = game.players.find((p) => p.id === player);
   const valid = found && isComplete(found.order, game.finalists);
-  const score = valid ? scorePrediction(found.id, found.order, result) : undefined;
+  const jokers = game.options.joker;
+  const score = valid
+    ? scorePrediction(found.id, found.order, result, jokers ? found.joker : undefined, jokers)
+    : undefined;
   const name = found?.name[language] ?? '';
   const percent = score ? Math.round(score.share * 100) : 0;
 
@@ -126,6 +130,12 @@ export function BreakdownDialog({ game, result, player, onClose }: Props) {
                       <span className={`${styles.points} ${styles[`${tone}Points`]} num`}>
                         {row.points}
                       </span>
+                      {row.joker && (
+                        <span className={styles.joker} title={t.settings.joker}>
+                          <Icon name="joker" size={12} />
+                          ×2
+                        </span>
+                      )}
                       {row.bonus > 0 && (
                         <span className={styles.bonus}>
                           <bdi>+{row.bonus}</bdi>

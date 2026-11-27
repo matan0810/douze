@@ -99,3 +99,34 @@ describe('the 2026 final, from the real data', () => {
     ]);
   });
 });
+
+describe('the joker', () => {
+  const result = ['a', 'b', 'c', 'd'];
+
+  it("doubles the joker's place points, not its podium bonus", () => {
+    const plain = scorePrediction('p', ['a', 'c', 'b', 'd'], result);
+    const joker = scorePrediction('p', ['a', 'c', 'b', 'd'], result, 'c');
+    // c is one place off: 9 place points, counted twice
+    expect(joker.total - plain.total).toBe(9);
+    const winner = scorePrediction('p', result, result, 'a');
+    expect(winner.rows[0]).toMatchObject({ base: 10, bonus: 15, joker: true, points: 35 });
+  });
+
+  it('raises the most a prediction can earn by one country', () => {
+    expect(maxScore(25, true)).toBe(290);
+    expect(scorePrediction('p', result, result, 'a').max).toBe(maxScore(4, true));
+  });
+
+  it('counts nothing in a year without jokers', () => {
+    const table = standings([{ player: 'p', order: result, joker: 'a' }], result, result);
+    expect(table[0]?.total).toBe(maxScore(4));
+  });
+});
+
+describe('the real 2026 final', () => {
+  it('has no jokers and no season table', () => {
+    const edition = archive.editions.find((e) => e.year === 2026);
+    expect(edition?.joker).toBe(false);
+    expect(edition?.season).toBe(false);
+  });
+});

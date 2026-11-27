@@ -1,0 +1,59 @@
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 0;
+  border: 0;
+  border-block-end: 1px solid var(--line);
+  background: transparent;
+  text-align: start;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.track {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 30px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  background: rgb(255 255 255 / 6%);
+  transition: background 0.2s ease;
+}
+
+.knob {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--soft);
+  transition: inset-inline-start 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.on {
+  border-color: transparent;
+  background: var(--brand);
+}
+
+.on .knob {
+  inset-inline-start: 25px;
+  background: var(--velvet);
+}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { setResult } from '../../domain/game';
 import { routeHash } from '../../domain/routes';
 import { isComplete, standings } from '../../domain/scoring';
-import { consensus, scoredPlayers } from '../../domain/stats';
+import { consensus, scoringEntries } from '../../domain/stats';
 import { navigate } from '../../hooks/useRoute';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
@@ -41,7 +41,12 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
           end={t.results.titleEnd}
           lead={t.results.lead}
         />
-        <StageTabs year={year} semis={game.semis.length} view="table" />
+        <StageTabs
+          year={year}
+          semis={game.semis.length}
+          season={game.options.season}
+          view="table"
+        />
         <div className="empty frame">
           <p>{t.results.noFinalists}</p>
           <a className="btn btn-primary" href={routeHash({ name: 'final', year, view: 'players' })}>
@@ -54,11 +59,7 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
   const liveOrder = live && isComplete(draft, game.finalists) ? draft : null;
   const shown = editing ? liveOrder : game.result;
   const table = shown
-    ? standings(
-        scoredPlayers(game).map((p) => ({ player: p.id, order: p.order })),
-        shown,
-        game.finalists,
-      )
+    ? standings(scoringEntries(game), shown, game.finalists, game.options.joker)
     : [];
   const board = editing ? !!liveOrder : !!game.result;
 
@@ -77,7 +78,12 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
         lead={t.results.lead}
         aside={<YearSelect year={year} view="table" />}
       />
-      <StageTabs year={year} semis={game.semis.length} view={editing ? 'results' : 'table'} />
+      <StageTabs
+        year={year}
+        semis={game.semis.length}
+        season={game.options.season}
+        view={editing ? 'results' : 'table'}
+      />
       <div className={board ? styles.split : styles.single}>
         <ResultsPanel
           game={game}

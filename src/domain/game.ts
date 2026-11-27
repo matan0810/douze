@@ -1,4 +1,4 @@
-import { isRecord } from './parse';
+import { DATE_PATTERN, isRecord } from './parse';
 import { isComplete } from './scoring';
 import { isCompleteQualifiers, MAX_SEMIS, qualifierCount, type Semi, type SemiPick } from './semis';
 import type { Bilingual, Edition, Player } from './types';
@@ -12,7 +12,19 @@ export interface GamePlayer {
   id: string;
   name: Bilingual;
   order: string[];
+  /** Their joker, a finalist whose points count double when the year has jokers. */
+  joker?: string;
 }
+
+/** What a year's settings switch on (DESIGN.md, section 4). */
+export interface GameOptions {
+  /** The semis and the final add up to a season table. */
+  season: boolean;
+  /** Every player has a joker in the final. */
+  joker: boolean;
+}
+
+export const DEFAULT_OPTIONS: GameOptions = { season: true, joker: false };
 
 export interface Game {
   year: number;
@@ -21,6 +33,11 @@ export interface Game {
   players: GamePlayer[];
   /** The year's semi-finals, each its own field, result and predictions (`semis.ts`). */
   semis: Semi[];
+  /** The date of the final, YYYY-MM-DD, or null when not known. */
+  date: string | null;
+  /** The order the final's songs are performed in; may be partial or empty. */
+  runningOrder: string[];
+  options: GameOptions;
 }
 
 /** Limits on what is entered or received: names, players, the field. */
@@ -63,17 +80,30 @@ export function gameFromEdition(edition: Edition, players: Player[]): Game {
       id: p.player,
       name: byId.get(p.player)?.name ?? typedName(p.player),
       order: [...p.order],
+      ...(p.joker ? { joker: p.joker } : {}),
     })),
     semis: edition.semis.map((semi) => ({
       countries: [...semi.countries],
       qualifiers: semi.qualifiers ? [...semi.qualifiers] : null,
       predictions: semi.predictions.map((p) => ({ ...p, picks: [...p.picks] })),
     })),
+    date: edition.final,
+    runningOrder: [...edition.runningOrder],
+    options: { season: edition.season, joker: edition.joker },
   };
 }
 
 export function emptyGame(year: number): Game {
-  return { year, finalists: [], result: null, players: [], semis: [] };
+  return {
+    year,
+    finalists: [],
+    result: null,
+    players: [],
+    semis: [],
+    date: null,
+    runningOrder: [],
+    options: { ...DEFAULT_OPTIONS },
+  };
 }
 
 /** Keeps the countries of `order` that are finalists, each once, in its order. */
@@ -120,14 +150,22 @@ export function parseStoredGame(
     const order = stringList(raw.order, MAX_FINALISTS);
     if (!name?.he || !name.en || !order) continue;
     ids.add(raw.id);
-    parsed.push({ id: raw.id, name, order: within(order, field) });
+    const joker = typeof raw.joker === 'string' && field.includes(raw.joker) ? raw.joker : null;
+    parsed.push({ id: raw.id, name, order: within(order, field), ...(joker ? { joker } : {}) });
   }
+  const options = isRecord(value.options) ? value.options : {};
   return {
     year,
     finalists: field,
     result: result && isComplete(result, field) ? result : null,
     players: parsed,
     semis: parseStoredSemis(value.semis, known, ids),
+    date: typeof value.date === 'string' && DATE_PATTERN.test(value.date) ? value.date : null,
+    runningOrder: within(stringList(value.runningOrder, MAX_FINALISTS) ?? [], field),
+    options: {
+      season: typeof options.season === 'boolean' ? options.season : DEFAULT_OPTIONS.season,
+      joker: typeof options.joker === 'boolean' ? options.joker : DEFAULT_OPTIONS.joker,
+    },
   };
 }
 
@@ -213,8 +251,44 @@ export function setFinalists(game: Game, finalists: string[]): Game {
     ...game,
     finalists: field,
     result: game.result && isComplete(game.result, field) ? game.result : null,
-    players: game.players.map((p) => ({ ...p, order: within(p.order, field) })),
+    players: game.players.map((p) => withJoker({ ...p, order: within(p.order, field) }, field)),
+    runningOrder: within(game.runningOrder, field),
   };
+}
+
+/** Keeps a player's joker only while it is in the field. */
+function withJoker(player: GamePlayer, field: readonly string[]): GamePlayer {
+  if (!player.joker || field.includes(player.joker)) return player;
+  return withoutJoker(player);
+}
+
+function withoutJoker({ id, name, order }: GamePlayer): GamePlayer {
+  return { id, name, order };
+}
+
+/** Sets a player's joker: a finalist, or none. */
+export function setJoker(game: Game, id: string, joker: string | null): Game {
+  return {
+    ...game,
+    players: game.players.map((p) => {
+      if (p.id !== id) return p;
+      const rest = withoutJoker(p);
+      return joker && game.finalists.includes(joker) ? { ...rest, joker } : rest;
+    }),
+  };
+}
+
+export function setOptions(game: Game, options: Partial<GameOptions>): Game {
+  return { ...game, options: { ...game.options, ...options } };
+}
+
+/** Sets the date of the final: YYYY-MM-DD, or none. */
+export function setDate(game: Game, date: string | null): Game {
+  return { ...game, date: date && DATE_PATTERN.test(date) ? date : null };
+}
+
+export function setRunningOrder(game: Game, order: string[]): Game {
+  return { ...game, runningOrder: within(order, game.finalists) };
 }
 
 export function setResult(game: Game, result: string[] | null): Game {

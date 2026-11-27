@@ -200,3 +200,17 @@ td.far,
 .stat .near {
   color: var(--near);
 }
+
+/* The joker's row: a gold star, its place points counted twice. */
+.joker {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-inline-start: 6px;
+  padding: 0 6px;
+  border-radius: var(--pill);
+  background: var(--brand-gold);
+  color: var(--on-piece);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
