@@ -55,7 +55,9 @@ export function App() {
     };
     const page =
       route.name === 'final' ? `${views[route.view]} · ${t.final(route.year)}` : names[route.name];
-    document.title = page ? `${page} · ${t.brand}` : `${t.brand} · ${t.slogan}`;
+    // The tab carries the page, not the name: the mark beside it already says whose it is, and
+    // a Latin name beside Hebrew words scrambles the order of the tab (owner, 2026-11-27).
+    document.title = page ?? t.brand;
   }, [route, t, latest]);
 
   return (

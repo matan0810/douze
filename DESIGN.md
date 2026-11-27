@@ -45,8 +45,9 @@ of joining the winning two.
   favicon (SVG), the home-screen icons (180, 192, 512 px) and the card a chat shows for the
   site's address (1200 × 630, JPEG to stay small). The same card for every address: there
   is no server to make one per page (issue #1).
-- The tab is titled _Douze · the slogan_ on the home page and _screen · final · Douze_
-  elsewhere; the share image is headed by the wordmark. The repository and the address are
+- The tab is titled _Douze_ on the home page and _screen · final_ elsewhere, with no name
+  beside Hebrew words (a Latin name there scrambles the tab's order; the ball icon says whose
+  it is); the share image is headed by the wordmark. The repository and the address are
   `douze` since 2026-11-26 (first `euro-rank`; the old address no longer answers, and Pages
   cannot redirect it). The keys saved on devices keep the first name (`eurorank:…`).
 

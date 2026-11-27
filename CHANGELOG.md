@@ -10,6 +10,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Changed
+
+- The browser tab is titled _Douze_ on the home page and by the page and the year elsewhere,
+  so the Latin name no longer scrambles the order of the Hebrew words.
+
 ## [1.3.0] - 2026-11-27
 
 ### Added

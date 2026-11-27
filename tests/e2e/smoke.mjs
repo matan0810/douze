@@ -76,7 +76,7 @@ async function main() {
 
   await page.getByRole('heading', { level: 1, name: 'Douze' }).waitFor();
   await page.getByRole('banner').getByRole('link', { name: /Douze/ }).waitFor();
-  assert.equal(await page.title(), 'Douze · מי באמת מבין באירוויזיון?');
+  assert.equal(await page.title(), 'Douze');
   const card = await page.locator('meta[property="og:image"]').getAttribute('content');
   assert.match(card ?? '', /^https:\/\/.+\/brand\/card\.jpg$/, 'the page names its card');
   for (const file of [
