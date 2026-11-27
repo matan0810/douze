@@ -59,6 +59,8 @@ describe('CORS', () => {
     });
     expect(ok.status).toBe(204);
     expect(ok.headers.get('Access-Control-Allow-Headers')).toContain('Authorization');
+    // the invitation's secret travels in its own header: the browser must be allowed to send it
+    expect(ok.headers.get('Access-Control-Allow-Headers')).toContain('X-Invite');
     const other = await call('/health', {
       method: 'OPTIONS',
       headers: { Origin: 'https://x.test' },
