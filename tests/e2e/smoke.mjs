@@ -3,36 +3,49 @@
 //
 //   npm run build && npm run e2e
 //
-// It fails on any page error, console error or Content Security Policy violation, on any
-// request that leaves the site's own address, and on sideways scroll. It walks every
-// screen and flow; extend it with a step for every new one.
+// It checks the build in dist/, then builds its own copy with the server's address
+// (.env.e2e, into dist-e2e/) and runs the real Worker in Node on SQLite (api.mjs) for the
+// groups. It fails on any page error, console error or Content Security Policy violation,
+// on any request that leaves this machine, and on sideways scroll. It walks every screen
+// and flow; extend it with a step for every new one.
 
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { chromium, devices } from 'playwright';
-import { preview } from 'vite';
+import { build, preview } from 'vite';
+import { startApi } from './api.mjs';
 
 const read = async (path) => JSON.parse(await readFile(new URL(path, import.meta.url)));
 const { version } = await read('../../package.json');
 
 async function main() {
-  const server = await preview({ preview: { port: 0 }, logLevel: 'silent' });
+  // The site as built for the browser test: the same production build, with the local
+  // server's address (.env.e2e), into its own folder.
+  await build({ mode: 'e2e', logLevel: 'warn', build: { outDir: 'dist-e2e' } });
+  const api = await startApi();
+  const server = await preview({
+    build: { outDir: 'dist-e2e' },
+    preview: { port: 0 },
+    logLevel: 'silent',
+  });
   const url = server.resolvedUrls.local[0];
+  api.allow(new URL(url).origin);
   const browser = await chromium.launch();
   const problems = [];
   const step = (name) => console.log(`ok  ${name}`);
 
-  const open = async (options, tag) => {
+  // `refusals`: the browser logs a server's 4xx as a console error; a step that expects one
+  // (an old invitation) says so, and only those are let through.
+  const open = async (options, tag, { refusals = false } = {}) => {
     const context = await browser.newContext(options);
     // A broken step fails in seconds, not after Playwright's half-minute wait.
     context.setDefaultTimeout(15_000);
-    await context.route(
-      (target) => target.hostname !== 'localhost',
-      (route) => {
-        problems.push(`${tag}: request to another host ${route.request().url()}`);
-        return route.abort();
-      },
-    );
+    // Requests are watched, not intercepted: interception would answer the browser's CORS
+    // preflight itself and hide a server that refuses it. The policy blocks other hosts.
+    context.on('request', (request) => {
+      if (new URL(request.url()).hostname !== 'localhost')
+        problems.push(`${tag}: request to another host ${request.url()}`);
+    });
     await context.exposeFunction('__cspViolation', (what) =>
       problems.push(`${tag}: blocked by the CSP: ${what}`),
     );
@@ -43,7 +56,11 @@ async function main() {
     );
     const page = await context.newPage();
     page.on('pageerror', (error) => problems.push(`${tag}: ${error.message}`));
-    page.on('console', (m) => m.type() === 'error' && problems.push(`${tag}: console ${m.text()}`));
+    page.on('console', (m) => {
+      if (m.type() !== 'error') return;
+      if (refusals && /status of 4\d\d/.test(m.text())) return;
+      problems.push(`${tag}: console ${m.text()}`);
+    });
     return { context, page };
   };
   const noOverflow = async (page, where) => {
@@ -313,6 +330,93 @@ async function main() {
     'planning mode: drawers, a place inside one, a missed song back at the end, kept after a reload, saved',
   );
 
+  // ---------- Groups, through the real Worker (tests/e2e/api.mjs) ----------
+  page.on('dialog', (dialog) => dialog.accept(dialog.type() === 'prompt' ? 'החברים' : undefined));
+  await page.goto(`${base}/groups`);
+  await page.getByLabel('שם הקבוצה').fill('החברים');
+  await page.getByLabel('השם שלך בקבוצה').fill('מתן');
+  await page.getByRole('button', { name: 'פתיחה' }).click();
+  await page.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
+  const owner = page.getByRole('listitem').filter({ hasText: 'מתן' });
+  await owner.getByText('בעלים').waitFor();
+  const invite = (await page.locator('p[dir="ltr"]').innerText()).trim();
+  assert.match(
+    invite,
+    /#\/join\/[\w-]{22}\/[\w-]{43}$/,
+    'the invitation carries its secret after #',
+  );
+  step('groups: a group is opened, with its owner and an invitation link');
+
+  const { context: phoneA, page: adi } = await open(
+    { ...devices['iPhone 13'], locale: 'he-IL' },
+    'adi',
+  );
+  adi.on('dialog', (dialog) => dialog.accept());
+  await adi.goto(invite);
+  await adi.getByText('הוזמנתם ל"החברים"').waitFor();
+  await adi.getByLabel('השם שלכם').fill('עדי');
+  await adi.getByRole('button', { name: 'הצטרפות' }).click();
+  await adi.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
+  assert.match(
+    await adi.evaluate(() => location.hash),
+    /^#\/group\/[\w-]{22}$/,
+    'the secret left the address',
+  );
+  await adi.getByRole('listitem').filter({ hasText: 'עדי' }).getByText('שחקן').waitFor();
+  await noOverflow(adi, 'group page on a phone');
+  step('groups: a friend joins from the link on a phone, and the secret leaves the address');
+
+  const { context: phoneB, page: adi2 } = await open(
+    { ...devices['iPhone 13'], locale: 'he-IL' },
+    'adi2',
+  );
+  adi2.on('dialog', (dialog) => dialog.accept());
+  await adi2.goto(invite);
+  // The owner's name is a manager's: shown, never offered for a takeover.
+  await adi2.getByTitle('מנהל: עובר רק מהטלפון שלו').waitFor();
+  assert.equal(await adi2.getByRole('button', { name: 'זה אני, מתן' }).count(), 0);
+  await adi2.getByRole('button', { name: 'זה אני, עדי' }).click();
+  await adi2.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
+  await adi2.getByText('בתור עדי').waitFor();
+  await phoneB.close();
+  step("groups: a player's name moves to a new phone; the owner's is protected");
+
+  await page.reload();
+  const adiRow = page.getByRole('listitem').filter({ hasText: 'עדי' });
+  await adiRow.getByRole('button', { name: 'מינוי למנהל' }).click();
+  await adiRow.getByText('מנהל', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'הצגת היומן' }).click();
+  await page.getByText('עבר לטלפון חדש').waitFor();
+  step('groups: the owner names an admin, and the log shows the takeover');
+
+  await page.getByRole('button', { name: 'קישור חדש' }).click();
+  await page.waitForFunction(
+    (old) => {
+      const shown = document.querySelector('p[dir="ltr"]')?.textContent?.trim();
+      return !!shown && shown !== old;
+    },
+    invite,
+    { timeout: 5000 },
+  );
+  const { context: phoneC, page: late } = await open(
+    { ...devices['iPhone 13'], locale: 'he-IL' },
+    'late',
+    { refusals: true },
+  );
+  await late.goto(invite);
+  await late.getByText('הקישור לא תקף').waitFor();
+  await phoneC.close();
+  step('groups: a renewed link replaces the old one, which stops working');
+
+  await adi.getByRole('button', { name: 'יציאה מהקבוצה' }).click();
+  await adi.getByRole('heading', { level: 1, name: /הקבוצות/ }).waitFor();
+  await adi.getByText('עוד אין קבוצות במכשיר הזה').waitFor();
+  await phoneA.close();
+  await page.getByRole('button', { name: 'מחיקת הקבוצה' }).click();
+  await page.getByRole('heading', { level: 1, name: /הקבוצות/ }).waitFor();
+  await page.getByText('עוד אין קבוצות במכשיר הזה').waitFor();
+  step('groups: a player leaves; the owner deletes the group by typing its name');
+
   await page.getByRole('button', { name: 'Switch to English' }).click();
   assert.equal(await page.evaluate(() => document.documentElement.dir), 'ltr');
   await page.reload();
@@ -331,6 +435,7 @@ async function main() {
     '/2026/settings',
     '/2026/reveal',
     '/2026/plan',
+    '/groups',
     '/history',
     '/new',
     '/2026/player/matan',
@@ -387,6 +492,7 @@ async function main() {
 
   await browser.close();
   await new Promise((resolve) => server.httpServer.close(resolve));
+  await api.close();
   if (problems.length) {
     console.error(problems.join('\n'));
     process.exit(1);

@@ -4,6 +4,10 @@ import { useRoute } from './hooks/useRoute';
 import { useI18n } from './i18n/context';
 import { NavBar } from './layout/NavBar';
 import { StarBackground } from './layout/StarBackground';
+import { apiOrigin } from './net/api';
+import { GroupScreen } from './screens/groups/GroupScreen';
+import { GroupsScreen } from './screens/groups/GroupsScreen';
+import { JoinScreen } from './screens/groups/JoinScreen';
 import { HistoryScreen } from './screens/history/HistoryScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
 import { NewFinalScreen } from './screens/new/NewFinalScreen';
@@ -40,6 +44,9 @@ export function App() {
     const names: Partial<Record<Route['name'], string>> = {
       history: t.nav.history,
       new: t.newFinal.titleStart + t.newFinal.titleEnd,
+      groups: t.nav.groups,
+      group: t.nav.groups,
+      join: t.join.titleStart + t.join.titleEnd,
     };
     const views: Record<FinalView, string> = {
       table: t.nav.results,
@@ -83,6 +90,17 @@ function screen(route: Route, known: boolean) {
       return <HistoryScreen />;
     case 'new':
       return <NewFinalScreen />;
+    // Groups need the server: a build without one shows home in their place.
+    case 'groups':
+      return apiOrigin() ? <GroupsScreen /> : <HomeScreen />;
+    case 'group':
+      return apiOrigin() ? <GroupScreen key={route.id} id={route.id} /> : <HomeScreen />;
+    case 'join':
+      return apiOrigin() ? (
+        <JoinScreen key={route.id} id={route.id} secret={route.secret} />
+      ) : (
+        <HomeScreen />
+      );
     case 'final':
     case 'player':
       if (!known) return <HomeScreen />;

@@ -258,7 +258,7 @@ told. Tools pinned to the cloud sessions' versions (Playwright) are never upgrad
   `npm run build && npm run e2e` (browser test), `npm run bump -- patch|minor|major` (release).
 - **Layout:** `src/domain/` the rules with no UI (scoring, data checks, games,
   statistics, addresses); `src/data/` the country catalogue, the players and one file per
-  year in `editions/`; `src/state/` this device's finals; `src/screens/` one folder per
+  year in `editions/`; `src/state/` this device's finals and groups; `src/net/` the calls to the server; `src/screens/` one folder per
   screen; `src/picker/`, `src/ui/`, `src/layout/` shared pieces; `src/export/` sharing;
   `src/i18n/` strings; `src/styles/` tokens and the font; `public/flags/` the flags;
   `scripts/` version bump, CHANGELOG, release plan, `flags.ts`, and `ball.ts` with

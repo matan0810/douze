@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react';
 import { copyFileSync, readFileSync } from 'node:fs';
-import type { Plugin } from 'vite';
+import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
+import { serverOrigin } from './shared/origin';
 
 const { name, version, homepage } = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
@@ -15,7 +16,15 @@ const { name, version, homepage } = JSON.parse(
  * any write of HTML from script fail. Only in the build: the dev server injects inline
  * scripts of its own. A new outside host needs a reason here and a line in SECURITY.md.
  */
-export const CONTENT_SECURITY_POLICY = [
+export function contentSecurityPolicy(server?: string): string {
+  return [
+    ...POLICY.filter((rule) => !rule.startsWith('connect-src')),
+    // The server, when the build has one (SECURITY.md): the only outside host.
+    server ? `connect-src 'self' ${server}` : "connect-src 'self'",
+  ].join('; ');
+}
+
+const POLICY = [
   "default-src 'none'",
   "script-src 'self'",
   "style-src 'self'",
@@ -30,7 +39,7 @@ export const CONTENT_SECURITY_POLICY = [
   "object-src 'none'",
   "require-trusted-types-for 'script'",
   "trusted-types 'none'",
-].join('; ');
+];
 
 /**
  * What a chat or a social site shows for the site's address: the name, the slogan and the
@@ -65,14 +74,14 @@ function socialMeta(): Plugin {
   };
 }
 
-function securityMeta(): Plugin {
+function securityMeta(server?: string): Plugin {
   return {
     name: 'security-meta',
     apply: 'build',
     transformIndexHtml: () => [
       {
         tag: 'meta',
-        attrs: { 'http-equiv': 'Content-Security-Policy', content: CONTENT_SECURITY_POLICY },
+        attrs: { 'http-equiv': 'Content-Security-Policy', content: contentSecurityPolicy(server) },
         injectTo: 'head-prepend',
       },
       {
@@ -98,8 +107,13 @@ function notFoundPage(): Plugin {
   };
 }
 
-export default defineConfig({
-  plugins: [react(), securityMeta(), socialMeta(), notFoundPage()],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    securityMeta(serverOrigin(loadEnv(mode, process.cwd(), 'VITE_').VITE_API_URL)),
+    socialMeta(),
+    notFoundPage(),
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },
@@ -108,4 +122,4 @@ export default defineConfig({
   test: {
     environment: 'node',
   },
-});
+}));

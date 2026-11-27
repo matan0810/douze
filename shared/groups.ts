@@ -176,3 +176,16 @@ export type ErrorCode = (typeof ERROR_CODES)[number];
 export function isErrorCode(value: unknown): value is ErrorCode {
   return ERROR_CODES.some((code) => code === value);
 }
+
+export function parseAudit(value: unknown): AuditEntry[] | undefined {
+  if (!Array.isArray(value) || value.length > 100) return undefined;
+  const entries = value.map((raw): AuditEntry | undefined => {
+    const json = record(raw, ['at', 'actor', 'action', 'subject']);
+    if (!json || typeof json.at !== 'number' || !isAuditAction(json.action)) return undefined;
+    const name = (v: unknown) => (v === null ? null : (parseName(v) ?? undefined));
+    const actor = name(json.actor);
+    const subject = typeof json.subject === 'string' ? json.subject.slice(0, 100) : null;
+    return actor === undefined ? undefined : { at: json.at, actor, action: json.action, subject };
+  });
+  return entries.every((e): e is AuditEntry => !!e) ? entries : undefined;
+}

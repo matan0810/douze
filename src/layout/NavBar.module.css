@@ -145,3 +145,25 @@
     padding-inline: 8px;
   }
 }
+
+/* The narrowest phones (320 to 360 px) fit seven controls: each a little tighter, still well
+   above the 24 px a target needs (WCAG 2.5.8). */
+@media (max-width: 360px) {
+  .inner {
+    gap: 4px;
+  }
+
+  .brand {
+    font-size: 0.72rem;
+  }
+
+  .link {
+    min-width: 32px;
+    padding: 6px 4px;
+  }
+
+  .language {
+    min-width: 32px;
+    padding-inline: 6px;
+  }
+}

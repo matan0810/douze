@@ -43,3 +43,23 @@ describe('years before 2026', () => {
     expect(parseRoute('#/1955').name).toBe('home');
   });
 });
+
+describe('the addresses of groups', () => {
+  const id = 'abcdefghijklmnopqrstuv';
+  const secret = 'a'.repeat(43);
+
+  it('round-trip', () => {
+    for (const route of [
+      { name: 'groups' } as const,
+      { name: 'group', id } as const,
+      { name: 'join', id, secret } as const,
+    ])
+      expect(parseRoute(routeHash(route))).toEqual(route);
+  });
+
+  it('fall back to home with a malformed id or secret', () => {
+    expect(parseRoute('#/group/short').name).toBe('home');
+    expect(parseRoute(`#/join/${id}/short`).name).toBe('home');
+    expect(parseRoute(`#/join/${id}/${secret}x`).name).toBe('home');
+  });
+});

@@ -5,16 +5,18 @@ them is made here first (CLAUDE.md, section 4).
 
 ## 1. Scope
 
-| In                                                    | Out                                 |
-| ----------------------------------------------------- | ----------------------------------- |
-| The final and the semi-finals of each year, from 2026 | Jury and televote split             |
-| Predictions of the full order, the result, the table  | Accounts, a server, live data feeds |
-| Statistics of each final and of all the years         | Betting odds, outside data          |
-| Hebrew (RTL) and English                              | Other languages                     |
+| In                                                    | Out                        |
+| ----------------------------------------------------- | -------------------------- |
+| The final and the semi-finals of each year, from 2026 | Jury and televote split    |
+| Predictions of the full order, the result, the table  | Accounts, live data feeds  |
+| Statistics of each final and of all the years         | Betting odds, outside data |
+| Hebrew (RTL) and English                              | Other languages            |
 
-The site has no server. The archive (`src/data/`) is what the repository says; everything
-else lives on the device that entered it. Sharing between phones, by link or by a server,
-waits for a server (issue #1): links without one were tried in 1.1.0 and removed.
+The archive (`src/data/`) is what the repository says; everything else lives on the device
+that entered it. Sharing between phones comes with the server (issue #1, the template's
+`SERVER.md`), in phases: groups first (section 4, _Groups_), then predictions, results and
+the live night from every phone. Links without a server were tried in 1.1.0 and removed. A
+build without the server's address (`VITE_API_URL`) has no groups at all: no link, no screen.
 
 ## 2. Look
 
@@ -207,13 +209,32 @@ order is published.
   how many finals each finished above the other, like a fixture's score. The same person is joined across years by
   their archive id; players added on a device, by name.
 - **New final**: a year and its countries from the catalogue.
+- **Groups** (only when the build has a server): a group is the people who play together,
+  each from their own phone, with no account (level 2 of `SERVER.md`: a person is their
+  device). _My groups_ lists the groups this device belongs to and opens a new one with a
+  name for it and one's own. The opener is its _owner_ and gets the group's invitation, a
+  link with a secret; anyone with the link sees the group's name and picks a name to join
+  as a _player_. Picking a player's name already in the group takes it over (a new phone);
+  an owner's or an admin's name cannot be taken over. A player's phones are at most five;
+  a sixth replaces the oldest. On the group's page: the members and their roles, the
+  invitation (copy, or a new link that ends the old one), and what each role may do:
+  - the owner names and removes _admins_, renews the link and deletes the group, typing
+    its name to confirm;
+  - an admin _releases_ a player (their phones leave, the name stays for them to take
+    back) and reads the _log_: who joined, took over, left, was named or released, and when;
+  - every member can leave; the owner cannot, while the group is theirs.
+
+  Who may do what is one table (`shared/capabilities.ts`); the numbers (40 members, five
+  groups a day from one address, names of up to 30 characters, …) are in
+  `shared/limits.ts` and `shared/config.ts`.
 
 ## 5. Addresses
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
 `#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/plan`, `#/<year>/player/<id>` a breakdown over the table,
-`#/history`, `#/new`. Unknown
+`#/history`, `#/new`, `#/groups`, `#/group/<id>`, `#/join/<id>/<secret>` an invitation (the
+address is replaced by the group's page once joined, so the secret leaves the history). Unknown
 addresses show home and are rewritten, and so does an unknown path under the site: Pages'
 404 page is a copy of the site.
 

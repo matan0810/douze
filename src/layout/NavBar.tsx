@@ -2,6 +2,7 @@ import type { Route } from '../domain/routes';
 import { routeHash } from '../domain/routes';
 import { useI18n } from '../i18n/context';
 import { Icon, type IconName } from '../ui/Icon';
+import { apiOrigin } from '../net/api';
 import { Wordmark } from '../ui/Wordmark';
 import styles from './NavBar.module.css';
 
@@ -36,6 +37,17 @@ export function NavBar({ route, year }: Props) {
       on: view === 'stats',
     },
     { icon: 'history', label: t.nav.history, hash: '#/history', on: route.name === 'history' },
+    // Groups need the server: a build without one has no link to them.
+    ...(apiOrigin()
+      ? [
+          {
+            icon: 'group' as const,
+            label: t.nav.groups,
+            hash: '#/groups',
+            on: ['groups', 'group', 'join'].includes(route.name),
+          },
+        ]
+      : []),
   ];
 
   return (

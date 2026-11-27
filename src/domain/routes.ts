@@ -1,3 +1,4 @@
+import { isId, isSecret } from '../../shared/ids';
 import { isYear } from './game';
 
 export const FINAL_VIEWS = [
@@ -29,7 +30,11 @@ export type Route =
   | { name: 'final'; year: number; view: FinalView }
   | { name: 'player'; year: number; id: string }
   | { name: 'history' }
-  | { name: 'new' };
+  | { name: 'new' }
+  | { name: 'groups' }
+  | { name: 'group'; id: string }
+  /** An invitation: the secret rides in the hash, which never reaches a server's log. */
+  | { name: 'join'; id: string; secret: string };
 
 const isView = (v: unknown): v is FinalView => FINAL_VIEWS.some((view) => view === v);
 
@@ -41,6 +46,10 @@ export function parseRoute(hash: string): Route {
   const [first, second, third] = hash.replace(/^#\/?/, '').split(/[/?]/);
   if (first === 'history') return { name: 'history' };
   if (first === 'new') return { name: 'new' };
+  if (first === 'groups') return { name: 'groups' };
+  if (first === 'group' && isId(second)) return { name: 'group', id: second };
+  if (first === 'join' && isId(second) && isSecret(third))
+    return { name: 'join', id: second, secret: third };
   const year = /^\d{4}$/.test(first ?? '') ? Number(first) : NaN;
   if (!isYear(year)) return { name: 'home' };
   if (second === 'player' && third && /^[\w-]{1,60}$/.test(third))
@@ -60,5 +69,11 @@ export function routeHash(route: Route): string {
       return route.view === 'table' ? `#/${route.year}` : `#/${route.year}/${route.view}`;
     case 'player':
       return `#/${route.year}/player/${route.id}`;
+    case 'groups':
+      return '#/groups';
+    case 'group':
+      return `#/group/${route.id}`;
+    case 'join':
+      return `#/join/${route.id}/${route.secret}`;
   }
 }

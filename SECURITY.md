@@ -10,40 +10,58 @@ Update it whenever any of these change (CLAUDE.md, section 4).
 | `eurorank:language`             | The language chosen in the header                      |
 | `eurorank:game:<year>`          | A final changed or created on this device              |
 | `eurorank:plan:<year>:<player>` | A plan in progress in planning mode, until it is saved |
+| `eurorank:groups`               | The groups this device belongs to (see below)          |
 
 Every value read back is parsed and checked (`src/hooks/storage.ts`,
-`src/domain/game.ts`, `parseStoredGame`; `src/domain/plan.ts`, `parsePlan`), never cast: unknown countries and repeats are
+`src/domain/game.ts`, `parseStoredGame`; `src/domain/plan.ts`, `parsePlan`;
+`src/state/memberships.ts`, `parseMemberships`), never cast: unknown countries and repeats are
 dropped, a bad entry is ignored. The first site's keys (`eurorank_state_he_<year>`) are
 read once, moved and removed.
 
 ## Hosts
 
-The site talks to no host but its own: the flags (`public/flags/`, drawn by
-`scripts/flags.ts` from the MIT-licensed `flag-icons`) and the Rubik and Syne fonts are part of the
-site. The first site loaded both from outside hosts (Google Fonts, flagcdn.com); it no
-longer does. The Content Security Policy (`vite.config.ts`)
-enforces it, and the browser test fails if any request leaves the site. A new host needs a
-reason, a change to the policy and a line here.
+The site talks to no host but its own, and the server's when the build has one
+(`VITE_API_URL`, from the repository variable `API_URL`): only that origin is added to
+`connect-src`, and only https (or this machine, for the browser test). Besides it, the
+flags (`public/flags/`, drawn by `scripts/flags.ts` from the MIT-licensed `flag-icons`) and
+the Rubik and Syne fonts are part of the site. The first site loaded both from outside
+hosts (Google Fonts, flagcdn.com); it no longer does. The Content Security Policy
+(`vite.config.ts`) enforces it, and the browser test fails if any request goes anywhere
+else. A new host needs a reason, a change to the policy and a line here.
 
-## The server (groundwork, issue #1)
+## The server (issue #1)
 
 The Worker `douze-api` (`worker/`, on Cloudflare; the standard is the template's `SERVER.md`)
-has one address so far, `GET /health`, and holds no data and no secret. It is not yet
-called by the site, so the Content Security Policy is unchanged: when the site first calls it,
-its host goes into `connect-src` with this line. Held to the standard from the start:
+keeps the groups in a D1 database (`worker/migrations/`): each group's name, its members'
+names and roles, the hashes of their devices' tokens and of the invitation, and the log.
+Nothing else: no address, no e-mail, no account, no prediction yet.
 
-- Deny by default: an unknown path is a plain 404, an unknown method a 405.
-- CORS answers the site's own origins only (`ALLOWED_ORIGINS` in `wrangler.jsonc`).
-- A request body is capped (`shared/limits.ts`) by its declared and its real size.
-- An unexpected error is a plain 500 that names nothing; the log has only the kind of error,
-  and one line per request without address, header or body.
-- Every answer is `no-store`, `nosniff` and sent with no referrer.
-- Secrets will be 256-bit random tokens stored as SHA-256 hashes, compared in constant time
-  (`shared/tokens.ts`); who may do what is one table, checked cell by cell
-  (`shared/capabilities.ts`).
-
-The deploy token (`CLOUDFLARE_API_TOKEN`) and the account id are repository secrets, used
-only by `deploy-worker.yml`, which has read-only permissions and keeps no checkout token.
+- **Who is who.** Level 2 of `SERVER.md`, without Google for now: a device holds a 256-bit
+  token, given when it opens or joins a group, sent as `Authorization: Bearer`. The server
+  keeps only its SHA-256 hash and compares in constant time (`shared/tokens.ts`). The same
+  for the invitation, sent in an `X-Invite` header, never in an address the server logs.
+- **On the device.** `eurorank:groups` holds, per group, the token, the invitation (so any
+  member can pass the link on) and the names as last seen. Anyone with the phone, or a
+  script on the same origin, can act as that member: the known limit below. Leaving a
+  group, or being released, ends the token on the server.
+- **Who may do what.** One table of roles and actions, deny by default, checked before
+  anything else in every handler (`shared/capabilities.ts`, `worker/src/auth.ts`).
+- **Every value checked.** Bodies are parsed against closed shapes, unknown fields refused
+  (`shared/groups.ts`); names cleaned of control and direction characters, 1 to 30
+  characters (`shared/names.ts`); ids and secrets by their exact form.
+- **Limits** (`shared/limits.ts`, `shared/config.ts`), counted in the database
+  (`worker/src/rate.ts`): bodies 32 KiB; 40 members a group, five phones a player; five new
+  groups a day from one address and 2000 in all; ten joins or wrong secrets an hour from
+  one address; 60 writes a minute. The log keeps 1000 entries a group for a year.
+- **Answers.** Deny by default: an unknown path is a plain 404, an unknown method a 405.
+  CORS answers the site's own origins only (`ALLOWED_ORIGINS` in `wrangler.jsonc`). An
+  unexpected error is a plain 500 that names nothing; the log has one line per request,
+  with ids replaced by `:id`, no address, header or body. Every answer is `no-store`,
+  `nosniff` and sent with no referrer.
+- **Deploying.** The deploy token (`CLOUDFLARE_API_TOKEN`, Workers Scripts and D1, edit) and
+  the account id are repository secrets, used only by `deploy-worker.yml`, which has
+  read-only permissions and keeps no checkout token; it creates the database once and
+  applies the migrations before the code that needs them.
 
 ## Threats and what answers them
 
@@ -58,11 +76,20 @@ only by `deploy-worker.yml`, which has read-only permissions and keeps no checko
 | A request the server should refuse | Deny by default; origin, size and method checked; errors name nothing                  | unit (`worker/src/app.test.ts`), the real runtime         |
 | A guessed or leaked secret         | 256-bit tokens, hashes only stored, constant-time comparison                           | unit (`shared/server.test.ts`)                            |
 | A role doing too much              | One table of capabilities, deny by default, walked cell by cell                        | unit (`shared/server.test.ts`)                            |
+| A stranger in a group              | An invitation secret; a new link ends the old; joins and wrong secrets capped          | unit (`worker/src/groups.test.ts`), e2e                   |
+| Taking over a manager's name       | Only players' names can be taken over; a manager's never                               | unit (`worker/src/groups.test.ts`), e2e                   |
+| Flooding the server                | Sizes, counts and rates capped in the database                                         | unit (`worker/src/groups.test.ts`)                        |
+| A secret left in the address bar   | The invitation address is replaced once joined; tokens never travel in an address      | e2e                                                       |
 
 ## Known limits, accepted
 
-- Devices do not sync: a final entered on one phone stays there until a server exists
-  (issue #1).
+- Devices do not sync: a final entered on one phone stays there; groups share only their
+  members so far (issue #1).
+- A member is their phone: whoever holds it, or a token copied from its storage, acts as
+  that member until the token is released. A manager's name cannot be taken over by the
+  invitation, but anyone with the link can join as a player; the owner renews the link
+  when it has gone too far. Signing in with Google, first for managers, is the next level
+  (`SERVER.md`).
 - GitHub Pages sends no headers, so the policy is a `<meta>` tag and cannot forbid framing.
 - Every Pages project of an account shares one origin (`<account>.github.io`), and with it
   `localStorage`. A custom domain gives the site an origin of its own.

@@ -12,9 +12,14 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ### Added
 
-- The groundwork of the server (nothing to see yet): a Cloudflare Worker with a health
-  address, the limits, roles and secrets the groups will need, and the deploy workflow, which
-  waits for the Cloudflare secrets.
+- Groups, the first part of the server (issue #1): open a group from your phone and send
+  its link; friends join from theirs with a name, or take their name back from a new
+  phone. The opener names admins, renews the link and can delete the group; admins
+  release a player's phones and read the group's log; anyone can leave. No account: each
+  phone is its member. Shown only once the server is deployed and its address set.
+- The server behind it: a Cloudflare Worker with a database, roles checked against one
+  table, secrets kept only as hashes, and limits on everything; deployed from `master`
+  once the Cloudflare secrets exist.
 - The 2024 and 2025 finals, from the group's own messages: everyone's prediction of the
   final, Matan's picks for semi-final 1 of 2024, and the picks for both semi-finals of 2025
   (Ori and Matan for the first, Ori for the second), with the official results of the finals
