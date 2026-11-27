@@ -1,9 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Env } from './env';
 import { guard, HttpError, json, readJson } from './http';
+import { testDatabase } from '../test/sqlite';
 import { handle, SERVICE } from './app';
 
-const env: Env = { ALLOWED_ORIGINS: 'https://matan0810.github.io, http://localhost:5173' };
+const env: Env = {
+  ALLOWED_ORIGINS: 'https://matan0810.github.io, http://localhost:5173',
+  DB: testDatabase(),
+};
 const call = (path: string, init?: RequestInit) =>
   handle(new Request(`https://api.test${path}`, init), env);
 
@@ -30,7 +34,7 @@ describe('the rest of the address space', () => {
   it('is denied by default: an unknown path is a plain 404', async () => {
     const answer = await call('/anything');
     expect(answer.status).toBe(404);
-    expect(await answer.json()).toEqual({ error: 'Not found' });
+    expect(await answer.json()).toEqual({ error: 'Not found', code: 'not-found' });
   });
 });
 

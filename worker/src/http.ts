@@ -1,3 +1,4 @@
+import type { ErrorCode } from '../../shared/groups';
 import type { Env } from './env';
 
 /** An error that is the caller's to see: its status and its (safe) message. */
@@ -5,6 +6,9 @@ export class HttpError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    /** A code from the closed list the site turns into words (`shared/groups.ts`). */
+    readonly code?: ErrorCode,
+    readonly headers: Record<string, string> = {},
   ) {
     super(message);
   }
@@ -41,14 +45,14 @@ export function json(body: unknown, status = 200, headers: Record<string, string
 /** Reads a JSON body, refusing anything larger than `maxBytes` (and anything that is not JSON). */
 export async function readJson(request: Request, maxBytes: number): Promise<unknown> {
   const declared = Number(request.headers.get('Content-Length') ?? 0);
-  if (declared > maxBytes) throw new HttpError(413, 'Request body is too large');
+  if (declared > maxBytes) throw new HttpError(413, 'Request body is too large', 'bad-request');
   const text = await request.text();
   if (new TextEncoder().encode(text).length > maxBytes)
-    throw new HttpError(413, 'Request body is too large');
+    throw new HttpError(413, 'Request body is too large', 'bad-request');
   try {
     return JSON.parse(text);
   } catch {
-    throw new HttpError(400, 'Request body is not valid JSON');
+    throw new HttpError(400, 'Request body is not valid JSON', 'bad-request');
   }
 }
 
@@ -60,7 +64,12 @@ export async function guard(run: () => Promise<Response>): Promise<Response> {
   try {
     return await run();
   } catch (error) {
-    if (error instanceof HttpError) return json({ error: error.message }, error.status);
+    if (error instanceof HttpError)
+      return json(
+        { error: error.message, ...(error.code ? { code: error.code } : {}) },
+        error.status,
+        error.headers,
+      );
     // Only the kind of error is logged, never its message, which may hold a secret.
     console.error('unhandled', error instanceof Error ? error.name : typeof error);
     return json({ error: 'Something went wrong' }, 500);
