@@ -138,7 +138,8 @@ order is published.
 - **Results** (per final): the official order, entered like a prediction, and the table.
   _Live mode_ is for the night itself: it starts from the group's average prediction, the
   order is dragged to follow the scoreboard as votes come in, and the table follows at
-  once; nothing is saved until Save. Each player opens their breakdown, country by
+  once; nothing is saved until Save. Arrows of rank change while the order moves wait for a
+  live data source (issue #3). Each player opens their breakdown, country by
   country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
   language).
 - **Planning mode** (per final, from the players page): a prediction built while
@@ -147,7 +148,7 @@ order is published.
   ten_, _Middle_, _Bottom_, then into its place among the songs already in that drawer;
   the drawers, top to bottom, are the prediction, saved as it like any other and then
   dragged into shape. It judges the place a song will get, not how much one likes it (a
-  ranking by liking is a separate idea, issue on GitHub). The last song placed can be
+  ranking by liking is a separate idea, issue #4). The last song placed can be
   taken back; a plan in progress is kept on the device until it is saved (`plan.ts`).
 - **The reveal** (per final, once there is a table): the places hidden, then told from
   the last to the first, one tap at a time (players level on a place together). Before the
