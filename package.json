@@ -1,7 +1,7 @@
 {
   "name": "douze",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Douze: predict the Eurovision final with friends. Who really knows Eurovision?",
   "type": "module",
   "homepage": "https://matan0810.github.io/douze",

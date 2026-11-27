@@ -10,6 +10,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-27
+
 ### Added
 
 - The semi-finals: each player picks the ten countries that go through and one more in
@@ -21,8 +23,7 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   first, Matan in the second).
 - New statistics of the final: a card per player (top-ten hits, the biggest miss, the
   bold call, top against bottom), taste twins, the Israeli heart, the host and the big
-  five, and each
-  country's surprise and who was closest to it.
+  five, and each country's surprise and who was closest to it.
 - Rivalries on the all-years page: for every pair of us, who finished above whom, final by
   final.
 - Planning mode: build a prediction while watching. Each song, in the running order,
@@ -52,7 +53,6 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   colour and stands on it like a game piece, on every screen and in the picture of the
   table.
 - The button that downloads the table as a picture is now called _Share the table_.
-
 - Douze feels like a game: every player has a colour and a token of their own, on every
   screen and in the image of the table; rounded shapes and a rounded, heavy typeface
   (Rubik); buttons that press like keys; and stickers of reward on the table: _Champion!_,
