@@ -250,15 +250,22 @@ async function main() {
   await page.getByRole('link', { name: /2026/ }).first().waitFor();
   await page.getByRole('heading', { name: /טבלת כל הזמנים/ }).waitFor();
   await page.getByRole('heading', { name: /יריבויות/ }).waitFor();
-  // each number beside its own player: Matan, who finished above Adi, has the 1
-  const fixture = page.getByRole('listitem').filter({ hasText: 'מתן' }).filter({ hasText: 'עדי' });
-  const [matanX, oneX] = await Promise.all([
-    fixture.getByText('מתן').boundingBox(),
-    fixture.getByText('1', { exact: true }).boundingBox(),
-  ]);
-  const zeroX = await fixture.getByText('0', { exact: true }).boundingBox();
+  // Each number beside its own player: over three finals Ori finished above Matan twice, Matan
+  // above Ori once, so the 2 belongs beside Ori and the 1 beside Matan.
+  const fixture = page.getByRole('listitem').filter({ hasText: 'אורי' }).filter({ hasText: 'מתן' });
+  // The distance from a number to the box of a player's name: nearest edge to its centre.
+  const near = async (name, number) => {
+    const [who, count] = await Promise.all([
+      fixture.getByText(name).first().boundingBox(),
+      fixture.getByText(number, { exact: true }).boundingBox(),
+    ]);
+    if (!who || !count) return Infinity;
+    const centre = count.x + count.width / 2;
+    return Math.max(who.x - centre, 0, centre - (who.x + who.width));
+  };
   assert.ok(
-    matanX && oneX && zeroX && Math.abs(matanX.x - oneX.x) < Math.abs(matanX.x - zeroX.x),
+    (await near('אורי', '2')) < (await near('מתן', '2')) &&
+      (await near('מתן', '1')) < (await near('אורי', '1')),
     'the rivalry score puts each number beside its player',
   );
   step('history: winners by year, the all-time table and the rivalries');

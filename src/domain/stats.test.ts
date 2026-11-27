@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { careers, consensus, countryGrid, headToHead, insights, rivalries } from './stats';
+import { archive } from './archive';
+import { gameFromEdition } from './game';
+import {
+  careers,
+  consensus,
+  countryGrid,
+  gameStandings,
+  headToHead,
+  insights,
+  rivalries,
+} from './stats';
 import { game2026 } from './testGame';
 
 describe('what the 2026 final taught us', () => {
@@ -106,5 +116,34 @@ describe('rivalries and surprises', () => {
     const israel = countryGrid(game2026()).find((row) => row.country === 'israel');
     expect(israel?.surprise).toBeCloseTo(3.67, 1);
     expect(israel?.closest).toEqual(['adi', 'matan']);
+  });
+});
+
+describe('the earlier finals, against their real results', () => {
+  const table = (year: number) => {
+    const edition = archive.editions.find((e) => e.year === year);
+    if (!edition) throw new Error(`no ${year} in the archive`);
+    return gameStandings(gameFromEdition(edition, archive.players)).map((s) => [s.player, s.total]);
+  };
+
+  it('2024: Ori 174, Adi 149, Matan 128', () => {
+    expect(table(2024)).toEqual([
+      ['ori', 174],
+      ['adi', 149],
+      ['matan', 128],
+    ]);
+  });
+
+  it('2025: Ori 149, Matan 143', () => {
+    expect(table(2025)).toEqual([
+      ['ori', 149],
+      ['matan', 143],
+    ]);
+  });
+
+  it('count the titles across the years: Ori 2, Matan 1', () => {
+    const games = archive.editions.map((e) => gameFromEdition(e, archive.players));
+    const titles = Object.fromEntries(careers(games).map((c) => [c.key, c.titles]));
+    expect(titles).toEqual({ ori: 2, matan: 1, adi: 0 });
   });
 });

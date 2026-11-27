@@ -14,9 +14,10 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 - The 2024 and 2025 finals, from the group's own messages: everyone's prediction of the
   final, Matan's picks for semi-final 1 of 2024, and the picks for both semi-finals of 2025
-  (Ori and Matan for the first, Ori for the second). The official results of the two finals
-  are not entered yet, so their tables wait for them. Neither year has a season table, since
-  not everyone predicted every stage.
+  (Ori and Matan for the first, Ori for the second), with the official results of the finals
+  and of the semi-finals. 2024: Ori 174, Adi 149, Matan 128. 2025: Ori 149, Matan 143. Ori
+  has won two titles, Matan one. Neither year has a season table, since not everyone
+  predicted every stage.
 
 ### Fixed
 
