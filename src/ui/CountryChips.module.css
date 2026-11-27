@@ -1,0 +1,73 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: start;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+button.chip:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+button.chip:active {
+  transform: scale(0.96);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.off {
+  opacity: 0.85;
+}
+
+/* On: the ball's light around it. */
+.on {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--velvet), var(--velvet)) padding-box,
+    var(--brand) border-box;
+  color: var(--text);
+}
+
+.reserve {
+  border-color: var(--brand-gold);
+  border-style: dashed;
+  color: var(--brand-gold);
+}
+
+.mark {
+  flex: none;
+  padding: 0 6px;
+  border-radius: var(--pill);
+  background: var(--brand-gold);
+  color: var(--on-piece);
+  font-size: 0.7rem;
+  font-weight: 800;
+}

@@ -10,7 +10,22 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Added
+
+- The semi-finals: each player picks the ten countries that go through and one more in
+  11th place; 2 points for every pick that qualified and 1 more if the 11th did. Each semi
+  has its own table, where every pick shows lit or faded by whether it went through.
+- The season table: the final and the semi-finals added up, with a 5-point bonus for a
+  perfect semi-final.
+- The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
+  first, Matan in the second).
+- A settings page for each year: the countries of the final and of each semi-final, set
+  separately, since the host and the big five go straight to the final; the number of
+  semi-finals; and the way back to the archive.
+
 ### Changed
+
+- The button that downloads the table as a picture is now called _Share the table_.
 
 - Douze feels like a game: every player has a colour and a token of their own, on every
   screen and in the image of the table; rounded shapes and a rounded, heavy typeface

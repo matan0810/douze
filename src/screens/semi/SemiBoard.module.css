@@ -1,0 +1,138 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-block-end: 10px;
+  border-block-end: 1px solid var(--line-strong);
+}
+
+.hint {
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  border-radius: 18px;
+}
+
+.first {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--night), var(--night)) padding-box,
+    var(--brand) border-box;
+}
+
+.place {
+  flex: none;
+  min-width: 2.2em;
+  color: transparent;
+  font-family: var(--font-brand);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-stroke: 1px rgb(243 238 251 / 45%);
+}
+
+.first .place {
+  -webkit-text-stroke: 0;
+  background-image: var(--gold-foil);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.reserveHit {
+  color: var(--brand-gold);
+  font-weight: 700;
+}
+
+/* The picks: the ones that went through in full colour, the others faded. */
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.hit {
+  display: inline-flex;
+}
+
+.miss {
+  display: inline-flex;
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+
+.sep {
+  margin-inline: 4px 2px;
+  color: var(--brand-gold);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.score {
+  flex: none;
+  min-width: 2ch;
+  color: var(--pc);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: end;
+}
+
+@media (max-width: 480px) {
+  .row {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .place {
+    font-size: 1.25rem;
+  }
+
+  .score {
+    font-size: 1.8rem;
+  }
+}

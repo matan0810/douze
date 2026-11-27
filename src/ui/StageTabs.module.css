@@ -1,0 +1,65 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: -16px 32px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A stage is a round chip; the one shown is lit by the ball. */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tab:hover {
+  border-color: rgb(249 168 212 / 50%);
+  color: var(--text);
+}
+
+.on {
+  border-color: transparent;
+  background: var(--brand);
+  color: var(--velvet);
+}
+
+.on:hover {
+  color: var(--velvet);
+}
+
+.settings {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  margin-inline-start: auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.settings:hover,
+.settings[aria-current='page'] {
+  color: var(--text);
+}

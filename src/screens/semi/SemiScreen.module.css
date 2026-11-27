@@ -1,0 +1,36 @@
+.page {
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: 48px var(--gutter);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.single {
+  display: grid;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* As on the final: the table first, it is what people open the page for. */
+  .split > :last-child {
+    order: -1;
+  }
+}

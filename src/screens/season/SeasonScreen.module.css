@@ -1,0 +1,130 @@
+.page {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: 48px var(--gutter);
+}
+
+.wrap {
+  overflow-x: auto;
+}
+
+/* Rows apart, each outlined in its player's colour, like the final's table. */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  font-size: 0.95rem;
+}
+
+.table thead th {
+  padding: 0 8px 4px;
+  color: var(--faint);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table td,
+.table tbody th {
+  padding: 14px 8px;
+  border-block: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  color: var(--muted);
+  text-align: center;
+}
+
+.table tbody tr > :first-child {
+  border-inline-start: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  border-start-start-radius: 18px;
+  border-end-start-radius: 18px;
+}
+
+.table tbody tr > :last-child {
+  border-inline-end: 1px solid color-mix(in srgb, var(--pc) 40%, transparent);
+  border-start-end-radius: 18px;
+  border-end-end-radius: 18px;
+}
+
+.first > * {
+  border-color: var(--brand-gold) !important;
+}
+
+.table .player {
+  color: var(--text);
+  text-align: start;
+}
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.place {
+  width: 3em;
+  color: transparent !important;
+  font-family: var(--font-brand);
+  font-size: 1.3rem;
+  font-weight: 800;
+  -webkit-text-stroke: 1px rgb(243 238 251 / 45%);
+}
+
+.gold,
+.silver,
+.bronze {
+  -webkit-text-stroke: 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.gold {
+  background-image: var(--gold-foil);
+}
+
+.silver {
+  background-image: var(--silver-foil);
+}
+
+.bronze {
+  background-image: var(--bronze-foil);
+}
+
+.bonus {
+  color: var(--brand-gold) !important;
+  font-weight: 800;
+}
+
+.table td.total {
+  color: var(--pc);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.table thead .total {
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .table {
+    font-size: 0.82rem;
+  }
+
+  .table td,
+  .table tbody th,
+  .table thead th {
+    padding-inline: 4px;
+  }
+
+  .place {
+    width: 2.2em;
+    font-size: 1rem;
+  }
+
+  .table td.total {
+    font-size: 1.25rem;
+  }
+}

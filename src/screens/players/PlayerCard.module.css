@@ -77,3 +77,33 @@
   background: var(--pc);
   transition: width 0.5s ease-out;
 }
+
+/* The player's semi picks: a chip per semi, lit in their colour once complete. */
+.stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 4px;
+}
+
+.stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 8px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--pill);
+  color: var(--faint);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.stage:hover {
+  color: var(--text);
+}
+
+.done {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--pc) 60%, transparent);
+  color: var(--pc);
+}

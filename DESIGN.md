@@ -5,12 +5,12 @@ them is made here first (CLAUDE.md, section 4).
 
 ## 1. Scope
 
-| In                                                   | Out                                  |
-| ---------------------------------------------------- | ------------------------------------ |
-| The grand final of each year, from 2026              | Semi-finals, jury and televote split |
-| Predictions of the full order, the result, the table | Accounts, a server, live data feeds  |
-| Statistics of each final and of all the years        | Betting odds, outside data           |
-| Hebrew (RTL) and English                             | Other languages                      |
+| In                                                    | Out                                 |
+| ----------------------------------------------------- | ----------------------------------- |
+| The final and the semi-finals of each year, from 2026 | Jury and televote split             |
+| Predictions of the full order, the result, the table  | Accounts, a server, live data feeds |
+| Statistics of each final and of all the years         | Betting odds, outside data          |
+| Hebrew (RTL) and English                              | Other languages                     |
 
 The site has no server. The archive (`src/data/`) is what the repository says; everything
 else lives on the device that entered it. Sharing between phones, by link or by a server,
@@ -75,7 +75,8 @@ of joining the winning two.
   Syne (`--font-brand`) for the wordmark, the eyebrows and large numerals only (its digits
   are unreadable small). Earlier: Noto Sans Hebrew, thin and narrow, for "light on velvet".
 - **Eyebrows**: a spaced Latin line above every title, the same in both languages
-  (_LEADERBOARD · 2026_, _THE PLAYERS · 2026_, _STATISTICS · 2026_, _ALL THE YEARS_).
+  (_LEADERBOARD · 2026_, _THE PLAYERS · 2026_, _SEMI-FINAL 1 · 2026_, _THE SEASON · 2026_,
+  _SETTINGS · 2026_, _STATISTICS · 2026_, _ALL THE YEARS_).
 - **Places**: two-digit numerals. In the table, large in Syne, outlined, the first three
   filled with their metal; in lists, small in the text face, the first three in their
   metal colour.
@@ -106,20 +107,46 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 - The rule lives in `src/domain/scoring.ts`; its tests include the real 2026 final
   (Matan 158, Adi 145, Ori 139).
 
+**Semi-finals** (chosen by the owner on 2026-11-27). Each player picks the countries that
+qualify (ten, or one fewer than the field if it is smaller) and one more in 11th place, a
+reserve. Only the set counts, not the order: the semis' results are known before their
+order is published.
+
+- **2 points** for every pick that qualified, and **1 more** if the 11th place qualified.
+  A semi of ten qualifiers is worth at most 21.
+- A semi's own table shows these points only. The **season** adds the final and every
+  semi, plus a **bonus of 5** for each perfect semi (all ten picks qualified); a stage a
+  player did not predict counts nothing.
+- A semi does not set the final's field: the host and the big five go straight to the
+  final, so the final's countries and each semi's are set apart, on the year's settings. A
+  country is in one semi at most.
+- The rule lives in `src/domain/semis.ts` and `season.ts`; their tests use the real 2026
+  semis (semi 1: Ori 18, Adi 15; semi 2: Ori 17, Matan 17; season: Matan 175, Ori 174,
+  Adi 160).
+
 ## 4. Screens
 
 - **Home**: the name, the last final's winner, the way to the players and the results, and
   how scoring works.
 - **Players** (per final): add a player, enter or edit their prediction (type a name in
   Hebrew or English and press Enter; drag, or use the handle with the arrow keys, to
-  reorder), delete it. The countries in
-  the final can be changed from the catalogue; a device whose data differs from the archive
-  can go back to it.
+  reorder), delete it. Each player shows a chip per semi, lit once their pick is complete.
 - **Results** (per final): the official order, entered like a prediction, and the table.
   _Live mode_ is for the night itself: it starts from the group's average prediction, the
   order is dragged to follow the scoreboard as votes come in, and the table follows at
   once; nothing is saved until Save. Each player opens their breakdown, country by
-  country. The table can be shared as a picture (1080 px wide, in the page's language).
+  country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
+  language).
+- **Stages**: a year with semis shows chips above the table, _Final · Semi-final 1 ·
+  Semi-final 2 · Season_, and a link to the year's settings on every one of them.
+- **Semi-final** (per year and semi): who qualified, marked by tapping the countries; each
+  player's pick, made by tapping (the first ten taps go through, the next is 11th; a tap on
+  a chosen country takes it back); and the semi's table, landing like the final's, with
+  each pick's flag lit if it went through and faded if not.
+- **Season**: the final, each semi, the bonus and the total, by total.
+- **Settings** (per year): the countries of the final and of each semi, the number of semis
+  (none, one or two; removing one asks first) and the way back to the archive. The players
+  page links here to change the final's countries.
 - **Statistics** (per final, once there is a result and a complete prediction):
   - _The surprise_ and _the letdown_: the countries that finished furthest above and below
     our average prediction.
@@ -141,7 +168,8 @@ and third 5**. A final of 25 countries is worth at most 25 × 10 + 30 = **280**.
 ## 5. Addresses
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
-`#/<year>/players`, `#/<year>/stats`, `#/<year>/player/<id>` a breakdown over the table,
+`#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
+`#/<year>/season`, `#/<year>/settings`, `#/<year>/player/<id>` a breakdown over the table,
 `#/history`, `#/new`. Unknown
 addresses show home and are rewritten, and so does an unknown path under the site: Pages'
 404 page is a copy of the site.

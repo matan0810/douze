@@ -1,7 +1,26 @@
 import { isYear } from './game';
 
-export type FinalView = 'table' | 'players' | 'results' | 'stats';
-export const FINAL_VIEWS: readonly FinalView[] = ['table', 'players', 'results', 'stats'];
+export const FINAL_VIEWS = [
+  'table',
+  'players',
+  'results',
+  'stats',
+  'semi-1',
+  'semi-2',
+  'season',
+  'settings',
+] as const;
+export type FinalView = (typeof FINAL_VIEWS)[number];
+
+/** The view of a year's semi, by its index. */
+export function semiView(index: number): FinalView {
+  return index === 0 ? 'semi-1' : 'semi-2';
+}
+
+/** The index of the semi a view shows, or undefined. */
+export function semiIndex(view: FinalView): number | undefined {
+  return view === 'semi-1' ? 0 : view === 'semi-2' ? 1 : undefined;
+}
 
 export type Route =
   | { name: 'home' }

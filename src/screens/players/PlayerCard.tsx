@@ -1,6 +1,8 @@
 import type { Game, GamePlayer } from '../../domain/game';
 import type { Piece } from '../../domain/pieces';
+import { routeHash, semiView } from '../../domain/routes';
 import { isComplete } from '../../domain/scoring';
+import { isCompletePick } from '../../domain/semis';
 import { useI18n } from '../../i18n/context';
 import { Icon } from '../../ui/Icon';
 import { pieceColour } from '../../ui/pieceColour';
@@ -32,6 +34,24 @@ export function PlayerCard({ game, player, piece, onEdit, onDelete }: Props) {
           {complete && <Icon name="check" size={13} />}
           {complete ? t.players.complete : count > 0 ? `${count}/${total}` : t.players.noPrediction}
         </span>
+        {game.semis.length > 0 && (
+          <span className={styles.stages}>
+            {game.semis.map((semi, i) => {
+              const pick = semi.predictions.find((p) => p.player === player.id);
+              const done = !!pick && isCompletePick(pick, semi);
+              return (
+                <a
+                  key={i}
+                  href={routeHash({ name: 'final', year: game.year, view: semiView(i) })}
+                  className={done ? `${styles.stage} ${styles.done}` : styles.stage}
+                >
+                  {done && <Icon name="check" size={11} />}
+                  {t.semi.chip(i + 1)}
+                </a>
+              );
+            })}
+          </span>
+        )}
       </div>
       <div className={styles.actions}>
         <button type="button" className="btn btn-line" onClick={onEdit} disabled={!total}>

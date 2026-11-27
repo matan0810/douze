@@ -49,3 +49,13 @@
     var(--brand) border-box;
   color: var(--text);
 }
+
+.chip:disabled {
+  opacity: 0.45;
+}
+
+.taken {
+  color: var(--faint);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}

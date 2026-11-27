@@ -7,6 +7,7 @@ import { navigate } from '../../hooks/useRoute';
 import { useI18n } from '../../i18n/context';
 import { useGame, useGames } from '../../state/context';
 import { PageTitle } from '../../ui/PageTitle';
+import { StageTabs } from '../../ui/StageTabs';
 import { YearSelect } from '../../ui/YearSelect';
 import { BreakdownDialog } from './BreakdownDialog';
 import { LeaderboardPanel } from './LeaderboardPanel';
@@ -40,6 +41,7 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
           end={t.results.titleEnd}
           lead={t.results.lead}
         />
+        <StageTabs year={year} semis={game.semis.length} view="table" />
         <div className="empty frame">
           <p>{t.results.noFinalists}</p>
           <a className="btn btn-primary" href={routeHash({ name: 'final', year, view: 'players' })}>
@@ -75,6 +77,7 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
         lead={t.results.lead}
         aside={<YearSelect year={year} view="table" />}
       />
+      <StageTabs year={year} semis={game.semis.length} view={editing ? 'results' : 'table'} />
       <div className={board ? styles.split : styles.single}>
         <ResultsPanel
           game={game}

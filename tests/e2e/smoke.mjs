@@ -123,7 +123,7 @@ async function main() {
   step('results: the 2026 table lands, with its stickers, and a breakdown with its own address');
 
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: /תמונה לשיתוף/ }).click();
+  await page.getByRole('button', { name: /שיתוף הטבלה/ }).click();
   assert.equal((await download).suggestedFilename(), 'eurorank-2026.png');
   step('results: the table as an image');
 
@@ -147,6 +147,35 @@ async function main() {
   await page.reload();
   await page.getByRole('listitem').filter({ hasText: 'טל' }).getByText('2/25').waitFor();
   step('players: typing countries builds a prediction, kept after a reload');
+
+  await page.goto(`${base}/2026/season`);
+  const season = page.getByRole('table');
+  await season.getByRole('row', { name: /מתן/ }).getByText('175', { exact: true }).waitFor();
+  await page.goto(`${base}/2026/semi-1`);
+  await page.getByRole('link', { name: 'חצי גמר 1', exact: true }).waitFor();
+  await page.getByRole('listitem').filter({ hasText: 'אורי' }).getByText('18').waitFor();
+  await page.getByRole('button', { name: 'הבחירה: מתן' }).click();
+  const pick = page.getByRole('dialog', { name: /הבחירה של מתן/ });
+  const perfect = ['פינלנד', 'ישראל', 'שוודיה', 'יוון', 'סרביה', 'ליטא', 'מולדובה', 'פולין'];
+  for (const country of [...perfect, 'קרואטיה', 'בלגיה', 'אסטוניה'])
+    await pick.getByRole('button', { name: country, exact: false }).first().click();
+  await pick.getByText('10/10 עולות').waitFor();
+  await pick.getByText('אסטוניה', { exact: true }).last().waitFor();
+  await pick.getByRole('button', { name: /שמירת הבחירה/ }).click();
+  await page.getByRole('listitem').filter({ hasText: 'מתן' }).getByText('20').first().waitFor();
+  await page.goto(`${base}/2026/season`);
+  const matan = page.getByRole('table').getByRole('row', { name: /מתן/ });
+  await matan.getByText('+5').waitFor();
+  await matan.getByText('200', { exact: true }).waitFor();
+  step('semis: a pick by tapping scores the semi, and a perfect one earns the season bonus');
+
+  await page.goto(`${base}/2026/settings`);
+  await page.getByRole('heading', { name: /המדינות בחצי גמר 2/ }).waitFor();
+  await page.getByRole('button', { name: 'עריכה' }).nth(1).click();
+  const chooser = page.getByRole('dialog', { name: 'המדינות בחצי גמר 1' });
+  assert.ok(await chooser.getByRole('button', { name: /בולגריה/ }).isDisabled());
+  await chooser.getByRole('button', { name: 'ביטול' }).click();
+  step('settings: the final and each semi set apart; a country is in one semi only');
 
   await page.goto(`${base}/2026/results`);
   await page.getByRole('button', { name: /מצב לייב/ }).click();
@@ -190,8 +219,10 @@ async function main() {
     '/2026',
     '/2026/players',
     '/2026/stats',
+    '/2026/semi-1',
+    '/2026/season',
+    '/2026/settings',
     '/history',
-
     '/new',
     '/2026/player/matan',
   ];
@@ -220,7 +251,7 @@ async function main() {
         `small ${locale} ${width}`,
       );
       await small.goto(`${base}/2026`);
-      await small.getByRole('navigation').waitFor();
+      await small.getByRole('banner').getByRole('navigation').waitFor();
       const cut = await small.evaluate(() => {
         const bar = document.querySelector('header > div');
         return bar ? bar.scrollWidth - bar.clientWidth : -1;

@@ -29,6 +29,7 @@ const PATHS = {
   grid: 'M3 3h5v5H3zM10 3h5v5h-5zM17 3h4v5h-4zM3 10h5v5H3zM10 10h5v5h-5zM17 10h4v5h-4zM3 17h5v4H3zM10 17h5v4h-5zM17 17h4v4h-4z',
   duel: 'M4 20L14 10M14 10l2-6 4 4-6 2M20 20L10 10M10 10L8 4 4 8l6 2',
   scoring: 'M4 4h16v16H4zM8 9h8M8 13h8M8 17h5',
+  settings: 'M4 7h9M17 7h3M15 5v4M4 17h3M11 17h9M9 15v4',
 } as const;
 
 export type IconName = keyof typeof PATHS;
