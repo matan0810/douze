@@ -95,8 +95,7 @@ of joining the winning two.
 - **Motion**: the table's rows land from the last place to the first, 0.35 s apart, with a
   bounce; the points count up as they land; the stickers are slapped on after; when the
   leader lands, a burst of the ball's facets falls over the screen (once per showing of the
-  table, 4 seconds). Elsewhere content rises a few pixels into place, and live mode blinks
-  a pink "on air" light. All of it stops with reduced motion: numbers appear at once.
+  table, 4 seconds). Elsewhere content rises a few pixels into place. All of it stops with reduced motion: numbers appear at once.
 - **Phones**: the bar keeps only the icon of each link below 900 px, and below 420 px the
   home link steps aside (the name leads home) and the wordmark is smaller; the results page
   puts the table above the official order below 1024 px.
@@ -141,12 +140,13 @@ order is published.
 - **Players** (per final): add a player, enter or edit their prediction (type a name in
   Hebrew or English and press Enter; drag, or use the handle with the arrow keys, to
   reorder), delete it. Each player shows a chip per semi, lit once their pick is complete.
-- **Results** (per final): the official order, entered like a prediction, and the table.
-  _Live mode_ is for the night itself: it starts from the group's average prediction, the
-  order is dragged to follow the scoreboard as votes come in, and the table follows at
-  once; nothing is saved until Save. Arrows of rank change while the order moves wait for a
-  live data source (issue #3). Each player opens their breakdown, country by
-  country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
+- **Results** (per final): the official order and the table, both read only. A result is a
+  fact, not something a device edits (the owner, 2026-11-28): it comes from the archive
+  (`src/data/`), or, in a group, from a manager (section 4, _Groups_); a result saved on a
+  device by an older release is ignored, and one carries over from the archive only for the
+  same countries (`withArchiveResults`). There is no live mode, and no result without a
+  group. Arrows of rank change on the night wait for a live data source (issue #3). Each
+  player opens their breakdown, country by country. The table can be shared as a picture (_Share the table_; 1080 px wide, in the page's
   language).
 - **Planning mode** (per final, from the players page): a prediction built while
   watching. The songs come up in the running order (set on the year's settings; without
@@ -163,7 +163,8 @@ order is published.
   _Douze points!_ and the ball's facets. Reached from the table.
 - **Stages**: a year with semis shows chips above the table, _Final · Semi-final 1 ·
   Semi-final 2 · Season_, and a link to the year's settings on every one of them.
-- **Semi-final** (per year and semi): who qualified, marked by tapping the countries; each
+- **Semi-final** (per year and semi): who qualified, lit (read only, like the final's
+  result); each
   player's pick, made by tapping (the first ten taps go through, the next is 11th; a tap on
   a chosen country takes it back); and the semi's table, landing like the final's, with
   each pick's flag lit if it went through and faded if not.
@@ -254,7 +255,7 @@ order is published.
 
 ## 5. Addresses
 
-`#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
+`#/` home, `#/<year>` results (`#/<year>/results`, once an edit address, opens the same),
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
 `#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/plan`, `#/<year>/player/<id>` a breakdown over the table,
 `#/history`, `#/new`, `#/groups`, `#/group/<id>`, `#/group/<id>/<year>` and `#/group/<id>/<year>/semi-1` a group's year, `#/join/<id>/<secret>` an invitation (the

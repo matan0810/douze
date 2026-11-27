@@ -16,17 +16,15 @@ import styles from './LeaderboardPanel.module.css';
 interface Props {
   game: Game;
   table: Standing[];
-  /** The table follows an order still being entered. */
-  live: boolean;
 }
 
 /** The leaderboard in its panel, with the image to share it. */
-export function LeaderboardPanel({ game, table, live }: Props) {
+export function LeaderboardPanel({ game, table }: Props) {
   const { t, language } = useI18n();
   const toast = useToast();
   const names = new Map(game.players.map((p) => [p.id, p.name[language]]));
   const pieces = playerPieces(game, archive.players);
-  const given = live ? new Map() : badges(game);
+  const given = badges(game);
 
   const shareImage = async () => {
     const title = t.results.imageTitle(game.year);
@@ -44,16 +42,10 @@ export function LeaderboardPanel({ game, table, live }: Props) {
         <div>
           <h2 id="board-title" className={styles.title}>
             {t.results.leaderboard}
-            {live && (
-              <span className={styles.live}>
-                <span className={styles.dot} aria-hidden="true" />
-                {t.results.liveBadge}
-              </span>
-            )}
           </h2>
           <p className={styles.hint}>{t.results.clickPlayer}</p>
         </div>
-        {!live && table.length > 0 && (
+        {table.length > 0 && (
           <div className={styles.actions}>
             <a
               className="btn btn-line"
@@ -78,9 +70,8 @@ export function LeaderboardPanel({ game, table, live }: Props) {
               names={names}
               pieces={pieces}
               badges={given}
-              live={live}
             />
-            {!live && <Facets delayMs={table.length * 350 + 300} />}
+            <Facets delayMs={table.length * 350 + 300} />
           </>
         ) : (
           <div className="empty">

@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import { setResult } from '../../domain/game';
 import { routeHash } from '../../domain/routes';
-import { isComplete, standings } from '../../domain/scoring';
-import { consensus, scoringEntries } from '../../domain/stats';
+import { standings } from '../../domain/scoring';
+import { scoringEntries } from '../../domain/stats';
 import { navigate } from '../../hooks/useRoute';
 import { useI18n } from '../../i18n/context';
-import { useGame, useGames } from '../../state/context';
+import { useGame } from '../../state/context';
 import { PageTitle } from '../../ui/PageTitle';
 import { StageTabs } from '../../ui/StageTabs';
 import { YearSelect } from '../../ui/YearSelect';
@@ -16,20 +14,14 @@ import styles from './ResultsScreen.module.css';
 
 interface Props {
   year: number;
-  /** Opens the result in edit mode (the `/results` address). */
-  editing?: boolean;
   /** The player whose breakdown is open over the table. */
   open?: string;
 }
 
-/** The official result of a final and the leaderboard it makes. */
-export function ResultsScreen({ year, editing: startEditing = false, open }: Props) {
+/** The official result of a final, from the archive, and the leaderboard it makes. */
+export function ResultsScreen({ year, open }: Props) {
   const { t } = useI18n();
-  const { update } = useGames();
   const game = useGame(year);
-  const [editing, setEditing] = useState(startEditing || !game?.result);
-  const [live, setLive] = useState(false);
-  const [draft, setDraft] = useState<string[]>(() => game?.result ?? []);
   if (!game) return null;
 
   if (!game.finalists.length)
@@ -56,18 +48,10 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
       </div>
     );
 
-  const liveOrder = live && isComplete(draft, game.finalists) ? draft : null;
-  const shown = editing ? liveOrder : game.result;
-  const table = shown
-    ? standings(scoringEntries(game), shown, game.finalists, game.options.joker)
+  const table = game.result
+    ? standings(scoringEntries(game), game.result, game.finalists, game.options.joker)
     : [];
-  const board = editing ? !!liveOrder : !!game.result;
-
-  const startLive = () => {
-    // The scoreboard starts where we expected it: the group's average prediction.
-    if (!isComplete(draft, game.finalists)) setDraft(consensus(game).order);
-    setLive(true);
-  };
+  const board = !!game.result;
 
   return (
     <div className={styles.page}>
@@ -78,43 +62,10 @@ export function ResultsScreen({ year, editing: startEditing = false, open }: Pro
         lead={t.results.lead}
         aside={<YearSelect year={year} view="table" />}
       />
-      <StageTabs
-        year={year}
-        semis={game.semis.length}
-        season={game.options.season}
-        view={editing ? 'results' : 'table'}
-      />
+      <StageTabs year={year} semis={game.semis.length} season={game.options.season} view="table" />
       <div className={board ? styles.split : styles.single}>
-        <ResultsPanel
-          game={game}
-          editing={editing}
-          live={live}
-          draft={draft}
-          onDraft={setDraft}
-          onEdit={() => {
-            setDraft(game.result ?? []);
-            setEditing(true);
-          }}
-          onLive={startLive}
-          onSave={() => {
-            update(year, (g) => setResult(g, draft));
-            setEditing(false);
-            setLive(false);
-          }}
-          onCancel={() => {
-            setDraft(game.result ?? []);
-            setEditing(false);
-            setLive(false);
-          }}
-          onReset={() => {
-            if (!window.confirm(t.results.confirmReset)) return;
-            update(year, (g) => setResult(g, null));
-            setDraft([]);
-            setLive(false);
-            setEditing(true);
-          }}
-        />
-        {board && <LeaderboardPanel game={game} table={table} live={editing && live} />}
+        <ResultsPanel game={game} />
+        {board && <LeaderboardPanel game={game} table={table} />}
       </div>
       {game.result && (
         <BreakdownDialog

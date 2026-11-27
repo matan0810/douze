@@ -6,7 +6,6 @@ describe('addresses', () => {
     ['#/', { name: 'home' }],
     ['#/2026', { name: 'final', year: 2026, view: 'table' }],
     ['#/2026/players', { name: 'final', year: 2026, view: 'players' }],
-    ['#/2026/results', { name: 'final', year: 2026, view: 'results' }],
     ['#/2026/stats', { name: 'final', year: 2026, view: 'stats' }],
     ['#/2026/semi-1', { name: 'final', year: 2026, view: 'semi-1' }],
     ['#/2026/semi-2', { name: 'final', year: 2026, view: 'semi-2' }],

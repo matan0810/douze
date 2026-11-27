@@ -20,7 +20,7 @@ export function StageTabs({ year, semis, season, view }: Props) {
     ...Array.from({ length: semis }, (_, i) => ({ view: semiView(i), label: t.stage.semi(i + 1) })),
     ...(semis && season ? [{ view: 'season' as const, label: t.stage.season }] : []),
   ];
-  const current = view === 'results' ? 'table' : view;
+  const current = view;
   return (
     <nav className={styles.bar} aria-label={t.stage.label}>
       <ul className={styles.tabs}>

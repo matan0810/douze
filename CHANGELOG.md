@@ -15,6 +15,13 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Removed
+
+- Editing the official result outside a group: live mode, the edit and reset buttons, and
+  marking who qualified from a semi. A result is a fact: it comes from the archive, or, in
+  a group, from a manager. A result saved on a phone by an older version is ignored, and
+  the archive's takes its place.
+
 ## [0.6.0] - 2026-11-27
 
 ### Added

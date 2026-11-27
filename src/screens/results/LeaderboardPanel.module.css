@@ -19,28 +19,6 @@
   gap: 10px;
 }
 
-.live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  border: 1px solid rgb(249 168 212 / 50%);
-  border-radius: var(--radius);
-  color: var(--brand-pink);
-  font-family: var(--font-brand);
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  background: var(--brand-pink);
-  animation: onair 1.2s steps(1) infinite;
-}
-
 .hint {
   margin-block-start: 4px;
   color: var(--faint);
@@ -55,12 +33,6 @@
 .small {
   margin-block-start: 8px;
   font-size: 0.85rem;
-}
-
-@keyframes onair {
-  50% {
-    opacity: 0.2;
-  }
 }
 
 .actions {

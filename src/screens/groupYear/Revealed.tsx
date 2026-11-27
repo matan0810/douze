@@ -39,7 +39,6 @@ export function Revealed({ stage, game, members }: Props) {
         names={names}
         pieces={pieces}
         badges={badges(game)}
-        live={false}
         linked={false}
       />
     ) : semi?.qualifiers ? (

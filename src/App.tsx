@@ -52,7 +52,6 @@ export function App() {
     };
     const views: Record<FinalView, string> = {
       table: t.nav.results,
-      results: t.nav.results,
       players: t.nav.players,
       stats: t.nav.stats,
       'semi-1': t.stage.semi(1),
@@ -134,8 +133,6 @@ function screen(route: Route, known: boolean) {
         if (index !== undefined)
           return <SemiScreen key={`${route.year}-${index}`} year={route.year} index={index} />;
       }
-      return (
-        <ResultsScreen key={route.year} year={route.year} editing={route.view === 'results'} />
-      );
+      return <ResultsScreen key={route.year} year={route.year} />;
   }
 }

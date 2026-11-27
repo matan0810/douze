@@ -5,7 +5,6 @@ import { isYear } from './game';
 export const FINAL_VIEWS = [
   'table',
   'players',
-  'results',
   'stats',
   'semi-1',
   'semi-2',

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { archive } from '../../domain/archive';
-import { setSemiPick, setSemiQualifiers } from '../../domain/game';
+import { setSemiPick } from '../../domain/game';
 import { playerPieces } from '../../domain/pieces';
 import { routeHash, semiView } from '../../domain/routes';
 import { semiStandings } from '../../domain/semis';
@@ -64,11 +64,7 @@ export function SemiScreen({ year, index }: { year: number; index: number }) {
       <StageTabs year={year} semis={game.semis.length} season={game.options.season} view={view} />
       <div className={table.length ? styles.split : styles.single}>
         <div className={styles.side}>
-          <QualifiersPanel
-            key={semi.qualifiers?.join() ?? ''}
-            semi={semi}
-            onSave={(qualifiers) => update(year, (g) => setSemiQualifiers(g, index, qualifiers))}
-          />
+          <QualifiersPanel semi={semi} />
           <SemiPicks game={game} semi={semi} pieces={pieces} onPick={(id) => setPicking(id)} />
         </div>
         {table.length > 0 && <SemiBoard semi={semi} table={table} names={names} pieces={pieces} />}

@@ -28,6 +28,28 @@ describe('games on a device', () => {
     expect(store.data.size).toBe(0);
   });
 
+  it('take the official result from the archive, whatever was saved', () => {
+    const store = memory();
+    const edited = { ...addPlayer(game2026(), 'דנה'), result: ['israel', 'italy'] };
+    store.set(`${GAME_PREFIX}2026`, JSON.stringify(edited));
+    const game = loadGames(store).get(2026);
+    expect(game?.result).toEqual(game2026().result);
+    expect(game?.players).toHaveLength(game2026().players.length + 1);
+  });
+
+  it('give a year the archive does not have no result', () => {
+    const store = memory();
+    store.set(
+      `${GAME_PREFIX}2027`,
+      JSON.stringify({
+        ...emptyGame(2027),
+        finalists: ['israel', 'italy'],
+        result: ['israel', 'italy'],
+      }),
+    );
+    expect(loadGames(store).get(2027)?.result).toBeNull();
+  });
+
   it('add a final created here', () => {
     const store = memory();
     saveGame(store, { ...emptyGame(2027), finalists: ['israel', 'italy'] });
@@ -56,7 +78,8 @@ describe('what the first site saved', () => {
     const game = fromLegacy(legacy, 2026);
     expect(game?.players.map((p) => p.id)[0]).toBe('matan');
     expect(game?.players[1]?.name.he).toBe('דנה');
-    expect(game?.result).toEqual(game2026().result);
+    // The first site's result is not read: results come from the archive.
+    expect(game?.result).toBeNull();
   });
 
   it('moves to the new key once, and is removed', () => {

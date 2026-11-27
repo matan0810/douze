@@ -16,8 +16,6 @@ interface Props {
   names: ReadonlyMap<string, string>;
   pieces: ReadonlyMap<string, Piece>;
   badges: ReadonlyMap<string, Badge[]>;
-  /** Live mode: rows and points change as the order is dragged; no entrance. */
-  live: boolean;
   /** Whether each row opens the player's breakdown (a group's year has none yet). */
   linked?: boolean;
 }
@@ -47,7 +45,6 @@ function Row({
   names,
   pieces,
   badges,
-  live,
   linked = true,
   landsAt,
 }: Props & { standing: Standing; landsAt: number }) {
@@ -55,11 +52,10 @@ function Row({
   const name = names.get(s.player) ?? s.player;
   const percent = Math.round(s.share * 100);
   const first = s.rank === 1;
-  const points = useCountUp(s.total, live ? 0 : (landsAt + 0.3) * 1000);
-  const shown = live ? s.total : points;
+  const points = useCountUp(s.total, (landsAt + 0.3) * 1000);
   return (
     <li
-      className={live ? undefined : 'land'}
+      className="land"
       style={{ ...pieceColour(pieces.get(s.player) ?? 'violet'), animationDelay: `${landsAt}s` }}
     >
       <Link
@@ -74,10 +70,7 @@ function Row({
         <span className={styles.info}>
           <span className={styles.name}>
             {name}
-            <BadgeStickers
-              badges={live ? [] : (badges.get(s.player) ?? [])}
-              delay={landsAt + 0.6}
-            />
+            <BadgeStickers badges={badges.get(s.player) ?? []} delay={landsAt + 0.6} />
           </span>
           <span className={styles.track} aria-hidden="true">
             <span className={styles.fill} style={{ width: `${percent}%` }} />
@@ -88,7 +81,7 @@ function Row({
           </span>
         </span>
         <span className={`${styles.score} num`} aria-label={String(s.total)}>
-          {shown}
+          {points}
         </span>
         {linked && (
           <span className={`${styles.chevron} chevron`} aria-hidden="true">

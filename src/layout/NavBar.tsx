@@ -28,7 +28,7 @@ export function NavBar({ route, year }: Props) {
       icon: 'results',
       label: t.nav.results,
       hash: routeHash({ name: 'final', year, view: 'table' }),
-      on: ['table', 'results', 'semi-1', 'semi-2', 'season'].some((v) => v === view),
+      on: ['table', 'semi-1', 'semi-2', 'season'].some((v) => v === view),
     },
     {
       icon: 'stats',

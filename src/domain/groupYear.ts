@@ -6,7 +6,7 @@ import {
   type StageView,
   type YearView,
 } from '../../shared/years';
-import { emptyGame, type Game } from './game';
+import { emptyGame, sameCountries, type Game } from './game';
 import type { Semi } from './semis';
 
 /**
@@ -85,9 +85,6 @@ export function stagesFromGame(game: Game, date: string): [Stage, StageSetup][] 
   });
 }
 
-const sameField = (a: readonly string[], b: readonly string[]) =>
-  a.length === b.length && new Set([...a, ...b]).size === a.length;
-
 /**
  * The group's year as a final the site can score: the predictions it may see, and the
  * results a manager entered on the server. The group's results are its own: a phone's copy
@@ -133,9 +130,11 @@ export function groupGame(view: YearView, members: readonly Member[]): Game {
 export function knownResult(stage: StageView, base: Game | undefined): string[] | null {
   if (!base) return null;
   if (stage.stage === 'final')
-    return base.result && sameField(base.finalists, stage.countries) ? base.result : null;
+    return base.result && sameCountries(base.finalists, stage.countries) ? base.result : null;
   const semi = base.semis[stage.stage === 'semi-1' ? 0 : 1];
-  return semi?.qualifiers && sameField(semi.countries, stage.countries) ? semi.qualifiers : null;
+  return semi?.qualifiers && sameCountries(semi.countries, stage.countries)
+    ? semi.qualifiers
+    : null;
 }
 
 function jokerOf(entry: { joker: string | null }) {

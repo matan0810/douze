@@ -5,12 +5,12 @@ Update it whenever any of these change (CLAUDE.md, section 4).
 
 ## What the site stores on a device
 
-| Key                             | What                                                   |
-| ------------------------------- | ------------------------------------------------------ |
-| `eurorank:language`             | The language chosen in the header                      |
-| `eurorank:game:<year>`          | A final changed or created on this device              |
-| `eurorank:plan:<year>:<player>` | A plan in progress in planning mode, until it is saved |
-| `eurorank:groups`               | The groups this device belongs to (see below)          |
+| Key                             | What                                                       |
+| ------------------------------- | ---------------------------------------------------------- |
+| `eurorank:language`             | The language chosen in the header                          |
+| `eurorank:game:<year>`          | A final changed or created on this device, not its results |
+| `eurorank:plan:<year>:<player>` | A plan in progress in planning mode, until it is saved     |
+| `eurorank:groups`               | The groups this device belongs to (see below)              |
 
 Every value read back is parsed and checked (`src/hooks/storage.ts`,
 `src/domain/game.ts`, `parseStoredGame`; `src/domain/plan.ts`, `parsePlan`;

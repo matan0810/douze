@@ -22,34 +22,6 @@
   gap: 10px;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  color: var(--muted);
-  font-family: var(--font-brand);
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-/* On air: a pink light that blinks while the order follows the scoreboard. */
-.live {
-  border-color: rgb(249 168 212 / 50%);
-  color: var(--brand-pink);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  background: var(--brand-pink);
-  animation: onair 1.2s steps(1) infinite;
-}
-
 .hint {
   margin-block-start: 4px;
   color: var(--faint);
@@ -79,16 +51,4 @@
 
 .buttons > * {
   flex: 1;
-}
-
-.liveButton {
-  border-color: rgb(249 168 212 / 50%);
-  background: transparent;
-  color: var(--brand-pink);
-}
-
-@keyframes onair {
-  50% {
-    opacity: 0.2;
-  }
 }

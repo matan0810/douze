@@ -4,7 +4,7 @@ import { useI18n } from '../../i18n/context';
 import { Icon } from '../../ui/Icon';
 import { useToast } from '../../ui/toastContext';
 import { PredictionEditor } from '../players/PredictionEditor';
-import { QualifiersPanel } from '../semi/QualifiersPanel';
+import { ResultQualifiers } from './ResultQualifiers';
 import styles from './GroupYear.module.css';
 
 interface Props {
@@ -25,7 +25,7 @@ export function ResultEntry({ stage, known, onSave }: Props) {
 
   if (stage.stage !== 'final')
     return (
-      <QualifiersPanel
+      <ResultQualifiers
         semi={{ countries: stage.countries, qualifiers: stage.result, predictions: [] }}
         onSave={(qualifiers) => void onSave(qualifiers)}
       />

@@ -8,7 +8,7 @@ import {
   parseStoredGame,
   sameName,
   setFinalists,
-  setResult,
+  withArchiveResults,
   type Game,
 } from '../domain/game';
 import { isRecord } from '../domain/parse';
@@ -68,11 +68,8 @@ export function fromLegacy(
       if (last) last.name = known.name;
     }
   }
-  const results = isRecord(value.results) ? value.results.finalOrder : null;
-  const order = Array.isArray(results)
-    ? results.filter((id): id is string => typeof id === 'string')
-    : null;
-  return setResult(game, order);
+  // The first site's result is not read: results come from the archive.
+  return game;
 }
 
 /**
@@ -94,7 +91,8 @@ export function loadGames(store: Store, data: Archive = archive): Map<number, Ga
       store.remove(key);
       if (store.get(GAME_PREFIX + year) !== null) continue;
     }
-    const game = legacy ? fromLegacy(value, year, data) : parseStoredGame(value, year, known);
+    const saved = legacy ? fromLegacy(value, year, data) : parseStoredGame(value, year, known);
+    const game = saved && withArchiveResults(saved, baselineGame(year, data));
     if (!game) {
       store.remove(key);
       continue;

@@ -118,8 +118,8 @@ function stringList(value: unknown, max: number): string[] | undefined {
 
 /**
  * Reads a game saved on this device. Anything there may come from an older release or be
- * edited by hand, so it is checked: unknown countries and repeats are dropped, a result
- * that is no longer complete is dropped, a bad entry means no saved game.
+ * edited by hand, so it is checked: unknown countries and repeats are dropped, a bad entry
+ * means no saved game. Results are not read at all: see `withArchiveResults`.
  */
 export function parseStoredGame(
   value: unknown,
@@ -131,8 +131,6 @@ export function parseStoredGame(
   const players = Array.isArray(value.players) ? value.players.slice(0, MAX_PLAYERS) : undefined;
   if (!finalists || !players) return undefined;
   const field = within(finalists, [...known]);
-  const result = value.result === null ? null : stringList(value.result, MAX_FINALISTS);
-  if (result === undefined) return undefined;
   const ids = new Set<string>();
   const parsed: GamePlayer[] = [];
   for (const raw of players) {
@@ -151,7 +149,8 @@ export function parseStoredGame(
   return {
     year,
     finalists: field,
-    result: result && isComplete(result, field) ? result : null,
+    // A saved result is never read: the official one comes from the archive (`withArchiveResults`).
+    result: null,
     players: parsed,
     semis: parseStoredSemis(value.semis, known, ids),
     date: typeof value.date === 'string' && DATE_PATTERN.test(value.date) ? value.date : null,
@@ -177,7 +176,6 @@ function parseStoredSemis(value: unknown, known: Set<string>, players: Set<strin
       (id) => !used.has(id),
     );
     field.forEach((id) => used.add(id));
-    const qualifiers = stringList(raw.qualifiers, MAX_FINALISTS);
     const picks: SemiPick[] = (Array.isArray(raw.predictions) ? raw.predictions : []).flatMap(
       (p): SemiPick[] => {
         if (!isRecord(p) || typeof p.player !== 'string' || !players.has(p.player)) return [];
@@ -192,7 +190,7 @@ function parseStoredSemis(value: unknown, known: Set<string>, players: Set<strin
     return [
       {
         countries: field,
-        qualifiers: qualifiers && isCompleteQualifiers(qualifiers, field) ? qualifiers : null,
+        qualifiers: null,
         predictions: picks.filter((p, i) => picks.findIndex((o) => o.player === p.player) === i),
       },
     ];
@@ -294,8 +292,32 @@ export function setRunningOrder(game: Game, order: string[]): Game {
   return { ...game, runningOrder: within(order, game.finalists) };
 }
 
-export function setResult(game: Game, result: string[] | null): Game {
-  return { ...game, result: result && isComplete(result, game.finalists) ? [...result] : null };
+/** The same countries, in any order. */
+export function sameCountries(a: readonly string[], b: readonly string[]) {
+  return a.length === b.length && new Set([...a, ...b]).size === a.length;
+}
+
+/**
+ * The game with the archive's results in place of its own: the official result is a fact the
+ * archive (or a group's manager, on the server) holds, never something a device edits. A
+ * result carries over only for the same countries.
+ */
+export function withArchiveResults(game: Game, archive: Game): Game {
+  return {
+    ...game,
+    result:
+      archive.result && sameCountries(game.finalists, archive.finalists)
+        ? [...archive.result]
+        : null,
+    semis: game.semis.map((semi, i) => {
+      const known = archive.semis[i];
+      const qualifiers =
+        known?.qualifiers && sameCountries(semi.countries, known.countries)
+          ? [...known.qualifiers]
+          : null;
+      return { ...semi, qualifiers };
+    }),
+  };
 }
 
 /** Whether the device's game differs from the archive's edition of the same year. */
@@ -345,15 +367,6 @@ function narrowSemi(semi: Semi, field: string[]): Semi {
       reserve: p.reserve && field.includes(p.reserve) ? p.reserve : null,
     })),
   };
-}
-
-/** Sets who qualified from a semi: a complete set, or nothing. */
-export function setSemiQualifiers(game: Game, index: number, qualifiers: string[] | null): Game {
-  return updateSemi(game, index, (semi) => ({
-    ...semi,
-    qualifiers:
-      qualifiers && isCompleteQualifiers(qualifiers, semi.countries) ? [...qualifiers] : null,
-  }));
 }
 
 /** Sets a player's pick in a semi: their qualifiers (within the field, at most the count). */

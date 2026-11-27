@@ -244,14 +244,14 @@ async function main() {
   await chooser.getByRole('button', { name: 'ביטול' }).click();
   step('settings: the final and each semi set apart; a country is in one semi only');
 
+  // Results are read only: from the archive, or from a group's manager.
+  await page.goto(`${base}/2026`);
+  await page.getByRole('heading', { name: 'תוצאות רשמיות' }).waitFor();
+  for (const name of [/מצב לייב/, 'עריכה', /איפוס תוצאות/, /להזנת התוצאות/])
+    assert.equal(await page.getByRole('button', { name }).count(), 0, `no ${name} button`);
   await page.goto(`${base}/2026/results`);
-  await page.getByRole('button', { name: /מצב לייב/ }).click();
-  await page
-    .getByRole('region', { name: /טבלת מובילים/ })
-    .getByText('לייב')
-    .waitFor();
-  await page.getByRole('button', { name: 'ביטול' }).click();
-  step('results: live mode scores an order still being entered');
+  await atHash(page, '#/2026');
+  step('results: read only, no live mode and no editing outside a group');
 
   await page.goto(`${base}/2026/stats`);
   await page.getByRole('heading', { name: 'חוכמת ההמון' }).waitFor();

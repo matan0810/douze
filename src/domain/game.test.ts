@@ -11,7 +11,6 @@ import {
   setSemiCountries,
   setSemiCount,
   setSemiPick,
-  setSemiQualifiers,
   removePlayer,
   cleanName,
   differs,
@@ -20,7 +19,8 @@ import {
   parseStoredGame,
   setFinalists,
   setOrder,
-  setResult,
+  withArchiveResults,
+  sameCountries,
 } from './game';
 import { game2026 } from './testGame';
 
@@ -59,24 +59,21 @@ describe('editing a game', () => {
     expect(game.result).toBeNull();
   });
 
-  it('takes only a complete result', () => {
-    const game = game2026();
-    expect(setResult(game, ['israel']).result).toBeNull();
-  });
-
   it('knows when the device differs from the archive', () => {
     expect(differs(game2026(), game2026())).toBe(false);
-    expect(differs(setResult(game2026(), null), game2026())).toBe(true);
+    expect(differs(setDate(game2026(), '2027-01-01'), game2026())).toBe(true);
   });
 });
 
 describe('a game saved on the device', () => {
   it('reads back what was saved', () => {
     const game = game2026();
-    expect(parseStoredGame(JSON.parse(JSON.stringify(game)), 2026, known)).toEqual(game);
+    const read = parseStoredGame(JSON.parse(JSON.stringify(game)), 2026, known);
+    // Everything but the official results, which come from the archive.
+    expect(read && withArchiveResults(read, game)).toEqual(game);
   });
 
-  it('drops unknown countries, repeats, broken players and a result no longer complete', () => {
+  it('drops unknown countries, repeats and broken players, and reads no result', () => {
     const stored = {
       year: 2027,
       finalists: ['israel', 'atlantis', 'italy', 'israel'],
@@ -162,15 +159,6 @@ describe('the semis of a game', () => {
     ]);
   });
 
-  it('take only a complete result, and drop it when the field changes under it', () => {
-    let game = setSemiQualifiers(withField, 0, ['israel']);
-    expect(game.semis[0]?.qualifiers).toBeNull();
-    game = setSemiQualifiers(withField, 0, ['israel', 'italy']);
-    expect(game.semis[0]?.qualifiers).toEqual(['israel', 'italy']);
-    game = setSemiCountries(game, 0, ['israel', 'italy', 'france', 'malta']);
-    expect(game.semis[0]?.qualifiers).toBeNull();
-  });
-
   it("forget a removed player's picks", () => {
     const game = setSemiPick(withField, 0, 'p1', ['israel'], null);
     expect(removePlayer(game, 'p1').semis[0]?.predictions).toEqual([]);
@@ -195,7 +183,7 @@ describe('the semis of a game', () => {
     expect(parseStoredGame(stored, 2026, known)?.semis).toEqual([
       {
         countries: ['israel', 'italy'],
-        qualifiers: ['israel'],
+        qualifiers: null,
         predictions: [{ player: 'adi', picks: ['israel'], reserve: 'italy' }],
       },
       { countries: ['france'], qualifiers: null, predictions: [] },
@@ -234,5 +222,35 @@ describe('the options of a year', () => {
 
   it('options change one at a time', () => {
     expect(setOptions(game, { joker: true }).options).toEqual({ season: true, joker: true });
+  });
+});
+
+describe('the official result', () => {
+  it('is never read from the device, only taken from the archive', () => {
+    const saved = JSON.parse(JSON.stringify(game2026()));
+    saved.result = ['israel', 'italy'];
+    saved.semis = [
+      {
+        countries: ['israel', 'italy', 'france'],
+        qualifiers: ['israel', 'italy'],
+        predictions: [],
+      },
+    ];
+    const parsed = parseStoredGame(saved, 2026, known);
+    expect(parsed?.result).toBeNull();
+    expect(parsed?.semis[0]?.qualifiers).toBeNull();
+  });
+
+  it('carries over from the archive only for the same countries', () => {
+    const archive = game2026();
+    const same = withArchiveResults({ ...archive, result: null }, archive);
+    expect(same.result).toEqual(archive.result);
+    const other = withArchiveResults(
+      { ...archive, finalists: archive.finalists.slice(1), result: null },
+      archive,
+    );
+    expect(other.result).toBeNull();
+    expect(sameCountries(['a', 'b'], ['b', 'a'])).toBe(true);
+    expect(sameCountries(['a', 'b'], ['b', 'c'])).toBe(false);
   });
 });
