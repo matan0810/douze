@@ -2,7 +2,7 @@
 # Runs on demand, and on pushes to master that change the Worker or the shared code.
 #
 # Needs two repository secrets (Settings → Secrets and variables → Actions → Secrets):
-#   CLOUDFLARE_API_TOKEN   an API token limited to this project's Worker (and, later, its D1)
+#   CLOUDFLARE_API_TOKEN   an API token limited to this account's Workers Scripts and D1 (Edit)
 #   CLOUDFLARE_ACCOUNT_ID  the Cloudflare account id
 # Until they are set, the deploy job is skipped and the run still passes.
 name: Deploy Worker
@@ -53,6 +53,17 @@ jobs:
           cache: npm
       - if: steps.ready.outputs.ok == 'true'
         run: npm ci
+
+      # The database is found by its name, and created on the first run. Its id is written
+      # into the config only for this run, so nothing has to be committed.
+      - name: Find or create the D1 database
+        if: steps.ready.outputs.ok == 'true'
+        run: node scripts/ensure-d1.ts douze worker/wrangler.jsonc
+
+      # Append-only migrations (worker/migrations/), applied before the code that needs them.
+      - name: Apply the database migrations
+        if: steps.ready.outputs.ok == 'true'
+        run: npx wrangler d1 migrations apply DB --remote --config worker/wrangler.jsonc
 
       - name: Deploy
         if: steps.ready.outputs.ok == 'true'

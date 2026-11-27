@@ -12,6 +12,15 @@
     "enabled": true,
     "logs": { "invocation_logs": false },
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "douze",
+      // Filled in at deploy time by scripts/ensure-d1.ts; leave the placeholder here.
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations",
+    },
+  ],
   "vars": {
     "ALLOWED_ORIGINS": "https://matan0810.github.io,http://localhost:5173",
   },
