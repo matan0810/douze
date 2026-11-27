@@ -10,6 +10,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-27
+
 ### Added
 
 - Groups, the first part of the server (issue #1): open a group from your phone and send
