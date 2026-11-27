@@ -30,3 +30,16 @@ describe('addresses', () => {
     },
   );
 });
+
+describe('years before 2026', () => {
+  it('have addresses of their own: the archive holds 2024 and 2025', () => {
+    expect(parseRoute('#/2024')).toEqual({ name: 'final', year: 2024, view: 'table' });
+    expect(parseRoute('#/2025/semi-1')).toEqual({ name: 'final', year: 2025, view: 'semi-1' });
+    expect(routeHash({ name: 'final', year: 2024, view: 'players' })).toBe('#/2024/players');
+  });
+
+  it('start with the first contest, 1956, as the data checks do', () => {
+    expect(parseRoute('#/1956').name).toBe('final');
+    expect(parseRoute('#/1955').name).toBe('home');
+  });
+});

@@ -46,7 +46,8 @@ export interface Game {
 export const MAX_NAME = 30;
 export const MAX_PLAYERS = 40;
 export const MAX_FINALISTS = 40;
-export const MIN_YEAR = 2026;
+/** The first contest (1956), the same lower bound the data checks use in `parse.ts`. */
+export const MIN_YEAR = 1956;
 export const MAX_YEAR = 2100;
 
 export function isYear(value: unknown): value is number {

@@ -10,6 +10,11 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Fixed
+
+- Years before 2026 had no address of their own and fell back to the home page. A year now
+  opens at its own address, back to the first contest in 1956.
+
 ### Changed
 
 - The browser tab is titled _Douze_ on the home page and by the page and the year elsewhere,
