@@ -12,6 +12,14 @@ import {
 } from '../../shared/groups';
 import { isSecret } from '../../shared/ids';
 import { serverOrigin } from '../../shared/origin';
+import {
+  parseYears,
+  parseYearView,
+  type Entry,
+  type Stage,
+  type StageSetup,
+  type YearView,
+} from '../../shared/years';
 
 /**
  * The server, as the site sees it (SERVER.md; the Worker in `worker/`). Its address comes from
@@ -105,4 +113,25 @@ export const api = {
     call({ method: 'DELETE', path: `/groups/${id}`, token, body: { confirm } }, nothing),
   audit: (id: string, token: string): Promise<Result<AuditEntry[]>> =>
     call({ method: 'GET', path: `/groups/${id}/audit`, token }, parseAudit),
+  years: (id: string, token: string): Promise<Result<number[]>> =>
+    call({ method: 'GET', path: `/groups/${id}/years`, token }, parseYears),
+  readYear: (id: string, token: string, year: number): Promise<Result<YearView>> =>
+    call({ method: 'GET', path: `/groups/${id}/years/${year}`, token }, parseYearView),
+  setStage: (id: string, token: string, year: number, stage: Stage, setup: StageSetup) =>
+    call(
+      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}`, token, body: setup },
+      parseYearView,
+    ),
+  removeStage: (id: string, token: string, year: number, stage: Stage) =>
+    call({ method: 'DELETE', path: `/groups/${id}/years/${year}/${stage}`, token }, parseYearView),
+  closeStage: (id: string, token: string, year: number, stage: Stage) =>
+    call(
+      { method: 'POST', path: `/groups/${id}/years/${year}/${stage}/close`, token },
+      parseYearView,
+    ),
+  saveEntry: (id: string, token: string, year: number, stage: Stage, entry: Entry) =>
+    call(
+      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}/entry`, token, body: entry },
+      parseYearView,
+    ),
 };

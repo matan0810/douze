@@ -53,6 +53,8 @@ describe('the addresses of groups', () => {
       { name: 'groups' } as const,
       { name: 'group', id } as const,
       { name: 'join', id, secret } as const,
+      { name: 'groupYear', id, year: 2027, stage: 'final' } as const,
+      { name: 'groupYear', id, year: 2027, stage: 'semi-2' } as const,
     ])
       expect(parseRoute(routeHash(route))).toEqual(route);
   });
@@ -61,5 +63,10 @@ describe('the addresses of groups', () => {
     expect(parseRoute('#/group/short').name).toBe('home');
     expect(parseRoute(`#/join/${id}/short`).name).toBe('home');
     expect(parseRoute(`#/join/${id}/${secret}x`).name).toBe('home');
+  });
+
+  it("open a group's year on its final unless a stage is named, and the group without a year", () => {
+    expect(parseRoute(`#/group/${id}/2027/semi-9`)).toMatchObject({ stage: 'final' });
+    expect(parseRoute(`#/group/${id}/1900`)).toEqual({ name: 'group', id });
   });
 });

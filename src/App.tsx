@@ -5,6 +5,7 @@ import { useI18n } from './i18n/context';
 import { NavBar } from './layout/NavBar';
 import { StarBackground } from './layout/StarBackground';
 import { apiOrigin } from './net/api';
+import { GroupYearScreen } from './screens/groupYear/GroupYearScreen';
 import { GroupScreen } from './screens/groups/GroupScreen';
 import { GroupsScreen } from './screens/groups/GroupsScreen';
 import { JoinScreen } from './screens/groups/JoinScreen';
@@ -46,6 +47,7 @@ export function App() {
       new: t.newFinal.titleStart + t.newFinal.titleEnd,
       groups: t.nav.groups,
       group: t.nav.groups,
+      groupYear: t.nav.groups,
       join: t.join.titleStart + t.join.titleEnd,
     };
     const views: Record<FinalView, string> = {
@@ -61,7 +63,11 @@ export function App() {
       plan: t.plan.open,
     };
     const page =
-      route.name === 'final' ? `${views[route.view]} · ${t.final(route.year)}` : names[route.name];
+      route.name === 'final'
+        ? `${views[route.view]} · ${t.final(route.year)}`
+        : route.name === 'groupYear'
+          ? `${t.nav.groups} · ${route.year}`
+          : names[route.name];
     // The tab carries the page, not the name: the mark beside it already says whose it is, and
     // a Latin name beside Hebrew words scrambles the order of the tab (owner, 2026-11-27).
     document.title = page ?? t.brand;
@@ -95,6 +101,17 @@ function screen(route: Route, known: boolean) {
       return apiOrigin() ? <GroupsScreen /> : <HomeScreen />;
     case 'group':
       return apiOrigin() ? <GroupScreen key={route.id} id={route.id} /> : <HomeScreen />;
+    case 'groupYear':
+      return apiOrigin() ? (
+        <GroupYearScreen
+          key={`${route.id}-${route.year}`}
+          id={route.id}
+          year={route.year}
+          stage={route.stage}
+        />
+      ) : (
+        <HomeScreen />
+      );
     case 'join':
       return apiOrigin() ? (
         <JoinScreen key={route.id} id={route.id} secret={route.secret} />

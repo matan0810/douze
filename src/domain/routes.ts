@@ -1,4 +1,5 @@
 import { isId, isSecret } from '../../shared/ids';
+import { isStage, type Stage } from '../../shared/years';
 import { isYear } from './game';
 
 export const FINAL_VIEWS = [
@@ -33,6 +34,8 @@ export type Route =
   | { name: 'new' }
   | { name: 'groups' }
   | { name: 'group'; id: string }
+  /** A group's year, on one of its stages. */
+  | { name: 'groupYear'; id: string; year: number; stage: Stage }
   /** An invitation: the secret rides in the hash, which never reaches a server's log. */
   | { name: 'join'; id: string; secret: string };
 
@@ -43,11 +46,15 @@ const isView = (v: unknown): v is FinalView => FINAL_VIEWS.some((view) => view =
  * (DESIGN.md, section 5). Unknown addresses fall back to home.
  */
 export function parseRoute(hash: string): Route {
-  const [first, second, third] = hash.replace(/^#\/?/, '').split(/[/?]/);
+  const [first, second, third, fourth] = hash.replace(/^#\/?/, '').split(/[/?]/);
   if (first === 'history') return { name: 'history' };
   if (first === 'new') return { name: 'new' };
   if (first === 'groups') return { name: 'groups' };
-  if (first === 'group' && isId(second)) return { name: 'group', id: second };
+  if (first === 'group' && isId(second)) {
+    const year = /^\d{4}$/.test(third ?? '') ? Number(third) : NaN;
+    if (!isYear(year)) return { name: 'group', id: second };
+    return { name: 'groupYear', id: second, year, stage: isStage(fourth) ? fourth : 'final' };
+  }
   if (first === 'join' && isId(second) && isSecret(third))
     return { name: 'join', id: second, secret: third };
   const year = /^\d{4}$/.test(first ?? '') ? Number(first) : NaN;
@@ -73,6 +80,8 @@ export function routeHash(route: Route): string {
       return '#/groups';
     case 'group':
       return `#/group/${route.id}`;
+    case 'groupYear':
+      return `#/group/${route.id}/${route.year}${route.stage === 'final' ? '' : `/${route.stage}`}`;
     case 'join':
       return `#/join/${route.id}/${route.secret}`;
   }

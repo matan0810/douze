@@ -141,6 +141,7 @@ export const AUDIT_ACTIONS = [
   'invite.rotate',
   'stage.set',
   'stage.remove',
+  'stage.close',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

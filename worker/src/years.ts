@@ -227,6 +227,33 @@ export async function removeStage(
   return json(await yearView(sql, groupId, year, who.member.id));
 }
 
+/**
+ * Closes a stage now, by the server's clock: a manager does it when the results start to be
+ * read. A stage already closed stays as it was.
+ */
+export async function closeStage(
+  request: Request,
+  env: Env,
+  groupId: string,
+  year: number,
+  stage: Stage,
+): Promise<Response> {
+  const sql = env.DB;
+  const who = await writer(request, sql, groupId);
+  allow(who, 'settings.write');
+  const setup = (await stages(sql, groupId, year)).find((s) => s.stage === stage)?.setup;
+  if (!setup) throw new HttpError(404, 'No such stage', 'not-found');
+  await sql.batch([
+    sql
+      .prepare(
+        'UPDATE stages SET lock_at = MIN(lock_at, ?1) WHERE group_id = ?2 AND year = ?3 AND stage = ?4',
+      )
+      .bind(Date.now(), groupId, year, stage),
+    ...log(sql, groupId, who.member.name, 'stage.close', `${year} ${stage}`),
+  ]);
+  return json(await yearView(sql, groupId, year, who.member.id));
+}
+
 export async function saveEntry(
   request: Request,
   env: Env,

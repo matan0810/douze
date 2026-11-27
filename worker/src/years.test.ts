@@ -188,6 +188,19 @@ describe('a prediction', () => {
     expect(changed.status).toBe(409);
   });
 
+  it('stays open until a manager closes the stage, which only managers can do', async () => {
+    const { owner, player, base } = await season();
+    expect((await call('POST', `${base}/final/close`, { token: player.token })).status).toBe(403);
+    const closed = await view(await call('POST', `${base}/final/close`, { token: owner.token }));
+    expect(closed.stages[0]?.locked).toBe(true);
+    const late = await call('PUT', `${base}/final/entry`, {
+      token: player.token,
+      body: { order: final, joker: null },
+    });
+    expect(late.status).toBe(409);
+    expect((await call('POST', `${base}/semi-2/close`, { token: owner.token })).status).toBe(404);
+  });
+
   it('goes with the stage when a manager removes it', async () => {
     const { owner, player, base } = await season();
     await call('PUT', `${base}/semi-1/entry`, {

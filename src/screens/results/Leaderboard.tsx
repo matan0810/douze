@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Badge } from '../../domain/badges';
 import type { Piece } from '../../domain/pieces';
 import { routeHash } from '../../domain/routes';
@@ -17,6 +18,8 @@ interface Props {
   badges: ReadonlyMap<string, Badge[]>;
   /** Live mode: rows and points change as the order is dragged; no entrance. */
   live: boolean;
+  /** Whether each row opens the player's breakdown (a group's year has none yet). */
+  linked?: boolean;
 }
 
 const METALS = [styles.gold, styles.silver, styles.bronze];
@@ -45,6 +48,7 @@ function Row({
   pieces,
   badges,
   live,
+  linked = true,
   landsAt,
 }: Props & { standing: Standing; landsAt: number }) {
   const { t } = useI18n();
@@ -58,8 +62,8 @@ function Row({
       className={live ? undefined : 'land'}
       style={{ ...pieceColour(pieces.get(s.player) ?? 'violet'), animationDelay: `${landsAt}s` }}
     >
-      <a
-        href={routeHash({ name: 'player', year, id: s.player })}
+      <Link
+        href={linked ? routeHash({ name: 'player', year, id: s.player }) : undefined}
         className={`${styles.row} piece-card ${first ? 'piece-card-first' : ''}`}
       >
         <span className={`${styles.place} ${METALS[s.rank - 1] ?? ''} num`} aria-hidden="true">
@@ -86,10 +90,31 @@ function Row({
         <span className={`${styles.score} num`} aria-label={String(s.total)}>
           {shown}
         </span>
-        <span className={`${styles.chevron} chevron`} aria-hidden="true">
-          ›
-        </span>
-      </a>
+        {linked && (
+          <span className={`${styles.chevron} chevron`} aria-hidden="true">
+            ›
+          </span>
+        )}
+      </Link>
     </li>
+  );
+}
+
+/** A link when there is somewhere to go, else the same box. */
+function Link({
+  href,
+  className,
+  children,
+}: {
+  href?: string;
+  className: string;
+  children: ReactNode;
+}) {
+  return href ? (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  ) : (
+    <div className={className}>{children}</div>
   );
 }

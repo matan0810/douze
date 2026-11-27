@@ -26,7 +26,7 @@ Live at https://matan0810.github.io/douze.
 | `src/data/`              | Countries, players, and one file per year in `editions/`                                                          |
 | `src/state/`             | What this device keeps: its finals, and the groups it belongs to                                                  |
 | `src/net/`               | Calls to the server, each answer parsed                                                                           |
-| `src/screens/`           | One folder per screen: home, players, results, semi, season, settings, plan, reveal, stats, groups, …             |
+| `src/screens/`           | One folder per screen: home, players, results, semi, season, settings, plan, reveal, stats, groups, groupYear, …  |
 | `src/picker/`            | Building a ranking: search, keyboard, drag                                                                        |
 | `src/ui/`, `src/layout/` | Shared pieces: flags, dialog, titles, the sky, the bar                                                            |
 | `src/export/`            | The table as an image, downloads                                                                                  |

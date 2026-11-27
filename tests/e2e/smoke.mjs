@@ -382,6 +382,77 @@ async function main() {
   await phoneB.close();
   step("groups: a player's name moves to a new phone; the owner's is protected");
 
+  // A year in the group: published from this device's 2026, a date far ahead so it is open.
+  await page.reload();
+  await page.getByRole('combobox', { name: /^שנה/ }).selectOption('2026');
+  await page.getByLabel('תאריך הגמר').fill('2099-05-16');
+  await page.getByRole('button', { name: 'פרסום בקבוצה' }).click();
+  await page.getByRole('heading', { level: 1, name: /החיזויים של 2026/ }).waitFor();
+  await page.getByRole('link', { name: 'חצי גמר 1', exact: true }).waitFor();
+  await page.getByText(/פתוח לשינויים, גם במהלך השידור/).waitFor();
+  await page.getByRole('button', { name: 'הזנת חיזוי' }).click();
+  const mine = page.getByRole('dialog', { name: 'החיזוי שלי' });
+  const final2026 = [
+    'Bulgaria',
+    'Israel',
+    'Romania',
+    'Australia',
+    'Italy',
+    'Finland',
+    'Denmark',
+    'Moldova',
+    'Ukraine',
+    'Greece',
+    'France',
+    'Poland',
+    'Albania',
+    'Norway',
+    'Croatia',
+    'Czechia',
+    'Serbia',
+    'Malta',
+    'Cyprus',
+    'Sweden',
+    'Belgium',
+    'Lithuania',
+    'Germany',
+    'Austria',
+    'United Kingdom',
+  ];
+  for (const country of final2026) {
+    await mine.getByRole('combobox').fill(country);
+    await mine.getByRole('combobox').press('Enter');
+  }
+  await mine.getByText('25 / 25 מדינות').waitFor();
+  await mine.getByRole('button', { name: /שמירת חיזוי/ }).click();
+  await page.getByText('מוכן', { exact: true }).waitFor();
+  step("group year: published from this device's year, open, and a prediction saved");
+
+  await adi.reload();
+  await adi.getByRole('link', { name: 'שנת 2026' }).click();
+  await adi.getByRole('heading', { level: 1, name: /החיזויים של 2026/ }).waitFor();
+  await adi.getByText('עוד לא הזנת חיזוי.').waitFor();
+  await adi.getByText('החיזויים של כולם ייחשפו כשהשלב ייסגר.').waitFor();
+  assert.equal(await adi.getByRole('button', { name: 'סגירת הניחושים עכשיו' }).count(), 0);
+  assert.equal(await adi.getByRole('heading', { name: 'החיזויים של כולם' }).count(), 0);
+  await noOverflow(adi, 'group year on a phone');
+  step("group year: a player sees who is done, not what they predicted, and can't close it");
+
+  await page.getByRole('button', { name: 'סגירת הניחושים עכשיו' }).click();
+  await page.getByText(/הניחושים נסגרו ביום/).waitFor();
+  await page.getByRole('heading', { name: 'החיזויים של כולם' }).waitFor();
+  await page.getByText('25 בול').waitFor();
+  await adi.reload();
+  await adi.getByRole('heading', { name: 'החיזויים של כולם' }).waitFor();
+  assert.equal(await adi.getByRole('button', { name: 'הזנת חיזוי' }).count(), 0);
+  for (const p of [page, adi]) {
+    await p.getByRole('link', { name: 'חזרה לקבוצה' }).click();
+    await p.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
+  }
+  step(
+    "group year: a manager closes it as the results begin; everyone's predictions and the table",
+  );
+
   await page.reload();
   const adiRow = page.getByRole('listitem').filter({ hasText: 'עדי' });
   await adiRow.getByRole('button', { name: 'מינוי למנהל' }).click();

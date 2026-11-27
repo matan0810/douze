@@ -1,5 +1,6 @@
 import { LIMITS } from '../../shared/config';
 import { cleanName as cleanNameTo } from '../../shared/names';
+import { isYear, MAX_FIELD, MAX_YEAR, MIN_YEAR } from '../../shared/years';
 import { DATE_PATTERN, isRecord } from './parse';
 import { isComplete } from './scoring';
 import { isCompleteQualifiers, MAX_SEMIS, qualifierCount, type Semi, type SemiPick } from './semis';
@@ -47,16 +48,9 @@ export interface Game {
 /** Limits on what is entered or received: names, players, the field. */
 export const MAX_NAME = LIMITS.nameMax;
 export const MAX_PLAYERS = LIMITS.membersPerGroup;
-export const MAX_FINALISTS = 40;
-/** The first contest (1956), the same lower bound the data checks use in `parse.ts`. */
-export const MIN_YEAR = 1956;
-export const MAX_YEAR = 2100;
-
-export function isYear(value: unknown): value is number {
-  return (
-    typeof value === 'number' && Number.isInteger(value) && value >= MIN_YEAR && value <= MAX_YEAR
-  );
-}
+export const MAX_FINALISTS = MAX_FIELD;
+/** The years and the size of a field are the server's too (`shared/years.ts`). */
+export { isYear, MAX_YEAR, MIN_YEAR };
 
 /** A name as typed: trimmed, inner spaces collapsed, no control or direction marks, capped. */
 export function cleanName(raw: string): string {

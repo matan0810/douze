@@ -228,12 +228,32 @@ order is published.
   groups a day from one address, names of up to 30 characters, …) are in
   `shared/limits.ts` and `shared/config.ts`.
 
+- **A group's year** (`#/group/<id>/<year>`, `groupYear.ts`): a manager publishes a year
+  from the group's page, as their phone has it: the final's countries, each semi's, and
+  whether there are jokers, with the date of the final. Every member then enters their own
+  prediction of each stage from their own phone, the same editors as on the device: the
+  final's order (with a joker when the year has them) and each semi's ten and its eleventh.
+  - **Open through the evening.** The point of the game is to rank while watching, so a
+    prediction can change all through the show, until the results start to be read (the
+    owner's rule, 2026-11-27). Then a manager taps _Close predictions now_. If no one does,
+    a stage closes by itself: the final at 00:30 the night after its date, a semi at 23:50
+    on its evening (Tuesday and Thursday before the final), on the manager's phone's clock,
+    which is Israel's; that is when the votes start to be read. The server's clock decides.
+  - Until a stage closes, each member sees only their own prediction and who has finished
+    (a finished final has every country placed; a semi, its qualifiers and a reserve).
+    Once it closes, everyone sees everyone's, and the table, scored by the rules of section
+    3, as soon as the official result is known on the phone looking at it (the server keeps
+    results in the next phase, issue #1).
+  - Publishing again updates the stages. A stage's countries can change until it closes;
+    each prediction keeps what still fits. After that they stay. A group keeps up to 30
+    years.
+
 ## 5. Addresses
 
 `#/` home, `#/<year>` results, `#/<year>/results` results in edit mode,
 `#/<year>/players`, `#/<year>/stats`, `#/<year>/semi-1`, `#/<year>/semi-2`,
 `#/<year>/season`, `#/<year>/settings`, `#/<year>/reveal`, `#/<year>/plan`, `#/<year>/player/<id>` a breakdown over the table,
-`#/history`, `#/new`, `#/groups`, `#/group/<id>`, `#/join/<id>/<secret>` an invitation (the
+`#/history`, `#/new`, `#/groups`, `#/group/<id>`, `#/group/<id>/<year>` and `#/group/<id>/<year>/semi-1` a group's year, `#/join/<id>/<secret>` an invitation (the
 address is replaced by the group's page once joined, so the secret leaves the history). Unknown
 addresses show home and are rewritten, and so does an unknown path under the site: Pages'
 404 page is a copy of the site.

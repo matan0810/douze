@@ -9,6 +9,7 @@ import { AuditLog } from './AuditLog';
 import { InviteBox } from './InviteBox';
 import { MemberList } from './MemberList';
 import { useGroupView } from './useGroupView';
+import { YearsSection } from './YearsSection';
 import styles from './Groups.module.css';
 
 /** One group: who is in it, the invitation, and what the viewer's role allows. */
@@ -76,6 +77,7 @@ export function GroupScreen({ id }: { id: string }) {
         lead={t.groups.as(view.me.name)}
       />
       <div className={styles.stack}>
+        <YearsSection view={view} token={me.token} />
         <MemberList view={view} token={me.token} onChange={show} />
         <InviteBox view={view} me={me} onRenewed={() => void reload()} />
         {can(view.me.role, 'audit.read') && <AuditLog group={id} token={me.token} />}

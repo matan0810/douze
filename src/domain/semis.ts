@@ -5,9 +5,12 @@
  * its field and result are set by hand.
  */
 
+import { qualifierCount, QUALIFIERS } from '../../shared/years';
+
+/** How many countries a semi sends to the final, and how many from a small one: shared. */
+export { qualifierCount, QUALIFIERS };
+
 export const MAX_SEMIS = 2;
-/** How many countries a semi sends to the final. */
-export const QUALIFIERS = 10;
 export const QUALIFIER_POINTS = 2;
 export const RESERVE_POINTS = 1;
 /** For all ten qualifiers right: counted in the season's table only, not the semi's own. */
@@ -26,11 +29,6 @@ export interface Semi {
   /** The countries that qualified; null until known. */
   qualifiers: string[] | null;
   predictions: SemiPick[];
-}
-
-/** How many qualify from a semi of this many countries: ten, unless the field is smaller. */
-export function qualifierCount(countries: readonly string[]): number {
-  return Math.max(0, Math.min(QUALIFIERS, countries.length - 1));
 }
 
 /** A complete pick: the right number of distinct countries of the semi, and a reserve. */

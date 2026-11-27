@@ -10,6 +10,15 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Added
+
+- Predictions from every phone, in a group: a manager publishes a year from the group's
+  page (its countries, semis and jokers as on their phone, and the date of the final), and
+  everyone enters their own final and semi picks from their own phone. Predictions stay
+  open through the show, until the results start to be read: then a manager closes them
+  (or the stage closes by itself after the show). Until then each sees only their own and
+  who has finished; after, everyone's, and the table once the result is known.
+
 ## [1.4.0] - 2026-11-27
 
 ### Added

@@ -14,7 +14,7 @@ import {
   setRole,
 } from './groups';
 import { corsHeaders, guard, HttpError, json } from './http';
-import { listYears, readYear, removeStage, saveEntry, setStage } from './years';
+import { closeStage, listYears, readYear, removeStage, saveEntry, setStage } from './years';
 
 /** The service's name, as the health address reports it. */
 export const SERVICE = 'douze-api';
@@ -59,6 +59,11 @@ const ROUTES: [method: string, path: string, run: Handler][] = [
     'DELETE',
     '/groups/:id/years/:year/:stage',
     (r, e, [g = '', y, s]) => removeStage(r, e, g, ...yearStage(y, s)),
+  ],
+  [
+    'POST',
+    '/groups/:id/years/:year/:stage/close',
+    (r, e, [g = '', y, s]) => closeStage(r, e, g, ...yearStage(y, s)),
   ],
   [
     'PUT',

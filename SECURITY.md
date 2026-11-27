@@ -33,8 +33,9 @@ else. A new host needs a reason, a change to the policy and a line here.
 
 The Worker `douze-api` (`worker/`, on Cloudflare; the standard is the template's `SERVER.md`)
 keeps the groups in a D1 database (`worker/migrations/`): each group's name, its members'
-names and roles, the hashes of their devices' tokens and of the invitation, and the log.
-Nothing else: no address, no e-mail, no account, no prediction yet.
+names and roles, the hashes of their devices' tokens and of the invitation, the log, and
+each year's stages (countries, when they close) and members' predictions of them. Nothing
+else: no address, no e-mail, no account.
 
 - **Who is who.** Level 2 of `SERVER.md`, without Google for now: a device holds a 256-bit
   token, given when it opens or joins a group, sent as `Authorization: Bearer`. The server
@@ -49,6 +50,10 @@ Nothing else: no address, no e-mail, no account, no prediction yet.
 - **Every value checked.** Bodies are parsed against closed shapes, unknown fields refused
   (`shared/groups.ts`); names cleaned of control and direction characters, 1 to 30
   characters (`shared/names.ts`); ids and secrets by their exact form.
+- **Predictions stay private until a stage closes.** The server answers a member's own
+  prediction and only the list of who has finished; everyone's only once the stage's close
+  time, by the server's clock, has passed (`worker/src/years.ts`). A prediction is refused
+  once it has. Only managers set stages or close them.
 - **Limits** (`shared/limits.ts`, `shared/config.ts`), counted in the database
   (`worker/src/rate.ts`): bodies 32 KiB; 40 members a group, five phones a player; five new
   groups a day from one address and 2000 in all; ten joins or wrong secrets an hour from
@@ -76,6 +81,8 @@ Nothing else: no address, no e-mail, no account, no prediction yet.
 | A request the server should refuse | Deny by default; origin, size and method checked; errors name nothing                  | unit (`worker/src/app.test.ts`), the real runtime         |
 | A guessed or leaked secret         | 256-bit tokens, hashes only stored, constant-time comparison                           | unit (`shared/server.test.ts`)                            |
 | A role doing too much              | One table of capabilities, deny by default, walked cell by cell                        | unit (`shared/server.test.ts`)                            |
+| Seeing predictions before closing  | Others' predictions are left out of every answer until the close time has passed       | unit (`worker/src/years.test.ts`), e2e                    |
+| Changing a prediction after it     | The server refuses a prediction once its stage has closed, by its own clock            | unit (`worker/src/years.test.ts`)                         |
 | A stranger in a group              | An invitation secret; a new link ends the old; joins and wrong secrets capped          | unit (`worker/src/groups.test.ts`), e2e                   |
 | Taking over a manager's name       | Only players' names can be taken over; a manager's never                               | unit (`worker/src/groups.test.ts`), e2e                   |
 | Flooding the server                | Sizes, counts and rates capped in the database                                         | unit (`worker/src/groups.test.ts`)                        |
@@ -83,8 +90,9 @@ Nothing else: no address, no e-mail, no account, no prediction yet.
 
 ## Known limits, accepted
 
-- Devices do not sync: a final entered on one phone stays there; groups share only their
-  members so far (issue #1).
+- Devices do not sync: a final entered on one phone stays there; groups share their members
+  and their predictions, not yet the results (issue #1).
+- A player who leaves a group takes their predictions with them; one released keeps them.
 - A member is their phone: whoever holds it, or a token copied from its storage, acts as
   that member until the token is released. A manager's name cannot be taken over by the
   invitation, but anyone with the link can join as a player; the owner renews the link
