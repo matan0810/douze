@@ -1,6 +1,7 @@
 import { isRole, type Role } from './capabilities';
 import { LIMITS } from './config';
 import { isId, isSecret } from './ids';
+import { record } from './json';
 import { cleanName } from './names';
 
 /**
@@ -8,17 +9,6 @@ import { cleanName } from './names';
  * used on both ends. Anything that does not fit is refused (undefined), never cast; an
  * unknown field is refused too (OWASP: mass assignment).
  */
-type Json = Record<string, unknown>;
-
-function isJson(value: unknown): value is Json {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-/** An object with only the given keys, or undefined. */
-function record(value: unknown, keys: readonly string[]): Json | undefined {
-  if (!isJson(value)) return undefined;
-  return Object.keys(value).every((key) => keys.includes(key)) ? value : undefined;
-}
 
 /** A name as a person typed it: cleaned, then within the project's limits. */
 export function parseName(value: unknown): string | undefined {
