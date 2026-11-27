@@ -139,6 +139,8 @@ export const AUDIT_ACTIONS = [
   'member.release',
   'role.change',
   'invite.rotate',
+  'stage.set',
+  'stage.remove',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
@@ -160,6 +162,7 @@ export const ERROR_CODES = [
   'rate-limited',
   'confirm-wrong',
   'owner-stays',
+  'locked',
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 

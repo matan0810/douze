@@ -22,13 +22,16 @@ import { all, first, int, text, textOrNull, type Sql, type Statement } from './s
  */
 const DAY = 24 * 60 * 60;
 
-async function body<T>(request: Request, parse: (value: unknown) => T | undefined): Promise<T> {
+export async function body<T>(
+  request: Request,
+  parse: (value: unknown) => T | undefined,
+): Promise<T> {
   const parsed = parse(await readJson(request, LIMITS.bodyBytes));
   if (!parsed) throw new HttpError(400, 'Bad request', 'bad-request');
   return parsed;
 }
 
-function log(
+export function log(
   sql: Sql,
   groupId: string,
   actor: string | null,
@@ -195,7 +198,7 @@ export async function join(request: Request, env: Env, groupId: string): Promise
 }
 
 /** A write by a signed-in device: its caller, counted against the write limit. */
-async function writer(request: Request, sql: Sql, groupId: string): Promise<Caller> {
+export async function writer(request: Request, sql: Sql, groupId: string): Promise<Caller> {
   const who = await caller(request, sql, groupId);
   await hit(sql, 'write', who.tokenHash, LIMITS.writesPerMinute, 60);
   return who;

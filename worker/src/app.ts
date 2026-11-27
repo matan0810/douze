@@ -1,4 +1,5 @@
 import { isId } from '../../shared/ids';
+import { isStage, isYear, type Stage } from '../../shared/years';
 import type { Env } from './env';
 import {
   auditLog,
@@ -13,11 +14,19 @@ import {
   setRole,
 } from './groups';
 import { corsHeaders, guard, HttpError, json } from './http';
+import { listYears, readYear, removeStage, saveEntry, setStage } from './years';
 
 /** The service's name, as the health address reports it. */
 export const SERVICE = 'douze-api';
 
 type Handler = (request: Request, env: Env, ids: string[]) => Promise<Response>;
+
+/** A year and a stage from a path already checked by `match`. */
+function yearStage(year = '', stage = ''): [number, Stage] {
+  const y = Number(year);
+  if (!isYear(y) || !isStage(stage)) throw new HttpError(404, 'Not found', 'not-found');
+  return [y, stage];
+}
 
 /**
  * Every address the API answers, by method and path; `:id` is a group's or member's id,
@@ -35,6 +44,27 @@ const ROUTES: [method: string, path: string, run: Handler][] = [
   ['DELETE', '/groups/:id/members/me', (r, e, [g = '']) => leave(r, e, g)],
   ['PUT', '/groups/:id/members/:id/role', (r, e, [g = '', m = '']) => setRole(r, e, g, m)],
   ['DELETE', '/groups/:id/members/:id/devices', (r, e, [g = '', m = '']) => release(r, e, g, m)],
+  ['GET', '/groups/:id/years', (r, e, [g = '']) => listYears(r, e, g)],
+  [
+    'GET',
+    '/groups/:id/years/:year',
+    (r, e, [g = '', y]) => readYear(r, e, g, yearStage(y, 'final')[0]),
+  ],
+  [
+    'PUT',
+    '/groups/:id/years/:year/:stage',
+    (r, e, [g = '', y, s]) => setStage(r, e, g, ...yearStage(y, s)),
+  ],
+  [
+    'DELETE',
+    '/groups/:id/years/:year/:stage',
+    (r, e, [g = '', y, s]) => removeStage(r, e, g, ...yearStage(y, s)),
+  ],
+  [
+    'PUT',
+    '/groups/:id/years/:year/:stage/entry',
+    (r, e, [g = '', y, s]) => saveEntry(r, e, g, ...yearStage(y, s)),
+  ],
 ];
 
 /** The ids in `path` if it fits `pattern`, or undefined. */
@@ -47,6 +77,12 @@ function match(pattern: string, path: string): string[] | undefined {
     const value = have[i] ?? '';
     if (part === ':id') {
       if (!isId(value)) return undefined;
+      ids.push(value);
+    } else if (part === ':year') {
+      if (!/^\d{4}$/.test(value) || !isYear(Number(value))) return undefined;
+      ids.push(value);
+    } else if (part === ':stage') {
+      if (!isStage(value)) return undefined;
       ids.push(value);
     } else if (part !== value) return undefined;
   }
