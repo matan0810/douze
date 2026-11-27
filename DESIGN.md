@@ -129,8 +129,9 @@ order is published.
 
 ## 4. Screens
 
-- **Home**: the name, the last final's winner, the way to the players and the results, and
-  how scoring works.
+- **Home**: the name, the last final's winner, a countdown to the next final whose date
+  is set (_N days to the final_, then _tomorrow_ and _tonight_; by the device's own
+  calendar), the way to the players and the results, and how scoring works.
 - **Players** (per final): add a player, enter or edit their prediction (type a name in
   Hebrew or English and press Enter; drag, or use the handle with the arrow keys, to
   reorder), delete it. Each player shows a chip per semi, lit once their pick is complete.
@@ -162,7 +163,10 @@ order is published.
 - **Stickers** (`src/domain/badges.ts`), at most two per player, in this order: _Champion!_
   for first place; _So close!_ for second within 15 points of first; _N spot on_ for the
   most exact places (at least two); _Prophet_ for whoever put the winner highest. In 2026:
-  Matan champion and prophet, Adi so close (13 behind), Ori 3 spot on.
+  Matan champion and prophet, Adi so close (13 behind), Ori 3 spot on. A semi's table
+  gives the champion, _Perfect!_ for all ten qualifiers and _11th in_ when the reserve went
+  through (at most two); the season's, the champion and _Perfect!_ for a perfect semi. In
+  2026: semi 1 Ori champion, Adi 11th in; semi 2 Ori and Matan champions, both 11th in.
 - **All the years**: each final with its winner, and the all-time table by titles, then
   average share of the maximum, then points. The same person is joined across years by
   their archive id; players added on a device, by name.

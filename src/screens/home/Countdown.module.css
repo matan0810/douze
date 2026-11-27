@@ -1,0 +1,25 @@
+/* The countdown: a gold ticket slapped on the page, the days in large numerals. */
+.countdown {
+  --tilt: -3deg;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px;
+  border: 2px solid var(--brand-gold);
+  border-radius: var(--pill);
+  background: color-mix(in srgb, var(--brand-gold) 16%, var(--card));
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--brand-gold) 45%, #000);
+  transform: rotate(var(--tilt));
+}
+
+.days {
+  color: var(--brand-gold);
+  font-family: var(--font-brand);
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.label {
+  font-weight: 700;
+}

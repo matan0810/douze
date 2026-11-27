@@ -1,10 +1,12 @@
 import { countryById } from '../../domain/archive';
 import type { Piece } from '../../domain/pieces';
+import { semiBadges, type StageBadge } from '../../domain/badges';
 import { qualifierCount, type Semi, type SemiScore } from '../../domain/semis';
 import { useCountUp } from '../../hooks/useCountUp';
 import { useI18n } from '../../i18n/context';
 import { Flag } from '../../ui/Flag';
 import { pieceColour } from '../../ui/pieceColour';
+import { StageStickers } from '../../ui/StageStickers';
 import { Token } from '../../ui/Token';
 import styles from './SemiBoard.module.css';
 
@@ -23,6 +25,7 @@ const STEP = 0.35;
  */
 export function SemiBoard({ semi, table, names, pieces }: Props) {
   const { t } = useI18n();
+  const stickers = semiBadges(table);
   return (
     <section className={styles.panel}>
       <div className={styles.head}>
@@ -37,6 +40,7 @@ export function SemiBoard({ semi, table, names, pieces }: Props) {
             score={s}
             name={names.get(s.player) ?? s.player}
             piece={pieces.get(s.player) ?? 'violet'}
+            badges={stickers.get(s.player) ?? []}
             landsAt={(table.length - 1 - i) * STEP}
           />
         ))}
@@ -50,12 +54,14 @@ function Row({
   score: s,
   name,
   piece,
+  badges,
   landsAt,
 }: {
   semi: Semi;
   score: SemiScore;
   name: string;
   piece: Piece;
+  badges: readonly StageBadge[];
   landsAt: number;
 }) {
   const { t, language } = useI18n();
@@ -82,11 +88,11 @@ function Row({
       <span className="visually-hidden">{t.ordinal(s.rank)}</span>
       <Token name={name} piece={piece} />
       <span className={styles.info}>
-        <span className={styles.name}>{name}</span>
-        <span className={styles.meta}>
-          {t.semi.hits(s.hits, qualifierCount(semi.countries))}
-          {s.reserveHit && <span className={styles.reserveHit}>{t.semi.reserveHit}</span>}
+        <span className={styles.name}>
+          {name}
+          <StageStickers badges={badges} delay={landsAt + 0.6} />
         </span>
+        <span className={styles.meta}>{t.semi.hits(s.hits, qualifierCount(semi.countries))}</span>
         {pick && (
           <span className={styles.flags} aria-hidden="true">
             {pick.picks.map(flag)}

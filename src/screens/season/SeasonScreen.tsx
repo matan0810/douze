@@ -1,10 +1,12 @@
 import { archive } from '../../domain/archive';
+import { seasonBadges } from '../../domain/badges';
 import { playerPieces } from '../../domain/pieces';
 import { seasonStandings } from '../../domain/season';
 import { useI18n } from '../../i18n/context';
 import { useGame } from '../../state/context';
 import { PageTitle } from '../../ui/PageTitle';
 import { pieceColour } from '../../ui/pieceColour';
+import { StageStickers } from '../../ui/StageStickers';
 import { StageTabs } from '../../ui/StageTabs';
 import { Token } from '../../ui/Token';
 import { YearSelect } from '../../ui/YearSelect';
@@ -19,6 +21,7 @@ export function SeasonScreen({ year }: { year: number }) {
   const game = useGame(year);
   if (!game) return null;
   const rows = seasonStandings(game);
+  const stickers = seasonBadges(rows);
   const pieces = playerPieces(game, archive.players);
   const names = new Map(game.players.map((p) => [p.id, p.name[language]]));
   const cell = (n: number | null) => (n === null ? '–' : String(n));
@@ -80,6 +83,10 @@ export function SeasonScreen({ year }: { year: number }) {
                       <span className={styles.who}>
                         <Token name={name} piece={piece} size="sm" />
                         {name}
+                        <StageStickers
+                          badges={stickers.get(r.player) ?? []}
+                          delay={(rows.length - i) * STEP + 0.4}
+                        />
                       </span>
                     </th>
                     <td className="num">{cell(r.final)}</td>

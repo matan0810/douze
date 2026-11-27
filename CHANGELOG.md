@@ -19,6 +19,9 @@ the deploy runs: the one state of `master` that reached the live site as a worki
   perfect semi-final.
 - The 2026 semi-finals: who qualified, and the picks known so far (Ori in both, Adi in the
   first, Matan in the second).
+- Stickers on the semi-final and season tables: the champion, _Perfect!_ for all ten
+  qualifiers, and _11th in_ when the 11th place went through too.
+- A countdown on the home page to the next final whose date is set.
 - Jokers, switched on in a year's settings: each player stars one country in their
   prediction of the final, and the points for its place count twice.
 - Hungary, Bosnia and Herzegovina, Russia and Belarus join the countries to choose from:

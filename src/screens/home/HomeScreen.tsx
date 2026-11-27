@@ -6,6 +6,7 @@ import { useGames } from '../../state/context';
 import { Icon, type IconName } from '../../ui/Icon';
 import { Sticker } from '../../ui/Sticker';
 import { Wordmark } from '../../ui/Wordmark';
+import { Countdown } from './Countdown';
 import styles from './HomeScreen.module.css';
 
 /** The front page: the name, the last winner, the way in, and how scoring works. */
@@ -61,6 +62,7 @@ export function HomeScreen() {
         </div>
         <p className={styles.slogan}>{t.slogan}</p>
         <p className={styles.lead}>{t.heroLine}</p>
+        <Countdown />
         {leader && leaderName && (
           <a href={hash('table')} className={styles.champion}>
             <Icon name="crown" size={16} />

@@ -1,4 +1,6 @@
 import type { Game } from './game';
+import type { SeasonRow } from './season';
+import type { SemiScore } from './semis';
 import { gameStandings, insights } from './stats';
 
 /**
@@ -36,4 +38,32 @@ export function badges(game: Game): Map<string, Badge[]> {
       give(s.player, { kind: 'prophet', place: found.prophets.predicted });
   }
   return out;
+}
+
+/** The stickers of a semi or of the season: its champion, a perfect pick, a lucky 11th. */
+export type StageBadge = { kind: 'champion' } | { kind: 'perfect' } | { kind: 'reserve' };
+
+/** A semi's stickers, at most two each: champion, a perfect ten, the 11th that went through. */
+export function semiBadges(table: readonly SemiScore[]): Map<string, StageBadge[]> {
+  return new Map(
+    table.map((s) => {
+      const list: StageBadge[] = [];
+      if (s.rank === 1) list.push({ kind: 'champion' });
+      if (s.perfect) list.push({ kind: 'perfect' });
+      if (s.reserveHit) list.push({ kind: 'reserve' });
+      return [s.player, list.slice(0, MAX_BADGES)];
+    }),
+  );
+}
+
+/** The season's stickers: its champion, and a perfect semi (the bonus) for whoever had one. */
+export function seasonBadges(rows: readonly SeasonRow[]): Map<string, StageBadge[]> {
+  return new Map(
+    rows.map((r) => {
+      const list: StageBadge[] = [];
+      if (r.rank === 1) list.push({ kind: 'champion' });
+      if (r.bonus > 0) list.push({ kind: 'perfect' });
+      return [r.player, list];
+    }),
+  );
 }

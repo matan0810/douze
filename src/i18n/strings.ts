@@ -34,6 +34,10 @@ const he = {
     sharpshooterTitle: 'הכי הרבה מקומות מדויקים',
     prophet: 'נביא',
     prophetTitle: (place: number) => `שם את הזוכה הכי גבוה: מקום ${place}`,
+    perfect: 'מושלם!',
+    perfectTitle: 'כל העשר עלו',
+    reserve: '11 עלה',
+    reserveTitle: 'גם מקום 11 עלה',
   },
   facts: {
     countries: (n: number) => `${n} מדינות`,
@@ -60,7 +64,6 @@ const he = {
     board: 'טבלת חצי הגמר',
     boardHint: '2 נקודות על כל מדינה שעלתה, ועוד 1 אם מקום 11 עלה',
     hits: (n: number, of: number) => `${n} מתוך ${of} עלו`,
-    reserveHit: '11 עלה',
     noScores: 'אין עדיין בחירות מלאות לחצי הגמר הזה.',
     pick: 'הבחירה',
     pickTitle: (name: string, n: number) => `חצי גמר ${n}: הבחירה של ${name}`,
@@ -148,6 +151,9 @@ const he = {
     offByOnePts: '+9 נק׳',
     winnerBonusPts: '+15 בונוס',
     scoringNote: 'כל מקום של סטייה מוריד נקודה. מקום שני ושלישי מדויקים: 10 ו־5 נקודות בונוס.',
+    countdown: (year: number) => `ימים לגמר ${year}`,
+    countdownOne: (year: number) => `הגמר ${year} מחר!`,
+    countdownTonight: (year: number) => `הגמר ${year} הערב!`,
   },
   players: {
     titleStart: 'שחקנים',
@@ -331,6 +337,10 @@ const en: Strings = {
     sharpshooterTitle: 'The most exact places',
     prophet: 'Prophet',
     prophetTitle: (place) => `Put the winner highest: place ${place}`,
+    perfect: 'Perfect!',
+    perfectTitle: 'All ten qualified',
+    reserve: '11th in',
+    reserveTitle: 'The 11th qualified too',
   },
   facts: {
     countries: (n) => `${n} countries`,
@@ -357,7 +367,6 @@ const en: Strings = {
     board: 'Semi-final table',
     boardHint: '2 points for every country that qualified, and 1 more if 11th place did',
     hits: (n, of) => `${n} of ${of} qualified`,
-    reserveHit: '11th qualified',
     noScores: 'No complete picks for this semi-final yet.',
     pick: 'The pick',
     pickTitle: (name, n) => `Semi-final ${n}: ${name}'s pick`,
@@ -449,6 +458,9 @@ const en: Strings = {
     winnerBonusPts: '+15 bonus',
     scoringNote:
       'Each place off costs a point. An exact second and third earn a 10 and 5 point bonus.',
+    countdown: (year) => `days to the ${year} final`,
+    countdownOne: (year) => `The ${year} final is tomorrow!`,
+    countdownTonight: (year) => `The ${year} final is tonight!`,
   },
   players: {
     titleStart: 'Players',

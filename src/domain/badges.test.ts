@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { badges } from './badges';
+import { badges, seasonBadges, semiBadges } from './badges';
+import { setSemiPick } from './game';
+import { seasonStandings } from './season';
+import { semiStandings } from './semis';
 import { game2026 } from './testGame';
 
 describe('the stickers of the 2026 final', () => {
@@ -29,5 +32,29 @@ describe('the stickers of the 2026 final', () => {
       { kind: 'champion' },
       { kind: 'sharpshooter', exact: 3 },
     ]);
+  });
+});
+
+describe('the stickers of the 2026 semis', () => {
+  const game = game2026();
+  const [one, two] = game.semis.map((semi) => semiBadges(semiStandings(semi)));
+
+  it('crown Ori in semi 1, and give Adi her 11th: Poland went through', () => {
+    expect(one?.get('ori')).toEqual([{ kind: 'champion' }]);
+    expect(one?.get('adi')).toEqual([{ kind: 'reserve' }]);
+  });
+
+  it('crown both Ori and Matan in semi 2, level on 17, both with their 11th in', () => {
+    expect(two?.get('ori')).toEqual([{ kind: 'champion' }, { kind: 'reserve' }]);
+    expect(two?.get('matan')).toEqual([{ kind: 'champion' }, { kind: 'reserve' }]);
+  });
+
+  it('give a perfect semi its sticker, in the semi and in the season', () => {
+    const perfect = setSemiPick(game, 0, 'matan', game.semis[0]?.qualifiers ?? [], 'estonia');
+    const semi = perfect.semis[0];
+    if (!semi) throw new Error('2026 has a first semi');
+    const both = [{ kind: 'champion' }, { kind: 'perfect' }];
+    expect(semiBadges(semiStandings(semi)).get('matan')).toEqual(both);
+    expect(seasonBadges(seasonStandings(perfect)).get('matan')).toEqual(both);
   });
 });

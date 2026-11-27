@@ -227,6 +227,17 @@ async function main() {
   await page.getByText('מדינות בגמר (3)').waitFor();
   step('new final: 2027 with three countries');
 
+  const inTen = new Date(Date.now() + 10 * 86_400_000);
+  const pad = (n) => String(n).padStart(2, '0');
+  await page.goto(`${base}/2027/settings`);
+  await page
+    .getByLabel(/תאריך הגמר/)
+    .fill(`${inTen.getFullYear()}-${pad(inTen.getMonth() + 1)}-${pad(inTen.getDate())}`);
+  await page.goto(`${base}/`);
+  const countdown = page.getByRole('link', { name: /ימים לגמר 2027/ });
+  await countdown.getByText('10', { exact: true }).waitFor();
+  step('countdown: the date of the final, set in the settings, counted down on the home page');
+
   await page.getByRole('button', { name: 'Switch to English' }).click();
   assert.equal(await page.evaluate(() => document.documentElement.dir), 'ltr');
   await page.reload();
