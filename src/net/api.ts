@@ -11,6 +11,7 @@ import {
   type Preview,
 } from '../../shared/groups';
 import { isSecret } from '../../shared/ids';
+import type { ImportYear } from '../../shared/importYear';
 import { serverOrigin } from '../../shared/origin';
 import {
   parseYears,
@@ -139,6 +140,8 @@ export const api = {
       },
       parseYearView,
     ),
+  importYear: (id: string, token: string, year: number, body: ImportYear) =>
+    call({ method: 'POST', path: `/groups/${id}/import/${year}`, token, body }, parseYearView),
   saveEntry: (id: string, token: string, year: number, stage: Stage, entry: Entry) =>
     call(
       { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}/entry`, token, body: entry },

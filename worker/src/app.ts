@@ -1,5 +1,6 @@
 import { isId } from '../../shared/ids';
 import { isStage, isYear, type Stage } from '../../shared/years';
+import { importYear } from './archive';
 import type { Env } from './env';
 import {
   auditLog,
@@ -77,6 +78,11 @@ const ROUTES: [method: string, path: string, run: Handler][] = [
     'POST',
     '/groups/:id/years/:year/:stage/close',
     (r, e, [g = '', y, s]) => closeStage(r, e, g, ...yearStage(y, s)),
+  ],
+  [
+    'POST',
+    '/groups/:id/import/:year',
+    (r, e, [g = '', y]) => importYear(r, e, g, yearStage(y, 'final')[0]),
   ],
   [
     'PUT',

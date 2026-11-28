@@ -143,6 +143,7 @@ export const AUDIT_ACTIONS = [
   'stage.remove',
   'stage.close',
   'result.set',
+  'archive.import',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

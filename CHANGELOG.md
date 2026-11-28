@@ -15,6 +15,13 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+### Added
+
+- The archive in a group: the owner can put 2024 to 2026 in the group once, from its page,
+  with every prediction and result, so the history lives with the group. The friends take
+  their own names when they join. This is the first step of making the group the only place
+  a competition lives (issue #6).
+
 ### Removed
 
 - Editing the official result outside a group: live mode, the edit and reset buttons, and

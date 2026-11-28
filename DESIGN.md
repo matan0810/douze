@@ -249,6 +249,13 @@ order is published.
     it is there for a mistake, and only managers can (the owner, 2026-11-28). With it,
     everyone's table appears, scored by the rules of section 3. A phone's own copy of the
     year never stands in for the group's result.
+  - **The archive in the group** (issue #6, step 2): the owner can put the archive's years
+    (`src/data/`) in the group once, from its page. Each stage arrives already closed, with
+    its result and every player's prediction under their Hebrew name, so the history lives
+    in the group like any year played in it. A name nobody holds becomes a member with no
+    phone; its person takes it by joining with the invitation and picking that name. The
+    tables score like the archive's (tested against it). Importing again replaces those
+    years' stages and what was predicted in them.
   - Publishing again updates the stages. A stage's countries can change until it closes;
     each prediction keeps what still fits. After that they stay. A group keeps up to 30
     years.

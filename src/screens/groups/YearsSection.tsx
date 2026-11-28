@@ -5,6 +5,7 @@ import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { api } from '../../net/api';
 import { Icon } from '../../ui/Icon';
+import { ImportArchive } from './ImportArchive';
 import { PublishYear } from './PublishYear';
 import styles from './Groups.module.css';
 
@@ -12,6 +13,7 @@ import styles from './Groups.module.css';
 export function YearsSection({ view, token }: { view: GroupView; token: string }) {
   const { t } = useI18n();
   const [years, setYears] = useState<number[] | null>(null);
+  const [again, setAgain] = useState(0);
 
   useEffect(() => {
     let live = true;
@@ -21,7 +23,7 @@ export function YearsSection({ view, token }: { view: GroupView; token: string }
     return () => {
       live = false;
     };
-  }, [view.id, token]);
+  }, [view.id, token, again]);
 
   return (
     <section className={styles.section} aria-labelledby="years">
@@ -48,6 +50,9 @@ export function YearsSection({ view, token }: { view: GroupView; token: string }
         </ul>
       )}
       {can(view.me.role, 'settings.write') && <PublishYear group={view.id} token={token} />}
+      {can(view.me.role, 'group.import') && (
+        <ImportArchive group={view.id} token={token} onDone={() => setAgain((n) => n + 1)} />
+      )}
     </section>
   );
 }
