@@ -48,7 +48,6 @@ describe('who may do what', () => {
     'invite.rotate': ['owner'],
     'group.handover': ['owner'],
     'group.export': ['owner'],
-    'group.import': ['owner'],
     'group.delete': ['owner'],
   };
 

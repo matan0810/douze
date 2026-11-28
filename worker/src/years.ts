@@ -79,12 +79,7 @@ async function stages(sql: Sql, groupId: string, year: number) {
     .sort((a, b) => STAGES.indexOf(a.stage) - STAGES.indexOf(b.stage));
 }
 
-export async function readYearView(
-  sql: Sql,
-  groupId: string,
-  year: number,
-  me: string,
-): Promise<YearView> {
+async function yearView(sql: Sql, groupId: string, year: number, me: string): Promise<YearView> {
   const now = Date.now();
   const rows = await all(
     sql
@@ -132,7 +127,7 @@ export async function readYear(
 ): Promise<Response> {
   const who = await caller(request, env.DB, groupId);
   allow(who, 'group.read');
-  return json(await readYearView(env.DB, groupId, year, who.member.id));
+  return json(await yearView(env.DB, groupId, year, who.member.id));
 }
 
 /** A prediction kept within a stage whose countries changed: what still fits stays. */
@@ -222,7 +217,7 @@ export async function setStage(
     ...refits,
     ...log(sql, groupId, who.member.name, 'stage.set', `${year} ${stage}`),
   ]);
-  return json(await readYearView(sql, groupId, year, who.member.id));
+  return json(await yearView(sql, groupId, year, who.member.id));
 }
 
 export async function removeStage(
@@ -241,7 +236,7 @@ export async function removeStage(
       .bind(groupId, year, stage),
     ...log(sql, groupId, who.member.name, 'stage.remove', `${year} ${stage}`),
   ]);
-  return json(await readYearView(sql, groupId, year, who.member.id));
+  return json(await yearView(sql, groupId, year, who.member.id));
 }
 
 /**
@@ -268,7 +263,7 @@ export async function closeStage(
       .bind(Date.now(), groupId, year, stage),
     ...log(sql, groupId, who.member.name, 'stage.close', `${year} ${stage}`),
   ]);
-  return json(await readYearView(sql, groupId, year, who.member.id));
+  return json(await yearView(sql, groupId, year, who.member.id));
 }
 
 /**
@@ -296,7 +291,7 @@ export async function setResult(
       .bind(result ? JSON.stringify(result) : null, groupId, year, stage),
     ...log(sql, groupId, who.member.name, 'result.set', `${year} ${stage}`),
   ]);
-  return json(await readYearView(sql, groupId, year, who.member.id));
+  return json(await yearView(sql, groupId, year, who.member.id));
 }
 
 export async function saveEntry(
@@ -332,5 +327,5 @@ export async function saveEntry(
       Date.now(),
     )
     .run();
-  return json(await readYearView(sql, groupId, year, who.member.id));
+  return json(await yearView(sql, groupId, year, who.member.id));
 }

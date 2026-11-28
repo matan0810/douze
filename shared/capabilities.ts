@@ -19,7 +19,6 @@ export const ACTIONS = [
   'invite.rotate',
   'group.handover',
   'group.export',
-  'group.import',
   'group.delete',
 ] as const;
 export type Action = (typeof ACTIONS)[number];
@@ -43,7 +42,6 @@ export const CAPABILITIES: Capabilities = {
   'invite.rotate': 'owner',
   'group.handover': 'owner',
   'group.export': 'owner',
-  'group.import': 'owner',
   'group.delete': 'owner',
 };
 

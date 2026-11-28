@@ -461,19 +461,6 @@ async function main() {
     "group year: a manager closes it as the results begin; everyone's predictions and the table",
   );
 
-  // The archive in the group, once: it lands closed, with the 2026 table scored from it.
-  await page.getByRole('button', { name: /ייבוא הארכיון \(2024–2026\)/ }).click();
-  await page.getByRole('link', { name: 'שנת 2024' }).waitFor();
-  await page.getByRole('link', { name: 'שנת 2025' }).waitFor();
-  await page.getByRole('link', { name: 'שנת 2026' }).click();
-  await page.getByText(/הניחושים נסגרו/).waitFor();
-  await page.getByText('אלוף!').first().waitFor();
-  await page.getByRole('heading', { name: 'החיזויים של כולם' }).waitFor();
-  await page.getByText('אורי', { exact: true }).first().waitFor();
-  step('group archive: 2024 to 2026 imported once, closed, with results and the 2026 table');
-  await page.getByRole('link', { name: 'חזרה לקבוצה' }).click();
-  await page.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
-
   await page.reload();
   const adiRow = page.getByRole('listitem').filter({ hasText: 'עדי' });
   await adiRow.getByRole('button', { name: 'מינוי למנהל' }).click();

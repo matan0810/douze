@@ -54,7 +54,7 @@ else: no address, no e-mail, no account.
 - **Predictions stay private until a stage closes.** The server answers a member's own
   prediction and only the list of who has finished; everyone's only once the stage's close
   time, by the server's clock, has passed (`worker/src/years.ts`). A prediction is refused
-  once it has. Only managers set stages, close them and enter results; only the owner imports the archive (`worker/src/archive.ts`), and a result only
+  once it has. Only managers set stages, close them and enter results, and a result only
   once its stage has closed.
 - **Limits** (`shared/limits.ts`, `shared/config.ts`), counted in the database
   (`worker/src/rate.ts`): bodies 32 KiB; 40 members a group, five phones a player; five new
