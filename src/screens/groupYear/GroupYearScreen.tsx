@@ -7,6 +7,7 @@ import { api } from '../../net/api';
 import { useGame } from '../../state/context';
 import { PageTitle } from '../../ui/PageTitle';
 import { useToast } from '../../ui/toastContext';
+import { SignInButton } from '../groups/SignInButton';
 import { useGroupView } from '../groups/useGroupView';
 import { LockLine } from './LockLine';
 import { MyEntry } from './MyEntry';
@@ -32,8 +33,7 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
   const { t } = useI18n();
   const toast = useToast();
   const group = useGroupView(id);
-  const me = group.state.kind === 'ready' ? group.state.me : undefined;
-  const { state, show } = useYearView(id, me?.token, year);
+  const { state, show } = useYearView(id, group.state.kind === 'ready', year);
   const base = useGame(year);
   const back = (
     <a className="btn btn-quiet" href={routeHash({ name: 'group', id })}>
@@ -54,7 +54,9 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
     return (
       <div className={styles.page}>
         {title('')}
-        {group.state.kind === 'out' ? (
+        {group.state.kind === 'signedOut' ? (
+          <SignInButton />
+        ) : group.state.kind === 'out' ? (
           <p className="note note-warn">{t.group.signedOut}</p>
         ) : state.kind === 'failed' ? (
           <p className="note note-warn" role="alert">
@@ -66,7 +68,7 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
       </div>
     );
 
-  const { view, me: mine } = group.state;
+  const { view } = group.state;
   const year$ = state.view;
   const stage = year$.stages.find((s) => s.stage === wanted) ?? year$.stages[0];
   if (!stage)
@@ -78,7 +80,7 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
     );
 
   const save = async (entry: Entry) => {
-    const answer = await api.saveEntry(id, mine.token, year, stage.stage, entry);
+    const answer = await api.saveEntry(id, year, stage.stage, entry);
     if (!answer.ok) {
       toast(t.errors[answer.error]);
       return false;
@@ -89,14 +91,14 @@ export function GroupYearScreen({ id, year, stage: wanted }: Props) {
   };
   const close = async () => {
     if (!window.confirm(t.groupYear.closeConfirm)) return;
-    const answer = await api.closeStage(id, mine.token, year, stage.stage);
+    const answer = await api.closeStage(id, year, stage.stage);
     if (!answer.ok) return toast(t.errors[answer.error]);
     show(answer.value);
     toast(t.groupYear.closed);
   };
 
   const setResult = async (result: string[] | null) => {
-    const answer = await api.setResult(id, mine.token, year, stage.stage, result);
+    const answer = await api.setResult(id, year, stage.stage, result);
     if (!answer.ok) {
       toast(t.errors[answer.error]);
       return false;

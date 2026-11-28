@@ -13,7 +13,7 @@ import styles from './Groups.module.css';
  * open until the results are read. Publishing again updates the stages; a closed stage keeps
  * its countries (the server refuses).
  */
-export function PublishYear({ group, token }: { group: string; token: string }) {
+export function PublishYear({ group }: { group: string }) {
   const { t } = useI18n();
   const toast = useToast();
   const { games, years } = useGames();
@@ -34,7 +34,7 @@ export function PublishYear({ group, token }: { group: string; token: string }) 
     if (!stages.length) return toast(t.groupYear.noField);
     setBusy(true);
     for (const [stage, setup] of stages) {
-      const answer = await api.setStage(group, token, year, stage, setup);
+      const answer = await api.setStage(group, year, stage, setup);
       if (!answer.ok) {
         setBusy(false);
         return toast(t.errors[answer.error]);

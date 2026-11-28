@@ -11,13 +11,14 @@ export interface Limits {
   nameMin: number;
   nameMax: number;
   membersPerGroup: number;
-  devicesPerPlayer: number;
+  /** Sign-ins started from one internet address in an hour. */
+  signInsPerHour: number;
   /** Groups one signed-in account may own. */
   groupsPerAccount: number;
-  /** New groups from one internet address a day, while nobody signs in. */
+  /** New groups from one internet address a day. */
   groupsPerAddressPerDay: number;
   groupsTotal: number;
-  /** Writes from one device or account in a minute. */
+  /** Writes from one account in a minute. */
   writesPerMinute: number;
   /** Joins, and wrong secrets, from one internet address in an hour. */
   joinsPerHour: number;
@@ -32,7 +33,7 @@ export const DEFAULT_LIMITS: Readonly<Limits> = {
   nameMin: 1,
   nameMax: 40,
   membersPerGroup: 40,
-  devicesPerPlayer: 5,
+  signInsPerHour: 30,
   groupsPerAccount: 10,
   groupsPerAddressPerDay: 5,
   groupsTotal: 2000,

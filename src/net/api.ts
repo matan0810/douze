@@ -11,7 +11,9 @@ import {
   type Preview,
 } from '../../shared/groups';
 import { isSecret } from '../../shared/ids';
+import { parseMe, parseSession, type Me, type Session } from '../../shared/accounts';
 import { serverOrigin } from '../../shared/origin';
+import { loadSession } from '../state/session';
 import {
   parseYears,
   parseYearView,
@@ -39,18 +41,19 @@ const TIMEOUT = 10_000;
 interface Call {
   method: string;
   path: string;
-  token?: string;
   invite?: string;
   body?: unknown;
 }
 
 async function call<T>(
-  { method, path, token, invite, body }: Call,
+  { method, path, invite, body }: Call,
   parse: (value: unknown) => T | undefined,
 ): Promise<Result<T>> {
   const origin = apiOrigin();
   if (!origin) return { ok: false, error: 'network' };
   const headers: Record<string, string> = {};
+  // Whoever is signed in on this device speaks for themselves: no screen passes a token.
+  const token = loadSession()?.token;
   if (token) headers.Authorization = `Bearer ${token}`;
   if (invite) headers['X-Invite'] = invite;
   if (body !== undefined) headers['Content-Type'] = 'application/json';
@@ -84,64 +87,67 @@ const inviteOf = (value: unknown) =>
     : undefined;
 
 export const api = {
+  collectSession: (code: string): Promise<Result<Session>> =>
+    call({ method: 'POST', path: '/auth/session', body: { code } }, parseSession),
+  signOut: (): Promise<Result<null>> => call({ method: 'DELETE', path: '/auth/session' }, nothing),
+  me: (): Promise<Result<Me>> => call({ method: 'GET', path: '/me' }, parseMe),
   createGroup: (group: string, me: string): Promise<Result<Joined>> =>
     call({ method: 'POST', path: '/groups', body: { group, me } }, parseJoined),
-  readGroup: (id: string, token: string): Promise<Result<GroupView>> =>
-    call({ method: 'GET', path: `/groups/${id}`, token }, parseGroupView),
+  readGroup: (id: string): Promise<Result<GroupView>> =>
+    call({ method: 'GET', path: `/groups/${id}` }, parseGroupView),
   preview: (id: string, invite: string): Promise<Result<Preview>> =>
     call({ method: 'GET', path: `/groups/${id}/preview`, invite }, parsePreview),
-  join: (id: string, invite: string, name: string, takeover: boolean): Promise<Result<Joined>> =>
+  join: (id: string, invite: string, name: string, claim: boolean): Promise<Result<Joined>> =>
     call(
-      { method: 'POST', path: `/groups/${id}/join`, invite, body: { name, takeover } },
+      { method: 'POST', path: `/groups/${id}/join`, invite, body: { name, claim } },
       parseJoined,
     ),
-  renewInvite: (id: string, token: string): Promise<Result<string>> =>
-    call({ method: 'POST', path: `/groups/${id}/invite`, token }, inviteOf),
-  setRole: (id: string, token: string, member: string, role: 'admin' | 'member') =>
+  renewInvite: (id: string): Promise<Result<string>> =>
+    call({ method: 'POST', path: `/groups/${id}/invite` }, inviteOf),
+  setRole: (id: string, member: string, role: 'admin' | 'member') =>
     call(
-      { method: 'PUT', path: `/groups/${id}/members/${member}/role`, token, body: { role } },
+      { method: 'PUT', path: `/groups/${id}/members/${member}/role`, body: { role } },
       parseGroupView,
     ),
-  release: (id: string, token: string, member: string) =>
+  release: (id: string, member: string) =>
+    call({ method: 'DELETE', path: `/groups/${id}/members/${member}/claim` }, parseGroupView),
+  leave: (id: string): Promise<Result<null>> =>
+    call({ method: 'DELETE', path: `/groups/${id}/members/me` }, nothing),
+  deleteGroup: (id: string, confirm: string): Promise<Result<null>> =>
+    call({ method: 'DELETE', path: `/groups/${id}`, body: { confirm } }, nothing),
+  audit: (id: string): Promise<Result<AuditEntry[]>> =>
+    call({ method: 'GET', path: `/groups/${id}/audit` }, parseAudit),
+  years: (id: string): Promise<Result<number[]>> =>
+    call({ method: 'GET', path: `/groups/${id}/years` }, parseYears),
+  readYear: (id: string, year: number): Promise<Result<YearView>> =>
+    call({ method: 'GET', path: `/groups/${id}/years/${year}` }, parseYearView),
+  setStage: (id: string, year: number, stage: Stage, setup: StageSetup) =>
     call(
-      { method: 'DELETE', path: `/groups/${id}/members/${member}/devices`, token },
-      parseGroupView,
-    ),
-  leave: (id: string, token: string): Promise<Result<null>> =>
-    call({ method: 'DELETE', path: `/groups/${id}/members/me`, token }, nothing),
-  deleteGroup: (id: string, token: string, confirm: string): Promise<Result<null>> =>
-    call({ method: 'DELETE', path: `/groups/${id}`, token, body: { confirm } }, nothing),
-  audit: (id: string, token: string): Promise<Result<AuditEntry[]>> =>
-    call({ method: 'GET', path: `/groups/${id}/audit`, token }, parseAudit),
-  years: (id: string, token: string): Promise<Result<number[]>> =>
-    call({ method: 'GET', path: `/groups/${id}/years`, token }, parseYears),
-  readYear: (id: string, token: string, year: number): Promise<Result<YearView>> =>
-    call({ method: 'GET', path: `/groups/${id}/years/${year}`, token }, parseYearView),
-  setStage: (id: string, token: string, year: number, stage: Stage, setup: StageSetup) =>
-    call(
-      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}`, token, body: setup },
+      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}`, body: setup },
       parseYearView,
     ),
-  removeStage: (id: string, token: string, year: number, stage: Stage) =>
-    call({ method: 'DELETE', path: `/groups/${id}/years/${year}/${stage}`, token }, parseYearView),
-  closeStage: (id: string, token: string, year: number, stage: Stage) =>
-    call(
-      { method: 'POST', path: `/groups/${id}/years/${year}/${stage}/close`, token },
-      parseYearView,
-    ),
-  setResult: (id: string, token: string, year: number, stage: Stage, result: string[] | null) =>
+  removeStage: (id: string, year: number, stage: Stage) =>
+    call({ method: 'DELETE', path: `/groups/${id}/years/${year}/${stage}` }, parseYearView),
+  closeStage: (id: string, year: number, stage: Stage) =>
+    call({ method: 'POST', path: `/groups/${id}/years/${year}/${stage}/close` }, parseYearView),
+  setResult: (id: string, year: number, stage: Stage, result: string[] | null) =>
     call(
       {
         method: 'PUT',
         path: `/groups/${id}/years/${year}/${stage}/result`,
-        token,
         body: { result },
       },
       parseYearView,
     ),
-  saveEntry: (id: string, token: string, year: number, stage: Stage, entry: Entry) =>
+  saveEntry: (id: string, year: number, stage: Stage, entry: Entry) =>
     call(
-      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}/entry`, token, body: entry },
+      { method: 'PUT', path: `/groups/${id}/years/${year}/${stage}/entry`, body: entry },
       parseYearView,
     ),
 };
+
+/** Where to send a person to sign in with Google: the Worker, which sends them on and back. */
+export function signInUrl(returnTo: string): string | undefined {
+  const origin = apiOrigin();
+  return origin ? `${origin}/auth/google/start?return=${encodeURIComponent(returnTo)}` : undefined;
+}

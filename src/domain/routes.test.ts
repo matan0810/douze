@@ -52,6 +52,8 @@ describe('the addresses of groups', () => {
       { name: 'groups' } as const,
       { name: 'group', id } as const,
       { name: 'join', id, secret } as const,
+      { name: 'signed', code: secret } as const,
+      { name: 'signed', code: 'failed' } as const,
       { name: 'groupYear', id, year: 2027, stage: 'final' } as const,
       { name: 'groupYear', id, year: 2027, stage: 'semi-2' } as const,
     ])
@@ -61,6 +63,7 @@ describe('the addresses of groups', () => {
   it('fall back to home with a malformed id or secret', () => {
     expect(parseRoute('#/group/short').name).toBe('home');
     expect(parseRoute(`#/join/${id}/short`).name).toBe('home');
+    expect(parseRoute('#/signed/short').name).toBe('home');
     expect(parseRoute(`#/join/${id}/${secret}x`).name).toBe('home');
   });
 

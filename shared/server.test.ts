@@ -11,7 +11,7 @@ describe('the limits', () => {
       bodyBytes: 32768,
       nameMax: 40,
       membersPerGroup: 40,
-      devicesPerPlayer: 5,
+      signInsPerHour: 30,
       groupsPerAccount: 10,
       groupsPerAddressPerDay: 5,
       groupsTotal: 2000,

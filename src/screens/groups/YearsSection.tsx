@@ -9,19 +9,19 @@ import { PublishYear } from './PublishYear';
 import styles from './Groups.module.css';
 
 /** The years the group plays, each opening its predictions; a manager publishes a new one. */
-export function YearsSection({ view, token }: { view: GroupView; token: string }) {
+export function YearsSection({ view }: { view: GroupView }) {
   const { t } = useI18n();
   const [years, setYears] = useState<number[] | null>(null);
 
   useEffect(() => {
     let live = true;
-    void api.years(view.id, token).then((answer) => {
+    void api.years(view.id).then((answer) => {
       if (live) setYears(answer.ok ? answer.value : []);
     });
     return () => {
       live = false;
     };
-  }, [view.id, token]);
+  }, [view.id]);
 
   return (
     <section className={styles.section} aria-labelledby="years">
@@ -47,7 +47,7 @@ export function YearsSection({ view, token }: { view: GroupView; token: string }
           ))}
         </ul>
       )}
-      {can(view.me.role, 'settings.write') && <PublishYear group={view.id} token={token} />}
+      {can(view.me.role, 'settings.write') && <PublishYear group={view.id} />}
     </section>
   );
 }

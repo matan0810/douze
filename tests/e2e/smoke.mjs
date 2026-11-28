@@ -70,6 +70,13 @@ async function main() {
     assert.ok(extra <= 0, `${where}: the page is ${extra}px wider than the screen`);
   };
 
+  // Signing in as someone: the Worker's real flow, with the browser test's own Google.
+  const signIn = async (page, email, name) => {
+    api.signInAs(email, name);
+    await page.getByRole('button', { name: 'התחברות עם Google' }).click();
+    await page.getByRole('button', { name: 'התחברות עם Google' }).waitFor({ state: 'detached' });
+  };
+
   const base = `${url}#`;
   const atHash = async (page, hash) => {
     await page.waitForFunction((h) => window.location.hash === h, hash);
@@ -334,6 +341,8 @@ async function main() {
   // ---------- Groups, through the real Worker (tests/e2e/api.mjs) ----------
   page.on('dialog', (dialog) => dialog.accept(dialog.type() === 'prompt' ? 'החברים' : undefined));
   await page.goto(`${base}/groups`);
+  await signIn(page, 'matan@example.test', 'מתן לביא');
+  await page.getByText('מחוברים בתור מתן לביא').waitFor();
   await page.getByLabel('שם הקבוצה').fill('החברים');
   await page.getByLabel('השם שלך בקבוצה').fill('מתן');
   await page.getByRole('button', { name: 'פתיחה' }).click();
@@ -355,6 +364,7 @@ async function main() {
   adi.on('dialog', (dialog) => dialog.accept());
   await adi.goto(invite);
   await adi.getByText('הוזמנתם ל"החברים"').waitFor();
+  await signIn(adi, 'adi@example.test', 'עדי כהן');
   await adi.getByLabel('השם שלכם').fill('עדי');
   await adi.getByRole('button', { name: 'הצטרפות' }).click();
   await adi.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
@@ -367,20 +377,28 @@ async function main() {
   await noOverflow(adi, 'group page on a phone');
   step('groups: a friend joins from the link on a phone, and the secret leaves the address');
 
+  // The same person on another phone: signing in is enough, the group is theirs there too.
   const { context: phoneB, page: adi2 } = await open(
     { ...devices['iPhone 13'], locale: 'he-IL' },
     'adi2',
   );
-  adi2.on('dialog', (dialog) => dialog.accept());
-  await adi2.goto(invite);
-  // The owner's name is a manager's: shown, never offered for a takeover.
-  await adi2.getByTitle('מנהל: עובר רק מהטלפון שלו').waitFor();
-  assert.equal(await adi2.getByRole('button', { name: 'זה אני, מתן' }).count(), 0);
-  await adi2.getByRole('button', { name: 'זה אני, עדי' }).click();
-  await adi2.getByRole('heading', { level: 1, name: 'החברים' }).waitFor();
-  await adi2.getByText('בתור עדי').waitFor();
+  await adi2.goto(`${base}/groups`);
+  await signIn(adi2, 'adi@example.test', 'עדי כהן');
+  await adi2.getByRole('link', { name: /החברים/ }).waitFor();
+  await adi2.getByRole('link', { name: 'החברים בתור עדי' }).waitFor();
   await phoneB.close();
-  step("groups: a player's name moves to a new phone; the owner's is protected");
+  // Someone else with the link: names already held are shown, and never offered.
+  const { context: phoneD, page: dana } = await open(
+    { ...devices['iPhone 13'], locale: 'he-IL' },
+    'dana',
+  );
+  await dana.goto(invite);
+  await signIn(dana, 'dana@example.test', 'דנה');
+  await dana.getByTitle('השם כבר שייך למישהו').first().waitFor();
+  assert.equal(await dana.getByRole('button', { name: 'זה אני, עדי' }).count(), 0);
+  assert.equal(await dana.getByRole('button', { name: 'זה אני, מתן' }).count(), 0);
+  await phoneD.close();
+  step('groups: the same person on a second phone; names already held are never offered');
 
   // A year in the group: published from this device's 2026, a date far ahead so it is open.
   await page.reload();
@@ -466,8 +484,11 @@ async function main() {
   await adiRow.getByRole('button', { name: 'מינוי למנהל' }).click();
   await adiRow.getByText('מנהל', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'הצגת היומן' }).click();
-  await page.getByText('עבר לטלפון חדש').waitFor();
-  step('groups: the owner names an admin, and the log shows the takeover');
+  await page
+    .getByRole('listitem')
+    .filter({ hasText: /עדי.*הצטרף/ })
+    .waitFor();
+  step('groups: the owner names an admin, and the log shows who joined');
 
   await page.getByRole('button', { name: 'קישור חדש' }).click();
   await page.waitForFunction(
@@ -490,11 +511,11 @@ async function main() {
 
   await adi.getByRole('button', { name: 'יציאה מהקבוצה' }).click();
   await adi.getByRole('heading', { level: 1, name: /הקבוצות/ }).waitFor();
-  await adi.getByText('עוד אין קבוצות במכשיר הזה').waitFor();
+  await adi.getByText('אתם עוד לא בקבוצה').waitFor();
   await phoneA.close();
   await page.getByRole('button', { name: 'מחיקת הקבוצה' }).click();
   await page.getByRole('heading', { level: 1, name: /הקבוצות/ }).waitFor();
-  await page.getByText('עוד אין קבוצות במכשיר הזה').waitFor();
+  await page.getByText('אתם עוד לא בקבוצה').waitFor();
   step('groups: a player leaves; the owner deletes the group by typing its name');
 
   await page.getByRole('button', { name: 'Switch to English' }).click();

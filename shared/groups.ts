@@ -31,15 +31,15 @@ export function parseCreateGroup(value: unknown): CreateGroup | undefined {
 
 export interface Join {
   name: string;
-  /** The joiner says this name is theirs, though another device holds it. */
-  takeover: boolean;
+  /** The joiner says this name, already in the group and held by nobody, is theirs. */
+  claim: boolean;
 }
 
 export function parseJoin(value: unknown): Join | undefined {
-  const json = record(value, ['name', 'takeover']);
+  const json = record(value, ['name', 'claim']);
   const name = parseName(json?.name);
-  const takeover = json?.takeover === undefined ? false : json.takeover;
-  return name && typeof takeover === 'boolean' ? { name, takeover } : undefined;
+  const claim = json?.claim === undefined ? false : json.claim;
+  return name && typeof claim === 'boolean' ? { name, claim } : undefined;
 }
 
 export interface SetRole {
@@ -94,22 +94,21 @@ export function parseGroupView(value: unknown): GroupView | undefined {
 
 export interface Joined {
   group: GroupView;
-  token: string;
-  /** The invite secret: returned when a group is made or its link renewed. */
+  /** The invite secret: returned when a group is made. */
   invite?: string;
 }
 
 export function parseJoined(value: unknown): Joined | undefined {
-  const json = record(value, ['group', 'token', 'invite']);
+  const json = record(value, ['group', 'invite']);
   const group = parseGroupView(json?.group);
-  if (!json || !group || !isSecret(json.token)) return undefined;
+  if (!json || !group) return undefined;
   if (json.invite !== undefined && !isSecret(json.invite)) return undefined;
-  return { group, token: json.token, ...(isSecret(json.invite) ? { invite: json.invite } : {}) };
+  return { group, ...(isSecret(json.invite) ? { invite: json.invite } : {}) };
 }
 
 export interface Preview {
   name: string;
-  /** `held`: a phone has the name (a manager's name is then not to be claimed). */
+  /** `held`: a person has the name already; one nobody holds is for its person to claim. */
   members: { name: string; role: Role; held: boolean }[];
 }
 
@@ -137,7 +136,7 @@ export interface AuditEntry {
 export const AUDIT_ACTIONS = [
   'group.create',
   'member.join',
-  'member.takeover',
+  'member.claim',
   'member.leave',
   'member.release',
   'role.change',
@@ -160,7 +159,6 @@ export const ERROR_CODES = [
   'unauthorized',
   'forbidden',
   'invite-wrong',
-  'name-protected',
   'name-taken',
   'group-full',
   'service-full',

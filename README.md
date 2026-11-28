@@ -47,12 +47,24 @@ the database the first time and applies the migrations. The site learns the Work
 address from the repository variable `API_URL` (Settings → Secrets and variables → Actions
 → Variables), read by `deploy.yml`'s build. Without it the site is built with no groups.
 
-The archive group (2024 to 2026, our history) is seeded into the database by the same deploy,
-once the repository secret `ARCHIVE_INVITE` exists: any random string of exactly 43 letters,
-digits, `-` or `_` (a password manager makes one), kept private. The invitation link is then
-`https://matan0810.github.io/douze/#/join/douze_archive_group_01/<that string>`; each of us
-joins with it and picks our own name. After the archive changes, `npm run seed` rewrites
-`worker/seed/archive.sql` (a test fails while it is stale).
+People sign in with Google (SERVER.md, level 3). One-time setup, in the browser:
+
+1. https://console.cloud.google.com/ → a new project (name: Douze) → **APIs & Services** →
+   **OAuth consent screen**: user type _External_, app name _Douze_, your email as support and
+   developer contact, no scopes beyond the defaults (openid, email, profile), then **Publish
+   app** (the basic scopes need no review).
+2. **Credentials** → **Create credentials** → **OAuth client ID** → type _Web application_;
+   under **Authorized redirect URIs** add `https://douze-api.mey-apps.workers.dev/auth/google/callback`
+   (the Worker's address plus `/auth/google/callback`). Copy the client id and the client secret.
+3. In the repository's **Settings → Secrets and variables → Actions → Secrets**, add
+   `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, and `ARCHIVE_OWNER_EMAIL`: the Google email of
+   the archive group's owner.
+
+The deploy sets the Google secrets on the Worker, and seeds the archive group (2024 to 2026,
+our history) into the database: a standard group whose owner's name goes to the account with
+`ARCHIVE_OWNER_EMAIL` when it first signs in. The owner opens the group, makes the invitation
+link and sends it; each of us signs in and picks our own name. After the archive changes,
+`npm run seed` rewrites `worker/seed/archive.sql` (a test fails while it is stale).
 
 How work is done: `CLAUDE.md`. Rules and numbers: `DESIGN.md`. Changes: `CHANGELOG.md`.
 Security: `SECURITY.md`.

@@ -19,11 +19,18 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ### Added
 
+- Sign in with Google: people are their Google accounts, on any device, instead of phones.
+  Your groups follow you; to join one you sign in, then pick your name (or claim the one the
+  group already has for you). No password is kept, and nothing from Google runs on the site.
 - The archive as a group: the server seeds a standard group with 2024 to 2026, every
-  prediction and result in place, applied on deploy. Its people join with the invitation like
-  any group and take their own names; the group then plays 2027 and beyond. A manager's name
-  that no phone holds can be claimed with the invitation, and a released admin becomes a
-  player again.
+  prediction and result in place, applied on deploy. Its owner is the Google account with the
+  owner's email, who makes the invitation link; the others sign in and take their own names;
+  the group then plays 2027 and beyond.
+
+### Changed
+
+- Groups made before sign-in (on phones, with no account) are no longer reachable: open a new
+  group. An admin now _frees_ a name (a wrong claim) instead of signing a phone out.
 
 ### Removed
 

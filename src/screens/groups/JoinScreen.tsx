@@ -3,7 +3,9 @@ import { parseName, type Preview } from '../../../shared/groups';
 import { routeHash } from '../../domain/routes';
 import { useI18n } from '../../i18n/context';
 import { api, type Failure } from '../../net/api';
-import { remember } from '../../state/memberships';
+import { rememberInvite } from '../../state/invites';
+import { useSession } from '../../state/session';
+import { SignInButton } from './SignInButton';
 import { PageTitle } from '../../ui/PageTitle';
 import styles from './Groups.module.css';
 
@@ -17,6 +19,7 @@ export function JoinScreen({ id, secret }: { id: string; secret: string }) {
   const [failed, setFailed] = useState<Failure | null>(null);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
+  const session = useSession();
 
   useEffect(() => {
     let live = true;
@@ -30,19 +33,13 @@ export function JoinScreen({ id, secret }: { id: string; secret: string }) {
     };
   }, [id, secret]);
 
-  const join = async (wanted: string, takeover: boolean) => {
+  const join = async (wanted: string, claim: boolean) => {
     setBusy(true);
-    const answer = await api.join(id, secret, wanted, takeover);
+    const answer = await api.join(id, secret, wanted, claim);
     setBusy(false);
     if (!answer.ok) return setFailed(answer.error);
-    const { group, token } = answer.value;
-    remember({
-      group: group.id,
-      token,
-      invite: secret,
-      groupName: group.name,
-      myName: group.me.name,
-    });
+    const { group } = answer.value;
+    rememberInvite(group.id, secret);
     // The group's page, in place of the invitation: the secret is not kept in the history.
     window.history.replaceState(null, '', routeHash({ name: 'group', id: group.id }));
     window.dispatchEvent(new HashChangeEvent('hashchange'));
@@ -67,7 +64,13 @@ export function JoinScreen({ id, secret }: { id: string; secret: string }) {
           {failed === 'invite-wrong' ? t.join.invalid : t.errors[failed]}
         </p>
       )}
-      {preview && (
+      {preview && !session && (
+        <div className={styles.actions}>
+          <p className={styles.muted}>{t.signIn.toJoin}</p>
+          <SignInButton />
+        </div>
+      )}
+      {preview && session && (
         <div className={styles.stack}>
           <form className={styles.form} onSubmit={submit}>
             <label className={styles.field}>
@@ -88,20 +91,20 @@ export function JoinScreen({ id, secret }: { id: string; secret: string }) {
               <p className={styles.muted}>{t.join.already}</p>
               <div className={styles.chips}>
                 {preview.members.map((m) =>
-                  m.role === 'member' || !m.held ? (
+                  !m.held ? (
                     <button
                       key={m.name}
                       type="button"
                       className="btn btn-line"
                       disabled={busy}
                       onClick={() => {
-                        if (window.confirm(t.join.takeoverConfirm(m.name))) void join(m.name, true);
+                        if (window.confirm(t.join.claimConfirm(m.name))) void join(m.name, true);
                       }}
                     >
                       {t.join.itsMe(m.name)}
                     </button>
                   ) : (
-                    <span key={m.name} className={styles.card} title={t.join.manager}>
+                    <span key={m.name} className={styles.card} title={t.join.held}>
                       {m.name} · {t.group.role[m.role]}
                     </span>
                   ),

@@ -11,18 +11,18 @@ export type YearState =
  * A group's year from the server. `at` is this device's clock when it answered, so a
  * countdown runs on the server's time: server now plus what has passed here since.
  */
-export function useYearView(group: string, token: string | undefined, year: number) {
+export function useYearView(group: string, enabled: boolean, year: number) {
   const [state, setState] = useState<YearState>({ kind: 'loading' });
 
   const load = useCallback(async () => {
-    if (!token) return;
-    const answer = await api.readYear(group, token, year);
+    if (!enabled) return;
+    const answer = await api.readYear(group, year);
     setState(
       answer.ok
         ? { kind: 'ready', view: answer.value, at: Date.now() }
         : { kind: 'failed', error: answer.error },
     );
-  }, [group, token, year]);
+  }, [group, enabled, year]);
 
   useEffect(() => {
     // The first load starts here and sets its state when the server answers.

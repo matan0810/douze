@@ -11,11 +11,9 @@ import styles from './Groups.module.css';
  */
 export function MemberList({
   view,
-  token,
   onChange,
 }: {
   view: GroupView;
-  token: string;
   onChange: (view: GroupView) => void;
 }) {
   const { t } = useI18n();
@@ -52,9 +50,7 @@ export function MemberList({
                   type="button"
                   className="btn btn-line"
                   onClick={() =>
-                    act(() =>
-                      api.setRole(view.id, token, m.id, m.role === 'admin' ? 'member' : 'admin'),
-                    )
+                    act(() => api.setRole(view.id, m.id, m.role === 'admin' ? 'member' : 'admin'))
                   }
                 >
                   {m.role === 'admin' ? t.group.removeAdmin : t.group.makeAdmin}
@@ -66,7 +62,7 @@ export function MemberList({
                   className="btn btn-quiet"
                   onClick={() => {
                     if (window.confirm(t.group.releaseConfirm(m.name)))
-                      void act(() => api.release(view.id, token, m.id));
+                      void act(() => api.release(view.id, m.id));
                   }}
                 >
                   {t.group.release}

@@ -8,6 +8,7 @@ import { apiOrigin } from './net/api';
 import { GroupYearScreen } from './screens/groupYear/GroupYearScreen';
 import { GroupScreen } from './screens/groups/GroupScreen';
 import { GroupsScreen } from './screens/groups/GroupsScreen';
+import { SignedScreen } from './screens/groups/SignedScreen';
 import { JoinScreen } from './screens/groups/JoinScreen';
 import { HistoryScreen } from './screens/history/HistoryScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
@@ -49,6 +50,7 @@ export function App() {
       group: t.nav.groups,
       groupYear: t.nav.groups,
       join: t.join.titleStart + t.join.titleEnd,
+      signed: t.signIn.titleStart + t.signIn.titleEnd,
     };
     const views: Record<FinalView, string> = {
       table: t.nav.results,
@@ -111,6 +113,8 @@ function screen(route: Route, known: boolean) {
       ) : (
         <HomeScreen />
       );
+    case 'signed':
+      return apiOrigin() ? <SignedScreen code={route.code} /> : <HomeScreen />;
     case 'join':
       return apiOrigin() ? (
         <JoinScreen key={route.id} id={route.id} secret={route.secret} />

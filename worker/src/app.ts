@@ -1,9 +1,11 @@
 import { isId } from '../../shared/ids';
 import { isStage, isYear, type Stage } from '../../shared/years';
 import type { Env } from './env';
+import { collectSession, finishSignIn, signOut, startSignIn } from './google';
 import {
   auditLog,
   createGroup,
+  myGroups,
   deleteGroup,
   join,
   leave,
@@ -42,6 +44,11 @@ function yearStage(year = '', stage = ''): [number, Stage] {
  */
 const ROUTES: [method: string, path: string, run: Handler][] = [
   ['GET', '/health', async () => json({ ok: true, service: SERVICE })],
+  ['GET', '/auth/google/start', (r, e) => startSignIn(r, e)],
+  ['GET', '/auth/google/callback', (r, e) => finishSignIn(r, e)],
+  ['POST', '/auth/session', (r, e) => collectSession(r, e)],
+  ['DELETE', '/auth/session', (r, e) => signOut(r, e)],
+  ['GET', '/me', (r, e) => myGroups(r, e)],
   ['POST', '/groups', (r, e) => createGroup(r, e)],
   ['GET', '/groups/:id', (r, e, [g = '']) => readGroup(r, e, g)],
   ['DELETE', '/groups/:id', (r, e, [g = '']) => deleteGroup(r, e, g)],
@@ -51,7 +58,7 @@ const ROUTES: [method: string, path: string, run: Handler][] = [
   ['GET', '/groups/:id/audit', (r, e, [g = '']) => auditLog(r, e, g)],
   ['DELETE', '/groups/:id/members/me', (r, e, [g = '']) => leave(r, e, g)],
   ['PUT', '/groups/:id/members/:id/role', (r, e, [g = '', m = '']) => setRole(r, e, g, m)],
-  ['DELETE', '/groups/:id/members/:id/devices', (r, e, [g = '', m = '']) => release(r, e, g, m)],
+  ['DELETE', '/groups/:id/members/:id/claim', (r, e, [g = '', m = '']) => release(r, e, g, m)],
   ['GET', '/groups/:id/years', (r, e, [g = '']) => listYears(r, e, g)],
   [
     'GET',

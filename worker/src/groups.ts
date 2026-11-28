@@ -10,15 +10,16 @@ import {
 } from '../../shared/groups';
 import { isSecret, newId } from '../../shared/ids';
 import { hashToken, newToken, tokenMatches } from '../../shared/tokens';
-import { allow, caller, type Caller } from './auth';
+import { allow, caller, signedIn, type Caller } from './auth';
 import type { Env } from './env';
 import { HttpError, json, readJson } from './http';
 import { address, hit, sweep } from './rate';
 import { all, first, int, text, textOrNull, type Sql, type Statement } from './sql';
 
 /**
- * The groups: making one, joining it, its members and roles, its log (SERVER.md, part 2,
- * level 2 without Google: every person is known by their device's token).
+ * The groups: making one, joining it, its members and roles, its log (SERVER.md, part 2).
+ * Every person is a signed-in Google account (`auth.ts`); a member is what an account is in
+ * a group, and a name nobody holds can be claimed by joining with the invitation.
  */
 const DAY = 24 * 60 * 60;
 
@@ -76,25 +77,24 @@ async function view(
   return { id: groupId, name: groupName, me, members };
 }
 
-function addDevice(sql: Sql, tokenHash: string, memberId: string, groupId: string): Statement {
-  const now = Date.now();
-  return sql
-    .prepare(
-      'INSERT INTO devices (token_hash, member_id, group_id, added_at, seen_at) VALUES (?1, ?2, ?3, ?4, ?4)',
-    )
-    .bind(tokenHash, memberId, groupId, now);
-}
-
 export async function createGroup(request: Request, env: Env): Promise<Response> {
   const sql = env.DB;
+  const who = await signedIn(request, sql);
   await hit(sql, 'create', address(request), LIMITS.groupsPerAddressPerDay, DAY);
+  await hit(sql, 'write', who.tokenHash, LIMITS.writesPerMinute, 60);
   const wanted = await body(request, parseCreateGroup);
   const count = await first(sql.prepare('SELECT COUNT(*) AS n FROM groups'));
   if (count && int(count, 'n') >= LIMITS.groupsTotal)
     throw new HttpError(503, 'No room for new groups', 'service-full');
+  const owned = await first(
+    sql
+      .prepare("SELECT COUNT(*) AS n FROM members WHERE account_id = ?1 AND role = 'owner'")
+      .bind(who.account.id),
+  );
+  if (owned && int(owned, 'n') >= LIMITS.groupsPerAccount)
+    throw new HttpError(409, 'Too many groups', 'group-full');
   const groupId = newId();
   const memberId = newId();
-  const token = newToken();
   const invite = newToken();
   const now = Date.now();
   await sql.batch([
@@ -103,20 +103,43 @@ export async function createGroup(request: Request, env: Env): Promise<Response>
       .bind(groupId, wanted.group, await hashToken(invite), now),
     sql
       .prepare(
-        "INSERT INTO members (id, group_id, name, role, joined_at) VALUES (?1, ?2, ?3, 'owner', ?4)",
+        "INSERT INTO members (id, group_id, name, role, joined_at, account_id) VALUES (?1, ?2, ?3, 'owner', ?4, ?5)",
       )
-      .bind(memberId, groupId, wanted.me, now),
-    addDevice(sql, await hashToken(token), memberId, groupId),
+      .bind(memberId, groupId, wanted.me, now, who.account.id),
     ...log(sql, groupId, wanted.me, 'group.create', wanted.group),
   ]);
   await sweep(sql, now);
-  return json({ group: await view(sql, groupId, wanted.group, memberId), token, invite }, 201);
+  return json({ group: await view(sql, groupId, wanted.group, memberId), invite }, 201);
 }
 
 export async function readGroup(request: Request, env: Env, groupId: string): Promise<Response> {
   const who = await caller(request, env.DB, groupId);
   allow(who, 'group.read');
   return json(await view(env.DB, groupId, who.group.name, who.member.id));
+}
+
+/** Every group the signed-in account is in, and who it is in each. */
+export async function myGroups(request: Request, env: Env): Promise<Response> {
+  const who = await signedIn(request, env.DB);
+  const rows = await all(
+    env.DB.prepare(
+      `SELECT g.id AS group_id, g.name AS group_name, m.id AS member_id, m.name AS member_name, m.role
+       FROM members m JOIN groups g ON g.id = m.group_id
+       WHERE m.account_id = ?1 ORDER BY m.joined_at, g.id`,
+    ).bind(who.account.id),
+  );
+  return json({
+    name: who.account.name,
+    groups: rows.map((row) => {
+      const role = row.role;
+      if (!isRole(role)) throw new HttpError(500, 'Bad stored data');
+      return {
+        id: text(row, 'group_id'),
+        name: text(row, 'group_name'),
+        me: { id: text(row, 'member_id'), name: text(row, 'member_name'), role },
+      };
+    }),
+  });
 }
 
 /** The group behind an invite: 403 for a wrong secret, counted against the address. */
@@ -136,7 +159,7 @@ export async function preview(request: Request, env: Env, groupId: string): Prom
   const group = await invited(request, env.DB, groupId);
   const rows = await all(
     env.DB.prepare(
-      `SELECT name, role, EXISTS (SELECT 1 FROM devices d WHERE d.member_id = members.id) AS held
+      `SELECT name, role, (account_id IS NOT NULL) AS held
        FROM members WHERE group_id = ?1 ORDER BY joined_at, id`,
     ).bind(groupId),
   );
@@ -150,23 +173,22 @@ export async function preview(request: Request, env: Env, groupId: string): Prom
   });
 }
 
-async function holdsDevices(sql: Sql, memberId: string): Promise<boolean> {
-  const row = await first(
-    sql.prepare('SELECT COUNT(*) AS n FROM devices WHERE member_id = ?1').bind(memberId),
-  );
-  return !!row && int(row, 'n') > 0;
-}
-
 export async function join(request: Request, env: Env, groupId: string): Promise<Response> {
   const sql = env.DB;
+  const who = await signedIn(request, sql);
   const group = await invited(request, sql, groupId);
   await hit(sql, 'join', address(request), LIMITS.joinsPerHour, 60 * 60);
   const wanted = await body(request, parseJoin);
-  const token = newToken();
-  const tokenHash = await hashToken(token);
+  // Already in: joining again is just reading the group.
+  const mine = await first(
+    sql
+      .prepare('SELECT id FROM members WHERE group_id = ?1 AND account_id = ?2')
+      .bind(groupId, who.account.id),
+  );
+  if (mine) return json({ group: await view(sql, groupId, group.name, text(mine, 'id')) });
   const held = await first(
     sql
-      .prepare('SELECT id, name, role FROM members WHERE group_id = ?1 AND name = ?2')
+      .prepare('SELECT id, name, account_id FROM members WHERE group_id = ?1 AND name = ?2')
       .bind(groupId, wanted.name),
   );
   if (!held) {
@@ -179,39 +201,28 @@ export async function join(request: Request, env: Env, groupId: string): Promise
     await sql.batch([
       sql
         .prepare(
-          "INSERT INTO members (id, group_id, name, role, joined_at) VALUES (?1, ?2, ?3, 'member', ?4)",
+          "INSERT INTO members (id, group_id, name, role, joined_at, account_id) VALUES (?1, ?2, ?3, 'member', ?4, ?5)",
         )
-        .bind(memberId, groupId, wanted.name, Date.now()),
-      addDevice(sql, tokenHash, memberId, groupId),
+        .bind(memberId, groupId, wanted.name, Date.now(), who.account.id),
       ...log(sql, groupId, wanted.name, 'member.join', null),
     ]);
-    return json({ group: await view(sql, groupId, group.name, memberId), token }, 201);
+    return json({ group: await view(sql, groupId, group.name, memberId) }, 201);
   }
-  // A manager's name is never taken over while a phone holds it: until Google sign-in, it
-  // stays on its devices. One no phone holds (a group seeded from the archive) is claimed
-  // with the invitation, like any player's.
-  if (text(held, 'role') !== 'member' && (await holdsDevices(sql, text(held, 'id'))))
-    throw new HttpError(409, 'This name belongs to a manager', 'name-protected');
-  if (!wanted.takeover) throw new HttpError(409, 'This name is taken', 'name-taken');
+  // A name already in the group is its person's to claim, once, if nobody holds it yet.
+  if (textOrNull(held, 'account_id') !== null || !wanted.claim)
+    throw new HttpError(409, 'This name is taken', 'name-taken');
   const memberId = text(held, 'id');
   const name = text(held, 'name');
-  // A player's oldest devices give way, so no name is held by more than the limit; devices
-  // added in the same millisecond go by the order they were added (rowid).
   await sql.batch([
     sql
-      .prepare(
-        `DELETE FROM devices WHERE member_id = ?1 AND token_hash NOT IN
-           (SELECT token_hash FROM devices WHERE member_id = ?1
-             ORDER BY added_at DESC, rowid DESC LIMIT ?2)`,
-      )
-      .bind(memberId, LIMITS.devicesPerPlayer - 1),
-    addDevice(sql, tokenHash, memberId, groupId),
-    ...log(sql, groupId, name, 'member.takeover', name),
+      .prepare('UPDATE members SET account_id = ?1, claim_email = NULL WHERE id = ?2')
+      .bind(who.account.id, memberId),
+    ...log(sql, groupId, name, 'member.claim', name),
   ]);
-  return json({ group: await view(sql, groupId, group.name, memberId), token }, 201);
+  return json({ group: await view(sql, groupId, group.name, memberId) }, 201);
 }
 
-/** A write by a signed-in device: its caller, counted against the write limit. */
+/** A write by a signed-in member: its caller, counted against the write limit. */
 export async function writer(request: Request, sql: Sql, groupId: string): Promise<Caller> {
   const who = await caller(request, sql, groupId);
   await hit(sql, 'write', who.tokenHash, LIMITS.writesPerMinute, 60);
@@ -263,7 +274,7 @@ export async function setRole(
   return json(await view(sql, groupId, who.group.name, who.member.id));
 }
 
-/** Signs out every device of a member, so the name can be picked again on a new phone. */
+/** Frees a member's name from its account, so its person can claim it again (a wrong claim). */
 export async function release(
   request: Request,
   env: Env,
@@ -274,13 +285,13 @@ export async function release(
   const who = await writer(request, sql, groupId);
   allow(who, 'member.release');
   const member = await target(sql, groupId, memberId);
-  // The owner is released by nobody; an admin only by the owner.
+  // The owner is freed by nobody; an admin only by the owner.
   if (member.role === 'owner' || (member.role === 'admin' && who.member.role !== 'owner'))
     throw new HttpError(403, 'Not allowed', 'forbidden');
   await sql.batch([
-    sql.prepare('DELETE FROM devices WHERE member_id = ?1').bind(member.id),
-    // A released admin is a player again: with no phone, the name can be claimed with the
-    // invitation, and it must not bring the role back.
+    sql.prepare('UPDATE members SET account_id = NULL WHERE id = ?1').bind(member.id),
+    // A released admin is a player again: the name is free to claim, and claiming it must not
+    // bring the role back.
     sql
       .prepare("UPDATE members SET role = 'member' WHERE id = ?1 AND role = 'admin'")
       .bind(member.id),

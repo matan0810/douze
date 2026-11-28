@@ -6,7 +6,7 @@ import { useToast } from '../../ui/toastContext';
 import styles from './Groups.module.css';
 
 /** The group's log, for its managers: who did what, and when. */
-export function AuditLog({ group, token }: { group: string; token: string }) {
+export function AuditLog({ group }: { group: string }) {
   const { t, language } = useI18n();
   const toast = useToast();
   const [entries, setEntries] = useState<AuditEntry[] | null>(null);
@@ -23,7 +23,7 @@ export function AuditLog({ group, token }: { group: string; token: string }) {
             type="button"
             className="btn btn-line"
             onClick={async () => {
-              const answer = await api.audit(group, token);
+              const answer = await api.audit(group);
               if (answer.ok) setEntries(answer.value);
               else toast(t.errors[answer.error]);
             }}

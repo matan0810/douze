@@ -2,18 +2,18 @@ import { describe, expect, it } from 'vitest';
 import { LIMITS } from '../../shared/config';
 import { parseGroupView, parseJoined, parsePreview } from '../../shared/groups';
 import { newToken } from '../../shared/tokens';
-import { call, create, env, joinAs, joined } from '../test/client';
+import { account, call, create, env, joinAs, joined } from '../test/client';
 
 describe('a group', () => {
-  it('is made by its owner, who gets a device token and the invite, once', async () => {
+  it('is made by its owner, who gets the invite, once', async () => {
     const made = await create();
     expect(made.group.name).toBe('החברים');
     expect(made.group.me).toMatchObject({ name: 'מתן', role: 'owner' });
     expect(made.token).not.toBe(made.invite);
     const stored = env.DB.raw.prepare('SELECT invite_hash FROM groups').get();
     expect(JSON.stringify(stored)).not.toContain(made.invite);
-    const devices = env.DB.raw.prepare('SELECT token_hash FROM devices').all();
-    expect(JSON.stringify(devices)).not.toContain(made.token);
+    const sessions = env.DB.raw.prepare('SELECT token_hash FROM sessions').all();
+    expect(JSON.stringify(sessions)).not.toContain(made.token);
   });
 
   it('is read by its members only', async () => {
@@ -29,13 +29,34 @@ describe('a group', () => {
   });
 
   it('refuses a name that is empty, too long or not text, and any unknown field', async () => {
+    const who = await account();
     for (const body of [
       { group: '', me: 'מתן' },
       { group: 'x'.repeat(500), me: 'מתן' },
       { group: 5, me: 'מתן' },
       { group: 'a', me: 'b', role: 'owner' },
     ])
-      expect((await call('POST', '/groups', { body })).status).toBe(400);
+      expect((await call('POST', '/groups', { token: who.token, body })).status).toBe(400);
+  });
+
+  it('needs a signed-in account', async () => {
+    const body = { group: 'ק', me: 'א' };
+    expect((await call('POST', '/groups', { body })).status).toBe(401);
+    expect((await call('POST', '/groups', { token: newToken(), body })).status).toBe(401);
+  });
+
+  it('keeps at most the limit of groups to one owner', async () => {
+    const who = await account();
+    for (let i = 0; i < LIMITS.groupsPerAccount; i++)
+      expect(
+        (await call('POST', '/groups', { token: who.token, body: { group: `ק${i}`, me: 'א' } }))
+          .status,
+      ).toBe(201);
+    const more = await call('POST', '/groups', {
+      token: who.token,
+      body: { group: 'עוד', me: 'א' },
+    });
+    expect(more.status).toBe(409);
   });
 });
 
@@ -93,30 +114,47 @@ describe('the invite', () => {
 });
 
 describe('names', () => {
-  it("asks before taking a player's name over, then moves it to the new phone, in the log", async () => {
+  it('lets a name nobody holds be claimed, only when asked, and puts it in the log', async () => {
     const made = await create();
-    await joined(made.group.id, made.invite, 'עדי');
+    // A name no account holds: the seeded archive group's members are like this.
+    env.DB.raw
+      .prepare(
+        "INSERT INTO members (id, group_id, name, role, joined_at) VALUES ('m'||hex(randomblob(10)), ?, 'עדי', 'member', 0)",
+      )
+      .run(made.group.id);
     const asked = await joinAs(made.group.id, made.invite, 'עדי');
     expect(asked.status).toBe(409);
     expect(await asked.json()).toMatchObject({ code: 'name-taken' });
-    const taken = await joinAs(made.group.id, made.invite, 'עדי', true);
-    expect(taken.status).toBe(201);
+    const claimed = await joinAs(made.group.id, made.invite, 'עדי', true);
+    expect(claimed.status).toBe(201);
     const log = await (
       await call('GET', `/groups/${made.group.id}/audit`, { token: made.token })
     ).json();
-    expect(JSON.stringify(log)).toContain('member.takeover');
+    expect(JSON.stringify(log)).toContain('member.claim');
   });
 
-  it("never lets a manager's name be taken over", async () => {
+  it("never lets a name an account holds be claimed by another, a manager's included", async () => {
     const made = await create();
-    const refused = await joinAs(made.group.id, made.invite, 'מתן', true);
-    expect(refused.status).toBe(409);
-    expect(await refused.json()).toMatchObject({ code: 'name-protected' });
+    await joined(made.group.id, made.invite, 'עדי');
+    for (const name of ['מתן', 'עדי']) {
+      const refused = await joinAs(made.group.id, made.invite, name, true);
+      expect(refused.status).toBe(409);
+      expect(await refused.json()).toMatchObject({ code: 'name-taken' });
+    }
   });
 
-  it("lets a manager's name be claimed once no phone holds it, like a player's", async () => {
+  it('lets an account in only once: joining again is reading the group', async () => {
     const made = await create();
-    env.DB.raw.prepare('DELETE FROM devices').run();
+    const adi = await joined(made.group.id, made.invite, 'עדי');
+    const again = await joinAs(made.group.id, made.invite, 'משהו אחר', false, adi.token);
+    expect(again.status).toBe(200);
+    expect(parseJoined(await again.json())?.group.me.name).toBe('עדי');
+    expect((await call('GET', `/groups/${made.group.id}`, { token: made.token })).status).toBe(200);
+  });
+
+  it('shows who holds a name before joining', async () => {
+    const made = await create();
+    env.DB.raw.prepare('UPDATE members SET account_id = NULL').run();
     const preview = parsePreview(
       await (await call('GET', `/groups/${made.group.id}/preview`, { invite: made.invite })).json(),
     );
@@ -126,34 +164,18 @@ describe('names', () => {
     expect(parseJoined(await claimed.json())?.group.me.role).toBe('owner');
   });
 
-  it('turns a released admin back into a player, so the name cannot bring the role back', async () => {
+  it('turns a freed admin back into a player, so the name cannot bring the role back', async () => {
     const made = await create();
     const adi = await joined(made.group.id, made.invite, 'עדי');
     await call('PUT', `/groups/${made.group.id}/members/${adi.group.me.id}/role`, {
       token: made.token,
       body: { role: 'admin' },
     });
-    await call('DELETE', `/groups/${made.group.id}/members/${adi.group.me.id}/devices`, {
+    await call('DELETE', `/groups/${made.group.id}/members/${adi.group.me.id}/claim`, {
       token: made.token,
     });
     const back = parseJoined(await (await joinAs(made.group.id, made.invite, 'עדי', true)).json());
     expect(back?.group.me.role).toBe('member');
-  });
-
-  it('keeps at most the limit of devices on one name: the oldest give way', async () => {
-    const made = await create();
-    const first = await joined(made.group.id, made.invite, 'עדי');
-    for (let i = 0; i < LIMITS.devicesPerPlayer; i++)
-      await joinAs(made.group.id, made.invite, 'עדי', true);
-    const devices = env.DB.raw
-      .prepare(
-        'SELECT COUNT(*) AS n FROM devices d JOIN members m ON m.id = d.member_id WHERE m.name = ?',
-      )
-      .get('עדי');
-    expect(devices).toEqual({ n: LIMITS.devicesPerPlayer });
-    expect((await call('GET', `/groups/${made.group.id}`, { token: first.token })).status).toBe(
-      401,
-    );
   });
 
   it('fills up at the limit of members', async () => {
@@ -199,7 +221,7 @@ describe('roles', () => {
     ).toBe(400);
   });
 
-  it('let an admin release a player, never the owner; another admin only the owner can', async () => {
+  it('let an admin free a player, never the owner; another admin only the owner can', async () => {
     const made = await create();
     const adi = await joined(made.group.id, made.invite, 'עדי');
     const ori = await joined(made.group.id, made.invite, 'אורי');
@@ -213,7 +235,7 @@ describe('roles', () => {
       body: { role: 'admin' },
     });
     const free = (who: string, id: string) =>
-      call('DELETE', `/groups/${made.group.id}/members/${id}/devices`, { token: who });
+      call('DELETE', `/groups/${made.group.id}/members/${id}/claim`, { token: who });
     expect((await free(ori.token, adi.group.me.id)).status).toBe(403); // a player
     expect((await free(adi.token, made.group.me.id)).status).toBe(403); // the owner
     expect((await free(adi.token, dana.group.me.id)).status).toBe(403); // another admin
@@ -227,7 +249,7 @@ describe('roles', () => {
     const other = await create('אחרים', 'דנה');
     const answer = await call(
       'DELETE',
-      `/groups/${made.group.id}/members/${other.group.me.id}/devices`,
+      `/groups/${made.group.id}/members/${other.group.me.id}/claim`,
       {
         token: made.token,
       },
@@ -286,13 +308,17 @@ describe('the audit log', () => {
 
 describe('limits on making groups', () => {
   it('allows a few new groups a day from one address', async () => {
-    for (let i = 0; i < LIMITS.groupsPerAddressPerDay; i++)
+    for (let i = 0; i < LIMITS.groupsPerAddressPerDay; i++) {
+      const who = await account();
+      const body = { group: `ק${i}`, me: 'א' };
       expect(
-        (await call('POST', '/groups', { from: '9.9.9.9', body: { group: `ק${i}`, me: 'א' } }))
-          .status,
+        (await call('POST', '/groups', { from: '9.9.9.9', token: who.token, body })).status,
       ).toBe(201);
+    }
+    const who = await account();
+    const body = { group: 'עוד', me: 'א' };
     expect(
-      (await call('POST', '/groups', { from: '9.9.9.9', body: { group: 'עוד', me: 'א' } })).status,
+      (await call('POST', '/groups', { from: '9.9.9.9', token: who.token, body })).status,
     ).toBe(429);
   });
 
@@ -301,12 +327,16 @@ describe('limits on making groups', () => {
       'INSERT INTO groups (id, name, invite_hash, created_at) VALUES (?, ?, ?, 0)',
     );
     for (let i = 0; i < LIMITS.groupsTotal; i++) insert.run(`g${i}`.padEnd(22, 'x'), `${i}`, 'h');
-    const full = await call('POST', '/groups', { body: { group: 'אחרונה', me: 'א' } });
+    const who = await account();
+    const full = await call('POST', '/groups', {
+      token: who.token,
+      body: { group: 'אחרונה', me: 'א' },
+    });
     expect(full.status).toBe(503);
     expect(await full.json()).toMatchObject({ code: 'service-full' });
   });
 
-  it('caps writes from one device a minute', async () => {
+  it('caps writes from one session a minute', async () => {
     const made = await create();
     let last = 0;
     for (let i = 0; i <= LIMITS.writesPerMinute; i++)

@@ -211,18 +211,20 @@ order is published.
   their archive id; players added on a device, by name.
 - **New final**: a year and its countries from the catalogue.
 - **Groups** (only when the build has a server): a group is the people who play together,
-  each from their own phone, with no account (level 2 of `SERVER.md`: a person is their
-  device). _My groups_ lists the groups this device belongs to and opens a new one with a
-  name for it and one's own. The opener is its _owner_ and gets the group's invitation, a
-  link with a secret; anyone with the link sees the group's name and picks a name to join
-  as a _player_. Picking a player's name already in the group takes it over (a new phone);
-  an owner's or an admin's name cannot be taken over. A player's phones are at most five;
-  a sixth replaces the oldest. On the group's page: the members and their roles, the
-  invitation (copy, or a new link that ends the old one), and what each role may do:
+  each signed in with their own Google account, from any device (level 3 of `SERVER.md`; the
+  site keeps no password, and the Worker keeps the account's Google id, email and name).
+  _Sign in with Google_ is the first step of everything here: the site only sends the person
+  to Google and back. _My groups_ lists the groups the account is in, on any device, and opens
+  a new one with a name for it and one's own. The opener is its _owner_ and gets the group's
+  invitation, a link with a secret; anyone with the link sees the group's name, signs in and
+  picks a name to join as a _player_. A name already in the group that nobody holds yet (the
+  archive's players) is claimed with one tap; a name an account holds is never offered. On
+  the group's page: the members and their roles, the invitation (copy, or a new link that
+  ends the old one), and what each role may do:
   - the owner names and removes _admins_, renews the link and deletes the group, typing
     its name to confirm;
-  - an admin _releases_ a player (their phones leave, the name stays for them to take
-    back) and reads the _log_: who joined, took over, left, was named or released, and when;
+  - an admin _frees_ a player's name (a wrong claim: its person can claim it again) and
+    reads the _log_: who joined, claimed, left, was named or freed, and when;
   - every member can leave; the owner cannot, while the group is theirs.
 
   Who may do what is one table (`shared/capabilities.ts`); the numbers (40 members, five
@@ -253,11 +255,11 @@ order is published.
     (`src/data/`, through `scripts/archiveSeed.ts` into `worker/seed/archive.sql`, applied on
     every deploy, ignoring whatever exists): its members are the archive's players, every
     archived year is closed with its result and everyone's prediction, and the owner is the
-    archive's owner. It has no special mechanics. Its people join with the invitation, like
-    any group, and pick their own name; a name no phone holds is theirs to claim, a manager's
-    included (while a phone holds a manager's name it is never claimed; releasing an admin
-    makes them a player again). The group then plays 2027 and beyond, with its history in
-    place.
+    archive's owner. It has no special mechanics. The owner's name is given to the Google
+    account with the owner's email (a deploy secret, never in the repository) the first time
+    it signs in; the owner then sends the invitation like any group's, and each of the others
+    signs in and picks their own name. The group then plays 2027 and beyond, with its history
+    in place.
   - Publishing again updates the stages. A stage's countries can change until it closes;
     each prediction keeps what still fits. After that they stay. A group keeps up to 30
     years.

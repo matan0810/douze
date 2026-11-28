@@ -36,7 +36,9 @@ export type Route =
   /** A group's year, on one of its stages. */
   | { name: 'groupYear'; id: string; year: number; stage: Stage }
   /** An invitation: the secret rides in the hash, which never reaches a server's log. */
-  | { name: 'join'; id: string; secret: string };
+  | { name: 'join'; id: string; secret: string }
+  /** Back from Google: the one-time code to collect a session with, or `failed`. */
+  | { name: 'signed'; code: string };
 
 const isView = (v: unknown): v is FinalView => FINAL_VIEWS.some((view) => view === v);
 
@@ -56,6 +58,8 @@ export function parseRoute(hash: string): Route {
   }
   if (first === 'join' && isId(second) && isSecret(third))
     return { name: 'join', id: second, secret: third };
+  if (first === 'signed' && (second === 'failed' || isSecret(second)))
+    return { name: 'signed', code: second };
   const year = /^\d{4}$/.test(first ?? '') ? Number(first) : NaN;
   if (!isYear(year)) return { name: 'home' };
   if (second === 'player' && third && /^[\w-]{1,60}$/.test(third))
@@ -83,5 +87,7 @@ export function routeHash(route: Route): string {
       return `#/group/${route.id}/${route.year}${route.stage === 'final' ? '' : `/${route.stage}`}`;
     case 'join':
       return `#/join/${route.id}/${route.secret}`;
+    case 'signed':
+      return `#/signed/${route.code}`;
   }
 }
