@@ -109,7 +109,8 @@ export function parseJoined(value: unknown): Joined | undefined {
 
 export interface Preview {
   name: string;
-  members: { name: string; role: Role }[];
+  /** `held`: a phone has the name (a manager's name is then not to be claimed). */
+  members: { name: string; role: Role; held: boolean }[];
 }
 
 export function parsePreview(value: unknown): Preview | undefined {
@@ -117,9 +118,11 @@ export function parsePreview(value: unknown): Preview | undefined {
   const name = parseName(json?.name);
   if (!json || !name || !Array.isArray(json.members)) return undefined;
   const members = json.members.flatMap((raw): Preview['members'] => {
-    const m = record(raw, ['name', 'role']);
+    const m = record(raw, ['name', 'role', 'held']);
     const memberName = parseName(m?.name);
-    return memberName && isRole(m?.role) ? [{ name: memberName, role: m.role }] : [];
+    return memberName && isRole(m?.role) && typeof m.held === 'boolean'
+      ? [{ name: memberName, role: m.role, held: m.held }]
+      : [];
   });
   return members.length === json.members.length ? { name, members } : undefined;
 }

@@ -65,6 +65,12 @@ else: no address, no e-mail, no account.
   unexpected error is a plain 500 that names nothing; the log has one line per request,
   with ids replaced by `:id`, no address, header or body. Every answer is `no-store`,
   `nosniff` and sent with no referrer.
+- **The seeded archive group.** The archive (public data) is put in the database as a
+  standard group on deploy (`worker/seed/archive.sql`, only `INSERT OR IGNORE`). Its
+  invitation is the repository secret `ARCHIVE_INVITE`, which only the seeding step reads and
+  which the database keeps only as a hash. A manager's name that no phone holds can be
+  claimed with the invitation: it exists for this group, and a released admin is made a
+  player again so the role cannot come back that way.
 - **Deploying.** The deploy token (`CLOUDFLARE_API_TOKEN`, Workers Scripts and D1, edit) and
   the account id are repository secrets, used only by `deploy-worker.yml`, which has
   read-only permissions and keeps no checkout token; it creates the database once and

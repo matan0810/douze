@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LIMITS } from '../../shared/config';
-import { parseGroupView, parsePreview } from '../../shared/groups';
+import { parseGroupView, parseJoined, parsePreview } from '../../shared/groups';
 import { newToken } from '../../shared/tokens';
 import { call, create, env, joinAs, joined } from '../test/client';
 
@@ -45,7 +45,10 @@ describe('the invite', () => {
     const preview = parsePreview(
       await (await call('GET', `/groups/${made.group.id}/preview`, { invite: made.invite })).json(),
     );
-    expect(preview).toEqual({ name: 'החברים', members: [{ name: 'מתן', role: 'owner' }] });
+    expect(preview).toEqual({
+      name: 'החברים',
+      members: [{ name: 'מתן', role: 'owner', held: true }],
+    });
     const adi = await joined(made.group.id, made.invite, 'עדי');
     expect(adi.group.me).toMatchObject({ name: 'עדי', role: 'member' });
     expect(adi.group.members.map((m) => m.name)).toEqual(['מתן', 'עדי']);
@@ -109,6 +112,32 @@ describe('names', () => {
     const refused = await joinAs(made.group.id, made.invite, 'מתן', true);
     expect(refused.status).toBe(409);
     expect(await refused.json()).toMatchObject({ code: 'name-protected' });
+  });
+
+  it("lets a manager's name be claimed once no phone holds it, like a player's", async () => {
+    const made = await create();
+    env.DB.raw.prepare('DELETE FROM devices').run();
+    const preview = parsePreview(
+      await (await call('GET', `/groups/${made.group.id}/preview`, { invite: made.invite })).json(),
+    );
+    expect(preview?.members).toEqual([{ name: 'מתן', role: 'owner', held: false }]);
+    const claimed = await joinAs(made.group.id, made.invite, 'מתן', true);
+    expect(claimed.status).toBe(201);
+    expect(parseJoined(await claimed.json())?.group.me.role).toBe('owner');
+  });
+
+  it('turns a released admin back into a player, so the name cannot bring the role back', async () => {
+    const made = await create();
+    const adi = await joined(made.group.id, made.invite, 'עדי');
+    await call('PUT', `/groups/${made.group.id}/members/${adi.group.me.id}/role`, {
+      token: made.token,
+      body: { role: 'admin' },
+    });
+    await call('DELETE', `/groups/${made.group.id}/members/${adi.group.me.id}/devices`, {
+      token: made.token,
+    });
+    const back = parseJoined(await (await joinAs(made.group.id, made.invite, 'עדי', true)).json());
+    expect(back?.group.me.role).toBe('member');
   });
 
   it('keeps at most the limit of devices on one name: the oldest give way', async () => {

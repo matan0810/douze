@@ -17,6 +17,14 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [0.7.0] - 2026-11-28
 
+### Added
+
+- The archive as a group: the server seeds a standard group with 2024 to 2026, every
+  prediction and result in place, applied on deploy. Its people join with the invitation like
+  any group and take their own names; the group then plays 2027 and beyond. A manager's name
+  that no phone holds can be claimed with the invitation, and a released admin becomes a
+  player again.
+
 ### Removed
 
 - Editing the official result outside a group: live mode, the edit and reset buttons, and

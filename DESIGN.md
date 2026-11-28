@@ -249,6 +249,15 @@ order is published.
     it is there for a mistake, and only managers can (the owner, 2026-11-28). With it,
     everyone's table appears, scored by the rules of section 3. A phone's own copy of the
     year never stands in for the group's result.
+  - **The archive is a group** (issue #6): the server seeds a standard group from the archive
+    (`src/data/`, through `scripts/archiveSeed.ts` into `worker/seed/archive.sql`, applied on
+    every deploy, ignoring whatever exists): its members are the archive's players, every
+    archived year is closed with its result and everyone's prediction, and the owner is the
+    archive's owner. It has no special mechanics. Its people join with the invitation, like
+    any group, and pick their own name; a name no phone holds is theirs to claim, a manager's
+    included (while a phone holds a manager's name it is never claimed; releasing an admin
+    makes them a player again). The group then plays 2027 and beyond, with its history in
+    place.
   - Publishing again updates the stages. A stage's countries can change until it closes;
     each prediction keeps what still fits. After that they stay. A group keeps up to 30
     years.

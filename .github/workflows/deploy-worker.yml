@@ -65,6 +65,23 @@ jobs:
         if: steps.ready.outputs.ok == 'true'
         run: npx wrangler d1 migrations apply DB --remote --config worker/wrangler.jsonc
 
+      # The archive as a standard group (worker/seed/archive.sql, from src/data/). Every
+      # statement is INSERT OR IGNORE, so this changes nothing that exists. The invitation to
+      # the group is the secret ARCHIVE_INVITE (43 letters, digits, - or _), stored only as its
+      # hash; without it, the seed waits.
+      - name: Seed the archive group
+        if: steps.ready.outputs.ok == 'true'
+        env:
+          ARCHIVE_INVITE: ${{ secrets.ARCHIVE_INVITE }}
+        run: |
+          if ! printf '%s' "$ARCHIVE_INVITE" | grep -Eq '^[A-Za-z0-9_-]{43}$'; then
+            echo "::notice::ARCHIVE_INVITE is not set (43 letters, digits, - or _); the archive group is not seeded."
+            exit 0
+          fi
+          hash=$(printf '%s' "$ARCHIVE_INVITE" | sha256sum | cut -d' ' -f1)
+          sed "s/__INVITE_HASH__/$hash/" worker/seed/archive.sql > "$RUNNER_TEMP/archive.sql"
+          npx wrangler d1 execute DB --remote --file "$RUNNER_TEMP/archive.sql" --config worker/wrangler.jsonc
+
       - name: Deploy
         if: steps.ready.outputs.ok == 'true'
         run: npx wrangler deploy --config worker/wrangler.jsonc | tee deploy.log

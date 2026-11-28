@@ -88,7 +88,7 @@ export function JoinScreen({ id, secret }: { id: string; secret: string }) {
               <p className={styles.muted}>{t.join.already}</p>
               <div className={styles.chips}>
                 {preview.members.map((m) =>
-                  m.role === 'member' ? (
+                  m.role === 'member' || !m.held ? (
                     <button
                       key={m.name}
                       type="button"

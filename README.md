@@ -47,6 +47,13 @@ the database the first time and applies the migrations. The site learns the Work
 address from the repository variable `API_URL` (Settings → Secrets and variables → Actions
 → Variables), read by `deploy.yml`'s build. Without it the site is built with no groups.
 
+The archive group (2024 to 2026, our history) is seeded into the database by the same deploy,
+once the repository secret `ARCHIVE_INVITE` exists: any random string of exactly 43 letters,
+digits, `-` or `_` (a password manager makes one), kept private. The invitation link is then
+`https://matan0810.github.io/douze/#/join/douze_archive_group_01/<that string>`; each of us
+joins with it and picks our own name. After the archive changes, `npm run seed` rewrites
+`worker/seed/archive.sql` (a test fails while it is stale).
+
 How work is done: `CLAUDE.md`. Rules and numbers: `DESIGN.md`. Changes: `CHANGELOG.md`.
 Security: `SECURITY.md`.
 

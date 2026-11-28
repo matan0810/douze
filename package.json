@@ -16,6 +16,7 @@
     "test": "vitest run",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
     "e2e": "node tests/e2e/smoke.mjs",
+    "seed": "node scripts/seed-archive.ts",
     "bump": "node scripts/bump.ts",
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
     "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc"

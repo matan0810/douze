@@ -136,13 +136,25 @@ export async function preview(request: Request, env: Env, groupId: string): Prom
   const group = await invited(request, env.DB, groupId);
   const rows = await all(
     env.DB.prepare(
-      'SELECT name, role FROM members WHERE group_id = ?1 ORDER BY joined_at, id',
+      `SELECT name, role, EXISTS (SELECT 1 FROM devices d WHERE d.member_id = members.id) AS held
+       FROM members WHERE group_id = ?1 ORDER BY joined_at, id`,
     ).bind(groupId),
   );
   return json({
     name: group.name,
-    members: rows.map((row) => ({ name: text(row, 'name'), role: text(row, 'role') })),
+    members: rows.map((row) => ({
+      name: text(row, 'name'),
+      role: text(row, 'role'),
+      held: int(row, 'held') === 1,
+    })),
   });
+}
+
+async function holdsDevices(sql: Sql, memberId: string): Promise<boolean> {
+  const row = await first(
+    sql.prepare('SELECT COUNT(*) AS n FROM devices WHERE member_id = ?1').bind(memberId),
+  );
+  return !!row && int(row, 'n') > 0;
 }
 
 export async function join(request: Request, env: Env, groupId: string): Promise<Response> {
@@ -175,8 +187,10 @@ export async function join(request: Request, env: Env, groupId: string): Promise
     ]);
     return json({ group: await view(sql, groupId, group.name, memberId), token }, 201);
   }
-  // A manager's name is never taken over: until Google sign-in, it stays on its devices.
-  if (text(held, 'role') !== 'member')
+  // A manager's name is never taken over while a phone holds it: until Google sign-in, it
+  // stays on its devices. One no phone holds (a group seeded from the archive) is claimed
+  // with the invitation, like any player's.
+  if (text(held, 'role') !== 'member' && (await holdsDevices(sql, text(held, 'id'))))
     throw new HttpError(409, 'This name belongs to a manager', 'name-protected');
   if (!wanted.takeover) throw new HttpError(409, 'This name is taken', 'name-taken');
   const memberId = text(held, 'id');
@@ -265,6 +279,11 @@ export async function release(
     throw new HttpError(403, 'Not allowed', 'forbidden');
   await sql.batch([
     sql.prepare('DELETE FROM devices WHERE member_id = ?1').bind(member.id),
+    // A released admin is a player again: with no phone, the name can be claimed with the
+    // invitation, and it must not bring the role back.
+    sql
+      .prepare("UPDATE members SET role = 'member' WHERE id = ?1 AND role = 'admin'")
+      .bind(member.id),
     ...log(sql, groupId, who.member.name, 'member.release', member.name),
   ]);
   return json(await view(sql, groupId, who.group.name, who.member.id));
