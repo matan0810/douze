@@ -15,6 +15,8 @@ the deploy runs: the one state of `master` that reached the live site as a worki
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-28
+
 ### Removed
 
 - Editing the official result outside a group: live mode, the edit and reset buttons, and
